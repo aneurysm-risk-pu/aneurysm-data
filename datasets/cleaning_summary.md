@@ -1,13 +1,11 @@
-# Podsumowanie czyszczenia danych
+# Podsumowanie czyszczenia danych NEURO
 
 ### Znalzione błędy i anomalie (sprint 1)
 
 | Problem | Szczegóły |
 |---------|-----------|
 | Kolumny ze słownikami | Kolumny w formacie `{'values': [...]}` — nie nadają się do analizy |
-| Błędny wiek | 1 rekord z wiekiem = 222 lata |
 | Duplikat `custom_id` | 1 duplikat: `'194143-2017-W52'` |
-| Powtarzający się pacjenci | 358 `patient_id` pojawia się więcej niż raz |
 
 ---
 
@@ -23,4 +21,12 @@ Skrypt: `clean_datasets_values.py`
 
 > **Do sprawdzenia:** przypadki o dużej wariancji w tygodniu (np. CRP: `[10.5, 80.1, 113.2]`) — uśrednianie może maskować gwałtowne zmiany kliniczne.
 
+
+### Drugie wykonane czyszczenie (duplikaty `custom_id`)
+
+Skrypt: `clean_anomalies.py`
+
+| custom_id | Działanie | Uzasadnienie |
+|-----------|-----------|--------------|
+| `194143-2017-W52` | Usunięto starszy rekord (2017-01-01), zachowano nowszy (2017-12-31) | Ten sam `patient_id`, ten sam tydzień — nowszy rekord ma inny wiek (72 vs 71) - najprawdopobniej wynika to ze spsobu liczenia|
 
