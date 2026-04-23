@@ -6,7 +6,7 @@
 # Dane
 
 
-TABLEKA DLA JASIKA NA 23.04:
+TABLEKA NA 23.04:
 
 - Błędy jednostek (KREA, WBC)
     - WBC: 3 rekordy >100 G/l
