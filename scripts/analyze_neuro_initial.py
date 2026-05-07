@@ -2,7 +2,7 @@ import csv, re, os
 from collections import Counter
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-path = 'datasets/cleaned/neuro_cleaning.csv'
+path = '../datasets/cleaned/neuro_cleaning.csv'
 rows = []
 with open(path, encoding='utf-8-sig') as f:
     for row in csv.DictReader(f):
