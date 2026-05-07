@@ -10,18 +10,12 @@ df_numeric = kor.select_dtypes(include=[np.number])
 if 'patient_id' in df_numeric.columns:
     df_numeric = df_numeric.drop(columns=['patient_id'])
 
-threshold = 0.7 * len(df_numeric)
+threshold = 0.8 * len(df_numeric)
 best_cols = df_numeric.columns[df_numeric.count() > threshold]
 df_clean = df_numeric[best_cols].dropna()
 
-if len(df_clean) > 1000:
-    df_clean = df_clean.iloc[:1000]
-
 scaler = MinMaxScaler()
 df_clean_scaled = pd.DataFrame(scaler.fit_transform(df_clean), columns=df_clean.columns)
-
-print(f"Wybrane kolumny ({len(best_cols)}): {list(best_cols)}")
-print(f"Rozmiar czystego datasetu: {df_clean_scaled.shape}")
 
 np.random.seed(42)
 df_masked = df_clean_scaled.copy()
@@ -49,5 +43,5 @@ df_res = pd.DataFrame(results)
 best_row = df_res.loc[df_res['RMSE'].idxmin()]
 
 print("-" * 30)
-print(f"NAJLEPSZY IMPUTER KNN z K={int(best_row['K'])}")
+print(f"Imputer KNN najlepszy z K={int(best_row['K'])}")
 print(f"Ostateczne RMSE: {best_row['RMSE']:.4f}")
