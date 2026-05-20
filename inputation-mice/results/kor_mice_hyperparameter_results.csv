@@ -1,0 +1,11 @@
+Estymator,max_iter,RMSE,MAE
+ExtraTrees(n=10),10,0.034773,0.012833
+ExtraTrees(n=10),50,0.034857,0.012832
+ExtraTrees(n=10),20,0.035032,0.012925
+ExtraTrees(n=10),5,0.035164,0.012997
+ExtraTrees(n=10),30,0.036178,0.013021
+BayesianRidge,5,0.040623,0.015832
+BayesianRidge,10,0.040711,0.015784
+BayesianRidge,50,0.040742,0.015784
+BayesianRidge,30,0.040757,0.015776
+BayesianRidge,20,0.040769,0.015778
