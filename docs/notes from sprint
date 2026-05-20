@@ -1,0 +1,27 @@
+
+- petla po wsyztskich paramatrach kor 
+['MCH', 'HGB', 'MCV', 'RBC', 'MCHC', 'PLT',
+'HCT', 'WBC', 'RDW', '%BAZO', 'BAZO', 'EO',
+'%EO', 'LYMPH', '%LYMPH', '%MONO', 'MONO',
+'MPV', 'KREA', 'Na', 'K', '%IG', 'IG', 'eGFR-MDRD',
+'eGFRCKD', 'NEUT', '%NEUT', '%NRBC', 'NRBC', 'WPT',
+'GLU', 'INR', 'PT', 'CRP', 'WAPTT', 'APTT', 'ALT', 'P-LCR']
+
+- petla po wszystkich NEURO
+['MCH', 'HGB', 'MCV', 'RBC', 'MCHC', 'PLT', 'HCT', 'WBC', 
+'RDW', '%BAZO', 'BAZO', 'EO', '%EO', 'LYMPH', '%LYMPH', '%MONO', 'MONO',
+'MPV', 'KREA', 'Na', 'K', '%IG', 'IG', 'eGFR-MDRD', 'eGFRCKD', 'NEUT', '%NEUT',
+'%NRBC', 'NRBC', 'CRP']
+
+
+
+
+
+DONE:
+- oczyscic patient_sex, usunac diagnosis_id
+- oczyścić patient_age 18 - 100
+- usunąć dane, które mają więcej niż 60% braków (kolumny)
+  -> tylko czy musimy zachować jednakowy wymiar (liczbę kolumn) ??
+  -> czy robimy tak też dla pacjentów (wiersze) ??
+- usunac nadmiarowych pacjentów 11 i 38 - na timeline
+- recznie wyczyścić outliers
