@@ -1,0 +1,54 @@
+# MAPOWANIE values_cols -> examination_type
+
+MCH        -> Morfologia
+HGB        -> Morfologia
+MCV        -> Morfologia
+RBC        -> Morfologia
+MCHC       -> Morfologia
+PLT        -> Morfologia
+HCT        -> Morfologia
+WBC        -> Morfologia
+RDW        -> Morfologia
+
+%BAZO      -> Morfologia z rozmazem
+BAZO       -> Morfologia z rozmazem
+EO         -> Morfologia z rozmazem
+%EO        -> Morfologia z rozmazem
+LYMPH      -> Morfologia z rozmazem
+%LYMPH     -> Morfologia z rozmazem
+%MONO      -> Morfologia z rozmazem
+MONO       -> Morfologia z rozmazem
+NEUT       -> Morfologia z rozmazem
+%NEUT      -> Morfologia z rozmazem
+%IG        -> Morfologia z rozmazem
+IG         -> Morfologia z rozmazem
+%NRBC      -> Morfologia z rozmazem
+NRBC       -> Morfologia z rozmazem
+
+MPV        -> Morfologia
+P-LCR      -> Morfologia
+
+HCT        -> Morfologia
+HGB        -> Morfologia
+
+WPT        -> (brak jednoznacznego odpowiednika — możliwe: Wskaźnik protrombinowy / Koagulologia)
+
+GLU        -> Glukoza
+CRP        -> Białko C-reaktywne
+
+KREA       -> Kreatynina we krwi
+eGFR-MDRD  -> Wskaźnik filtracji kłębuszkowej (wg MDRD)
+eGFRCKD    -> Wskaźnik filtracji kłębuszkowej (wg CKD-EPI)
+
+Na         -> Sód
+K          -> Potas
+
+ALT        -> Transaminaza alaninowa
+AST        -> Transaminaza asparaginianowa
+
+BUN        -> Azot mocznika we krwi
+
+INR        -> INR
+PT         -> Czas protrombinowy
+APTT       -> Współczynnik APTT
+WAPTT      -> Czas częściowej tromboplastyny po aktywacji
