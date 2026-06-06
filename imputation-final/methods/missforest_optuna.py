@@ -54,25 +54,30 @@ def optimize_and_impute(
     """
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
+    # Pełna zamaskowana macierz do finalnej imputacji (oryginalna maska)
     df_masked_full = apply_mask(df_scaled, mask)
+
+    # Osobna maska do trialu Optuna — unikamy leakage parametrów
+    from evaluate import create_mask
+    mask_val_full = create_mask(df_scaled, frac=mask.mean(), seed=seed + 1)
 
     # Podzbiór do szybkiej walidacji w trialu Optuna
     if val_rows and len(df_scaled) > val_rows:
         rng = np.random.default_rng(seed)
         idx = rng.choice(len(df_scaled), size=val_rows, replace=False)
         df_val = df_scaled.iloc[idx].reset_index(drop=True)
-        mask_val = mask[idx]
+        mask_val = mask_val_full[idx]
     else:
         df_val = df_scaled
-        mask_val = mask
+        mask_val = mask_val_full
 
     df_val_masked = apply_mask(df_val, mask_val)
     orig_val = df_val.values
 
     def objective(trial: optuna.Trial) -> float:
-        n_estimators = trial.suggest_int("n_estimators", 10, 150)
-        max_depth    = trial.suggest_int("max_depth",    5,  25)
-        max_iter     = trial.suggest_int("max_iter",     3,  8)
+        n_estimators = trial.suggest_int("n_estimators", 10, 300)
+        max_depth    = trial.suggest_int("max_depth",    3,  15)
+        max_iter     = trial.suggest_int("max_iter",     3,  15)
 
         imputer = _build_imputer(n_estimators, max_depth, max_iter, seed)
         with warnings.catch_warnings():

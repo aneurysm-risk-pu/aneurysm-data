@@ -1,0 +1,16 @@
+{
+  "KNN": {
+    "n_neighbors": 16,
+    "weights": "distance"
+  },
+  "MICE": {
+    "estimator_type": "ExtraTrees",
+    "max_iter": 16,
+    "n_estimators": 96
+  },
+  "MissForest": {
+    "n_estimators": 93,
+    "max_depth": 15,
+    "max_iter": 7
+  }
+}
