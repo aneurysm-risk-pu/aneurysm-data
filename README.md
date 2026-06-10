@@ -17,13 +17,3 @@ Morfologia (HGB, RBC, WBC, PLT, MCV, MCH, MCHC, HCT, RDW), biochemia (KREA, BUN,
 
 Dla każdego parametru: wartość + flaga normy (`-1` / `0` / `1`).
 
-## TODO 
-
-- Zapoznać się z danymi - spotkanie 09.04
-- Zwerfikować dane pod względem poprawności (niepoprawny wiek itd.) - spotkanie 09.04
-- Obsłużyć braki danych - spotkanie 09.04
-
-
-
-
--  **część pacjentów z NEURO pojawia się również w KOR** - co zrobić? - @kjubig
