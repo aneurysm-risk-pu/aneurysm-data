@@ -1,0 +1,18 @@
+NOTATKI ZE SPOTKANIA SPRINT 07.05.2026
+
+**1. Tworzymy Basic cleaned dataset**
+    - Możemy mieć dzieci (osoby nieletnie) - nie ma zgody na badanie na dzieciach !!! 
+    - Usunąć osoby poniżej 18 lat -> wyczyścić wiek 18-100 
+    - Wyczyścić patient_sex 
+    - Usunąć dane, które mają więcej niż 60% braków - *dataset do uzupełnienia*
+    - Usunięcie percentylowe nadmiarowych pacjentów -> Uciac dane 11 i 38 
+    - Do wywalenia outliers - usuwać ręcznie 
+    - Uzupełnić braki danych - najlepszą wybraną metodą 
+    - Sprawdzamy testy statystyczne i rozkłady 
+        - Zmienna może być jako predyktor lub niepredyktor (czy będziemy ją wykorzystywać dalej czy nie )
+ 
+
+**2. Tworzymy *dataset do uzupełnienia - czysty dataset bez braków danych* **
+    - Na tym sprawdzamy metody uupełniania braków danych 
+    - Losowo usuwamy wartości i sprawdzamy imputery 
+    - RMSE, MSE sprawdza jak działają konkretne metody 
