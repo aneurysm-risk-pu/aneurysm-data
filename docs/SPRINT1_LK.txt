@@ -1,0 +1,38 @@
+# Ogóle
+
+- czy na pewno w neuro rekord pacjenta kończy się na diagnozie
+- dzielimi dane train/test - jak? (Podział na poziomie patient_id)
+
+# Dane
+
+- 358 pacjentów powtarzających się
+- wiek 222 lata
+
+- Błędy jednostek (KREA, WBC)
+    - WBC: 3 rekordy >100 G/l
+    - KREA: wartości >20 mg/dl (prawdopodobnie µmol/l, przelicznik /88.4)
+    - PLT = 0 (pacjent 1746102, 2 rekordy)
+    - Na <100 i K >9 - biologicznie niemożliwe wartości
+
+- 1 duplikat custom_id '194143-2017-W52'
+
+- testów statystycznych porównujących rozkłady P vs U (jakie metody) (przed imputacją)
+    - Mann-Whitney U, Kolmogorov-Smirnov, t-test Welcha
+
+- co z robić z kolumnami {'values': [...]} 
+- ujednolicić płeć? (KOR: "0.0"/"1.0" vs NEURO: "0"/"1") 
+
+
+# Imputacja (po podziale train/test)!
+
+- KNN - kto?
+- MICE - kto?
+- mediana/średnia (raczej nie)
+- co jeszcze?
+
+
+
+# Pytania do Was/prowadzącego
+
+- metryka Kullbacka/Cosine similarity do analizy imputacji
+- agregacja dwutygodniowa (zamiast tygodniowej) — czy warto rozważyć?
