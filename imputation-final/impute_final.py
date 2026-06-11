@@ -38,6 +38,10 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 INPUT_CSV  = BASE_DIR / "aneurysm_concatted.csv"
 OUTPUT_CSV = RESULTS_DIR / "aneurysm_imputed_final.csv"
 
+# Aby zaimputować inny plik, zmień INPUT_CSV i OUTPUT_CSV, np.:
+# INPUT_CSV  = BASE_DIR / "aneurysm_concatted_cleaned.csv"
+# OUTPUT_CSV = RESULTS_DIR / "aneurysm_imputed_cleaned.csv"
+
 META_COLS    = ["patient_id", "custom_id", "examination_date", "label"]
 FINAL_PARAMS = dict(max_iter=7, n_estimators=78, max_depth=10)
 

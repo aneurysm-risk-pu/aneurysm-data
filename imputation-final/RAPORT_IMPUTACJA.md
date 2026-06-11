@@ -294,6 +294,37 @@ Najlepsze hiperparametry:
 
 ---
 
+### 4.7 Benchmark MICE na zbiorze po analizie korelacji (35 cech) ✅ (2026-06-10)
+
+Koleżanka dostarczyła `aneurysm_concatted_cleaned.csv` — zbiór po usunięciu skorelowanych cech.
+
+**Usunięte cechy (analiza korelacji):** `CRP`, `MONO`, `%MONO` (38 → 35 cech)
+
+**Benchmark z maskowanie 10%** (`benchmark_cleaned.py`, params bez zmian: `max_iter=7, n_est=78, max_depth=10`):
+
+| Zbiór | Complete cases | RMSE (35 cech) | RMSE (38 cech) | Δ | MAE | KL | Ujemne |
+|---|---|---|---|---|---|---|---|
+| KOR | 21 961 | 0.0904 | 0.0861 | **+0.0043** | 0.0327 | 0.00399 | 0 |
+| NEURO | 1 131 | 0.0976 | 0.0984 | -0.0008 | 0.0413 | 0.01106 | 0 |
+
+> KOR: wzrost RMSE o +0.0043 po usunięciu `CRP` — marker zapalny był użytecznym predyktorem w MICE dla dużego zbioru. NEURO: różnica w granicach szumu (±0.001). Parametry `max_iter=7, n_est=78` działają poprawnie na 35 cechach bez re-optymalizacji.
+
+**Imputacja pełna** (`impute_final.py` na `aneurysm_concatted_cleaned.csv`):
+
+| | Wartość |
+|---|---|
+| Wejście | `aneurysm_concatted_cleaned.csv` (78 197 wierszy, 35 cech) |
+| Brakujące wartości wejście | 377 236 / 2 736 895 (13.8%) |
+| Kompletne wiersze (referencja scalera) | 23 092 |
+| NaN po imputacji | **0** |
+| Wartości < 0 | **0** |
+| Czas | 23.4 min |
+| Wyjście | `results/aneurysm_imputed_cleaned.csv` |
+
+> **Ten plik jest właściwym wejściem do pipeline PU learning** — zawiera finalny zestaw 35 cech po analizie korelacji.
+
+---
+
 ## 5. Wnioski
 
 **KNN wyraźnie odstaje** od obu metod opartych na drzewach we wszystkich metrykach i obu zbiorach — odpada.
@@ -333,4 +364,6 @@ Najlepsze hiperparametry:
 - [x] **Wybór finalnych params** ✅ → `max_iter=7, n_estimators=78` (params KOR) **dla obu zbiorów** — identyczne RMSE, 7× szybsze na NEURO
 - [x] **Imputacja pełnego zbioru** ✅ → `results/aneurysm_imputed_final.csv` (78 197 wierszy, 0 NaN, 0 ujemnych, 26 min)
 - [x] **Walidacja statystyczna** ✅ → KS test + korelacje + statystyki opisowe (patrz sekcja 4.6)
+- [x] **Benchmark na zbiorze po korelacji (35 cech)** ✅ → KOR RMSE=0.090, NEURO RMSE=0.098 — params bez zmian (patrz sekcja 4.7)
+- [x] **Imputacja finalnego zbioru PU** ✅ → `results/aneurysm_imputed_cleaned.csv` (35 cech, 0 NaN)
 - [ ] Przekazanie imputowanego zbioru do pipeline PU learning
