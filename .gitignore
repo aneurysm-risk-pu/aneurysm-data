@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+report-docs/
+
+# Duże pliki wynikowe (>10 MB) — nie wrzucamy do repo
+imputation-final/results/aneurysm_imputed_final.csv
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

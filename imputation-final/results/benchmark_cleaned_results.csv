@@ -1,0 +1,3 @@
+dataset,n_complete,n_feat,rmse,mae,kl,neg_values,elapsed_s
+kor,21961,35,0.0904,0.0327,0.00399,0,327
+neuro,1131,35,0.0976,0.0413,0.01106,0,44
