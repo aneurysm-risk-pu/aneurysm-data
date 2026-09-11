@@ -29,10 +29,10 @@ from scipy import stats
 
 warnings.filterwarnings("ignore")
 
-BASE_DIR    = Path(__file__).parent.parent
+BASE_DIR    = Path(__file__).parent.parent.parent
 RESULTS_DIR = Path(__file__).parent / "results"
 
-ORIG_CSV    = BASE_DIR / "aneurysm_concatted.csv"
+ORIG_CSV    = BASE_DIR / "data" / "imputation-inputs" / "aneurysm_concatted.csv"
 IMPUTED_CSV = RESULTS_DIR / "aneurysm_imputed_final.csv"
 
 META_COLS = ["patient_id", "custom_id", "examination_date", "label"]

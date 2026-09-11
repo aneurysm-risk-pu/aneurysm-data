@@ -27,8 +27,8 @@ def calculate_kl_divergence(actual, predicted, bins=30):
 # -----------------------------------------
 
 pliki_medyczne = {
-    'KOR': '../datasets/cleaned/kor_shortend.csv',
-    'NEURO': '../datasets/cleaned/neuro_shortend.csv'
+    'KOR': '../../data/interim/cleaned/kor_shortend.csv',
+    'NEURO': '../../data/interim/cleaned/neuro_shortend.csv'
 }
 
 plik_raportu = 'raport_missforest.md'

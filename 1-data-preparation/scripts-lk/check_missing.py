@@ -7,7 +7,7 @@ import os
 import pandas as pd
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-path = "datasets/cleaned/neuro_cleaning.csv"
+path = "data/interim/cleaned/neuro_cleaning.csv"
 
 df = pd.read_csv(path, low_memory=False)
 print(f"Zaladowano: {df.shape[0]} wierszy x {df.shape[1]} kolumn\n")

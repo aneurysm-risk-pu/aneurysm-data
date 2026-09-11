@@ -18,18 +18,18 @@ import pandas as pd
 from pathlib import Path
 
 # ── sciezki ──────────────────────────────────────────────────────────────────
-BASE     = Path(__file__).parent.parent
+BASE     = Path(__file__).parent.parent.parent
 RESULTS  = Path(__file__).parent / "results"
 
 DATASETS = [
     {
         "name":     "NEURO",
-        "original": BASE / "neuro_shortend.csv",
+        "original": BASE / "data" / "imputation-inputs" / "neuro_shortend.csv",
         "imputed":  RESULTS / "neuro_mice_best_imputed.csv",
     },
     {
         "name":     "KOR",
-        "original": BASE / "kor_shortend.csv",
+        "original": BASE / "data" / "imputation-inputs" / "kor_shortend.csv",
         "imputed":  RESULTS / "kor_mice_best_imputed.csv",
     },
 ]

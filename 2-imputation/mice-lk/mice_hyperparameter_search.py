@@ -31,10 +31,10 @@ import seaborn as sns
 
 # --- SCIEZKI ------------------------------------------------------------------
 
-BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUTPUT_DIR = os.path.join(BASE_DIR, "inputation-mice", "results")
-NEURO_FILE = os.path.join(BASE_DIR, "neuro_shortend.csv")
-KOR_FILE   = os.path.join(BASE_DIR, "kor_shortend.csv")
+BASE_DIR   = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
+NEURO_FILE = os.path.join(BASE_DIR, "data", "imputation-inputs", "neuro_shortend.csv")
+KOR_FILE   = os.path.join(BASE_DIR, "data", "imputation-inputs", "kor_shortend.csv")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # --- KONFIGURACJA ------------------------------------------------------------

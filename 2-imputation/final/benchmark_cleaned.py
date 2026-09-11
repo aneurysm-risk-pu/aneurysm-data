@@ -31,11 +31,11 @@ from evaluate import create_mask, apply_mask, compute_rmse, compute_mae, evaluat
 
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
-BASE_DIR    = Path(__file__).parent.parent
+BASE_DIR    = Path(__file__).parent.parent.parent
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-INPUT_CSV   = BASE_DIR / "aneurysm_concatted_cleaned.csv"
+INPUT_CSV   = BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv"
 OUTPUT_CSV  = RESULTS_DIR / "benchmark_cleaned_results.csv"
 
 META_COLS    = ["patient_id", "custom_id", "examination_date", "label"]

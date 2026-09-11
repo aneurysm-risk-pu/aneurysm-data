@@ -1,7 +1,7 @@
 import csv, os
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-path = 'datasets/cleaned/neuro_cleaning.csv'
+path = 'data/interim/cleaned/neuro_cleaning.csv'
 
 # Checker 
 # (parametr, min_ok,  max_ok,  opis_anomalii)

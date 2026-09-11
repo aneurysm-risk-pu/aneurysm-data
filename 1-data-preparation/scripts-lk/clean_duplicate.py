@@ -7,7 +7,7 @@ Nadpisuje plik w miejscu.
 import os
 import pandas as pd
 
-TARGET = "datasets/cleaned/neuro_cleaning.csv"
+TARGET = "data/interim/cleaned/neuro_cleaning.csv"
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 

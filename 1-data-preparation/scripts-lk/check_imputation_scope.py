@@ -10,7 +10,7 @@ import pandas as pd
 sys.stdout.reconfigure(encoding='utf-8')
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-df = pd.read_csv("datasets/cleaned/neuro_cleaning.csv", low_memory=False)
+df = pd.read_csv("data/interim/cleaned/neuro_cleaning.csv", low_memory=False)
 n = len(df)
 
 # Parametry medyczne — wartości surowe do imputacji

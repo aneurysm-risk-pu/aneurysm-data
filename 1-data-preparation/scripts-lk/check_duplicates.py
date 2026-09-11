@@ -1,7 +1,7 @@
 import pandas as pd
 
-kor   = pd.read_csv(r"c:\Users\kjub2\Desktop\PU DATASET\kor_shortend.csv")
-neuro = pd.read_csv(r"c:\Users\kjub2\Desktop\PU DATASET\neuro_shortend.csv")
+kor   = pd.read_csv("../../data/interim/kor_shortend.csv")
+neuro = pd.read_csv("../../data/interim/neuro_shortend.csv")
 
 # --- patient_id duplicates between datasets ---
 common_ids = set(kor["patient_id"]) & set(neuro["patient_id"])

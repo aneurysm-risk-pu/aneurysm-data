@@ -10,7 +10,7 @@ import os
 import numpy as np
 import pandas as pd
 
-TARGET = "datasets/cleaned/neuro_cleaning.csv"
+TARGET = "data/interim/cleaned/neuro_cleaning.csv"
 
 # Kolumny czysto tekstowe — do usunięcia
 DROP_COLS = ["examination_type", "descriptive_result"]

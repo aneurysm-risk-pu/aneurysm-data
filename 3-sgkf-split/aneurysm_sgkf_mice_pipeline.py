@@ -33,8 +33,8 @@ warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 # Konfiguracja
 # ---------------------------------------------------------------------------
 
-BASE_DIR   = Path(__file__).parent
-INPUT_CSV  = BASE_DIR / "aneurysm_concatted_cleaned.csv"
+BASE_DIR   = Path(__file__).parent.parent   # katalog glowny repo
+INPUT_CSV  = BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv"
 
 META_COLS    = ["patient_id", "custom_id", "examination_date", "label"]
 TARGET_COL   = "label"

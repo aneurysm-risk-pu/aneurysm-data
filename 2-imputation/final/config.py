@@ -3,12 +3,12 @@ Wspólna konfiguracja — imputation-final
 """
 from pathlib import Path
 
-BASE_DIR    = Path(__file__).parent.parent   # c:\...\PU DATASET
+BASE_DIR    = Path(__file__).parent.parent.parent   # katalog glowny repo
 RESULTS_DIR = Path(__file__).parent / "results"
 
 DATASETS = {
-    "kor":   BASE_DIR / "kor_shortend.csv",
-    "neuro": BASE_DIR / "neuro_shortend.csv",
+    "kor":   BASE_DIR / "data" / "imputation-inputs" / "kor_shortend.csv",
+    "neuro": BASE_DIR / "data" / "imputation-inputs" / "neuro_shortend.csv",
 }
 
 # Kolumny identyfikatorów / dat do usunięcia przed imputacją
