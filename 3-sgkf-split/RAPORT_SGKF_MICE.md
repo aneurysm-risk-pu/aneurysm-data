@@ -44,7 +44,7 @@ Gdyby imputacja była wykonana **przed** podziałem (na całym zbiorze), statyst
 
 ## 3. Parametry MICE
 
-Parametry finalne z `imputation-final/RAPORT_IMPUTACJA.md` (przebieg 4 + walidacja cross-param):
+Parametry finalne z `2-imputation/RAPORT_IMPUTACJA.md` (przebieg 4 + walidacja cross-param):
 
 | Parametr | Wartość |
 |---|---|

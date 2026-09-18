@@ -5,7 +5,7 @@
 **Zakres:** etap 0 oraz punkty 1–5 — wszystko, co musi być gotowe, zanim wytrenujemy pierwszy model
 **Data:** 11.09.2026
 
-Trening modeli zaczyna się dopiero w `PLAN_MODELOWANIE_PU.md` (punkty 6–9).
+Trening modeli zaczyna się dopiero w `03_PLAN_MODELOWANIE.md` (punkty 6–9).
 
 ---
 
@@ -30,13 +30,13 @@ Cały dalszy protokół jest podporządkowany temu rozróżnieniu.
 | 3 | Modelowanie Positive-Unlabeled | etap 0 i punkty 1–5 to przygotowanie (ten dokument), punkty 6–9 to trening i wnioski (osobny dokument) |
 | 4 | Raport końcowy | przed nami |
 
-W całym planie pierwszym momentem, w którym cokolwiek się faktycznie uczy, jest punkt 6. Wszystko wcześniej to rozstrzygnięcia protokołu, infrastruktura i definicje metryk.
+Pierwszy model przypisujący risk score powstaje w punkcie 6. Wcześniej dopasowywane są już elementy preprocessingu, przede wszystkim scaler i imputer, dlatego również one muszą respektować granice foldów.
 
 ---
 
 ## Stan wyjściowy — zweryfikowany
 
-Liczby przeliczone bezpośrednio na `aneurysm_concatted_cleaned.csv`:
+Liczby przeliczone bezpośrednio na `data/processed/aneurysm_concatted_cleaned.csv`:
 
 | Co | Wartość |
 |---|---|
@@ -56,11 +56,13 @@ Liczby przeliczone bezpośrednio na `aneurysm_concatted_cleaned.csv`:
 
 ## Co wyszło przy weryfikacji istniejącego kodu
 
-**1. Brak tasowania w podziale.** W `aneurysm_sgkf_mice_pipeline.py` (linia 137) podział powstaje jako `StratifiedGroupKFold(n_splits=N_SPLITS)`, a sygnatura w sklearn 1.8.0 to `(n_splits=5, shuffle=False, random_state=None)`. Domyślnie **nie ma tasowania**, więc podział zależy wyłącznie od kolejności wierszy w CSV, a stała `RANDOM_STATE = 42` nie wpływa na foldy — działa tylko wewnątrz MICE.
+**1. Brak tasowania w podziale.** W `3-sgkf-split/aneurysm_sgkf_mice_pipeline.py` podział powstaje jako `StratifiedGroupKFold(n_splits=N_SPLITS)`, a sygnatura w sklearn 1.8.0 to `(n_splits=5, shuffle=False, random_state=None)`. Domyślnie **nie ma tasowania**, więc podział zależy wyłącznie od kolejności wierszy w CSV, a stała `RANDOM_STATE = 42` nie wpływa na foldy — działa tylko wewnątrz MICE.
 
-**2. Źródło danych jest poprawne — i tak musi zostać.** Pipeline czyta `aneurysm_concatted_cleaned.csv`, czyli zbiór **przed** imputacją, i imputuje wewnątrz foldów. W repo leży też `imputation-final/results/aneurysm_imputed_cleaned.csv` — zbiór zaimputowany globalnie, przed podziałem. Tego pliku **nie wolno** użyć do walidacji modeli, bo statystyki ze zbioru walidacyjnego weszły tam do uzupełniania braków treningowych. Warto to zapisać wprost, bo plik jest kuszący i gotowy.
+**2. Źródło danych jest poprawne — i tak musi zostać.** Pipeline czyta `data/processed/aneurysm_concatted_cleaned.csv`, czyli zbiór **przed** imputacją, i imputuje wewnątrz foldów. W repo leży też `2-imputation/final/results/aneurysm_imputed_cleaned.csv` — zbiór zaimputowany globalnie, przed podziałem. Tego pliku **nie wolno** użyć do walidacji modeli, bo statystyki ze zbioru walidacyjnego weszły tam do uzupełniania braków treningowych.
 
-**3. Selekcja cech była robiona z użyciem etykiety na całym zbiorze.** CRP, MONO i %MONO usunięto na podstawie korelacji ze zmienną `label` liczonej na skonsolidowanym zbiorze. Formalnie jest to selekcja cech wykorzystująca etykietę i dane, które później trafiają do walidacji. Praktyczny wpływ jest prawdopodobnie znikomy — odrzuciliśmy cechy o korelacji bliskiej zeru, czyli szum, a nie najsilniejsze predyktory — ale trzeba to jawnie opisać w ograniczeniach raportu, a nie przemilczeć.
+**3. Selekcja cech była robiona z użyciem etykiety na całym zbiorze.** CRP, MONO i %MONO usunięto na podstawie korelacji ze zmienną `label` liczonej na skonsolidowanym zbiorze. Formalnie jest to selekcja cech wykorzystująca etykietę i dane, które później trafiają do walidacji. Nie można z góry uznać wpływu za znikomy: dodatkowo etykieta odróżnia kohorty P i U, a nie potwierdzonych chorych i zdrowych. W analizie potwierdzającej należy użyć wszystkich 38 uprzednio ustalonych cech albo wykonywać selekcję wyłącznie wewnątrz foldów; samo opisanie ograniczenia jest słabszym wariantem.
+
+**4. Kohorty są silnie rozdzielone w czasie.** Diagnostyka z `4-pu-setup/etap0_diagnostyka.py` pokazała, że 99,5% rekordów KOR pochodzi z lat 2020–2021, natomiast NEURO obejmuje lata 2000–2024. Tylko 680 z 6 651 rekordów NEURO mieści się w dokładnym oknie dat KOR. Porównanie grup NEURO z różnych okresów wskazuje na możliwy efekt kalendarza, laboratorium lub składu pacjentów, ale nie izoluje „czystego efektu epoki”.
 
 ---
 
@@ -68,17 +70,23 @@ Liczby przeliczone bezpośrednio na `aneurysm_concatted_cleaned.csv`:
 
 To nie jest praca programistyczna, tylko decyzje protokołu. Bez nich każdy dalszy wynik będzie niejednoznaczny.
 
-**0.1. Rozstrzygnąć 63 pacjentów występujących jednocześnie w KOR i NEURO.** Skoro grupujemy po `patient_id`, jeden pacjent nie może być naraz pozytywny i nieoznaczony. Do wyboru: uznać ich w całości za pozytywnych, usunąć z analizy albo potraktować osobno. Decyzja musi być świadoma i opisana.
+**0.1. Rozstrzygnąć 63 pacjentów występujących jednocześnie w KOR i NEURO.** Skoro grupujemy po `patient_id`, jeden pacjent nie może być naraz pozytywny i nieoznaczony. U 55 osób wszystkie rekordy KOR poprzedzają rekordy NEURO, ale oznacza to tylko zmianę kohorty źródłowej, nie potwierdzoną datę diagnozy. Do wyboru: nadać pacjentowi status pozytywny z osobną flagą pochodzenia rekordu, usunąć przypadki niejednoznaczne albo przeanalizować je osobno. Decyzja musi być świadoma i opisana.
 
-**0.2. Ustalić chronologię diagnozy.** Mamy `examination_date` (format `YYYY-MM-DD`, zero braków), ale nie mamy daty rozpoznania tętniaka. Trzeba ustalić, czy pomiary NEURO pochodzą sprzed diagnozy, czy z okresu po niej — a jeśli po, to model może uczyć się skutków leczenia i hospitalizacji zamiast ryzyka. To jest największe potencjalne źródło przekłamania w całym projekcie.
+**0.2. Rozstrzygnąć czas i pochodzenie kohort.** Mamy `examination_date` (format `YYYY-MM-DD`, zero braków), ale nie mamy daty rozpoznania tętniaka. Trzeba równolegle:
 
-**0.3. Zdefiniować agregację rekordów do pacjenta.** Skoro metryki liczymy na pacjentach (punkt 4), musimy z wielu wyników jednego pacjenta zrobić jeden. Kandydaci: średnia, mediana, maksimum albo ostatni pomiar przed diagnozą. Przy medianie 1 rekordu i maksimum 38 wybór realnie zmienia wynik dla najczęściej badanych pacjentów.
+- ustalić, czy pomiary NEURO pochodzą sprzed diagnozy, z jej okresu czy po leczeniu,
+- ograniczyć confounding kalendarzowy i źródłowy przez dopasowanie kohort lub restrykcję do wspólnego okna; dodanie roku jako zwykłej cechy nie rozwiązuje problemu i może ułatwić modelowi rozpoznawanie źródła,
+- zaplanować analizę wrażliwości w oknie wspólnym, pamiętając, że pozostaje wtedy tylko 271 pacjentów NEURO.
 
-**0.4. Sprawdzić selekcję cech pod kątem wycieku.** Zweryfikować, czy usunięcie CRP, MONO i %MONO dało się zrobić bez użycia etykiety, i zdecydować: albo powtarzamy selekcję wewnątrz foldów, albo zostawiamy jak jest i opisujemy jako ograniczenie.
+To jest największe potencjalne źródło przekłamania w całym projekcie i wymaga konsultacji z opiekunem lub właścicielem danych.
 
-**0.5. Analiza wrażliwości dla wartości skrajnych.** Sprawdzić WBC, Na, K i KREA — czy ekstremalne wartości to stany kliniczne, czy błędy wpisu, i jak ich obecność wpływa na ranking pacjentów.
+**0.3. Zdefiniować jednostkę treningu i agregację predykcji do pacjenta.** Trzeba rozstrzygnąć, czy model dostaje jeden zagregowany profil pacjenta, czy rekordy tygodniowe. W drugim wariancie częściej badani pacjenci nie mogą automatycznie ważyć więcej w funkcji straty; należy zastosować wagi odwrotne do liczby rekordów pacjenta. Niezależnie od jednostki treningu końcowy risk score i wszystkie główne metryki muszą być pacjentowe. Kandydaci dla agregacji wyników to mediana lub maksimum; „ostatni pomiar przed diagnozą” jest możliwy dopiero po uzyskaniu wiarygodnej daty diagnozy.
 
-**0.6. Domknąć konfigurację podziału.** Włączyć realnie działające `shuffle` i `random_state`, sprawdzić na siatce kilku ziaren i kilku wartości `n_splits`, czy rozmiary foldów i proporcje klas są powtarzalne — również w scenariuszu z częścią pozytywnych już ukrytych, bo to dodatkowo zmniejsza widoczną klasę pozytywną. Efektem jedna udokumentowana decyzja.
+**0.4. Poprawić selekcję cech pod kątem wycieku.** Usunięcie CRP, MONO i %MONO wykorzystywało etykietę na całym zbiorze. W analizie głównej trzeba albo wrócić do 38 cech bez tej selekcji, albo wykonywać selekcję wyłącznie wewnątrz foldów. Pozostawienie 35 cech można pokazać jako wcześniej ustalony wariant w analizie wrażliwości, ale samo opisanie leakage nie wystarcza dla analizy potwierdzającej. Wariant 38 cech nie wymaga pracy przy danych: plik `data/imputation-inputs/aneurysm_concatted.csv` (78 197 × 42) po usunięciu CRP, MONO i %MONO jest co do wartości identyczny z `data/processed/aneurysm_concatted_cleaned.csv`, więc różni się od niego wyłącznie tymi trzema kolumnami.
+
+**0.5. Analiza wrażliwości dla wartości skrajnych i jednostek.** Sprawdzić WBC, Na, K i KREA — czy ekstremalne wartości to stany kliniczne, błędy wpisu albo mieszane jednostki. W szczególności KREA trzeba połączyć z informacją o jednostce z danych źródłowych; automatyczne dzielenie wartości powyżej arbitralnego progu byłoby niewystarczające. Następnie porównać ranking pacjentów przed i po uzgodnionej korekcie.
+
+**0.6. Domknąć konfigurację podziału.** Najpierw utworzyć jedną etykietę pacjentową po decyzji 0.1, potem włączyć realnie działające `shuffle` i `random_state`. Sprawdzić na siatce kilku ziaren i kilku wartości `n_splits` rozmiary foldów, proporcje etykiety pacjentowej oraz rozkład lat. Foldy zamrozić przed maskami ukrywania; do stratyfikacji można użyć prawdziwego statusu znanych pozytywnych wyłącznie jako elementu konstrukcji benchmarku, ale model nie może go później zobaczyć.
 
 ---
 
@@ -90,9 +98,10 @@ Kolejność split → scaler → MICE na train → transform na walidacji jest p
 
 - włączyć `shuffle=True` i `random_state` zgodnie z decyzją z 0.6,
 - **zapisać przypisanie pacjentów do foldów** jako osobną tabelę (`patient_id → fold`) — to artefakt, który potem trzeba dołączyć do raportu,
-- wystawić pipeline jako importowalną funkcję i zapisać gotowe foldy na dysk (imputacja całości trwa ok. 23 minut, nie ma sensu jej powtarzać),
-- rozszerzyć asercje: brak wspólnych pacjentów, brak NaN, **brak wartości nieskończonych**, **brak wartości poza dozwolonym zakresem**, brak wartości ujemnych,
-- trzymać się `aneurysm_concatted_cleaned.csv` jako jedynego wejścia.
+- wystawić pipeline jako importowalną funkcję i cache'ować osobno przekształcenia outer oraz inner foldów; outer-train zaimputowany przed inner CV nie może zastąpić preprocessingu inner foldów,
+- rozszerzyć asercje: brak wspólnych pacjentów, brak NaN i wartości nieskończonych oraz kontrola dziedzin klinicznych. Wartości obserwowane mogą wyjść poza zakres min–max treningu, więc nie wolno odrzucać całego foldu tylko dlatego, że po skalowaniu leżą poza [0,1],
+- rozważyć dopasowanie `MinMaxScaler` kolumnowo na wszystkich dostępnych wartościach train, zamiast wyłącznie na kompletnych wierszach; obecny wariant zachowuje zgodność z benchmarkiem, ale opiera skalę na selektywnej podpróbie,
+- trzymać się danych **przed imputacją**; wybór wariantu 35 lub 38 cech zależy od decyzji 0.4.
 
 **Zastrzeżenie, które zmienia architekturę:** gotowych foldów zewnętrznych **nie wolno** użyć jednocześnie do strojenia w Optunie i do raportowania wyniku — to zawyża jakość. Strojenie wymaga **zagnieżdżonej walidacji**: wewnątrz każdego foldu zewnętrznego osobne inner Group CV, z preprocessingiem dopasowywanym od nowa w każdym foldzie wewnętrznym. Pipeline z tego punktu musi to umożliwiać, nie tylko produkować pięć gotowych podziałów.
 
@@ -103,9 +112,9 @@ Z grupy NEURO losujemy część pacjentów i odbieramy im widoczną etykietę. T
 Warunki, które muszą być spełnione:
 
 - losujemy **całych pacjentów**, nigdy pojedynczych rekordów; wszystkie rekordy pacjenta dostają ten sam status,
-- ukrywanie następuje **przed** rozpoczęciem walidacji krzyżowej,
+- foldy są zamrażane na poziomie pacjentów przed maskami, a maska ukrywania powstaje przed treningiem dla danego scenariusza; ukryci pacjenci w outer test nigdy nie mogą być widocznymi pozytywnymi w outer train,
 - w danych trzymamy trzy kolumny: `true_label` (prawda), `observed_label` (to, co widzi model) i `is_hidden` (flaga kontrolna),
-- testujemy **kilka udziałów ukrywania** — 20%, 40%, 60%,
+- z góry wybieramy jeden udział główny, a pozostałe traktujemy jako analizę wrażliwości — np. 40% jako scenariusz główny oraz 20% i 60% jako dodatkowe,
 - każdy udział powtarzamy na **5–10 ziarnach**, żeby wynik nie zależał od jednego losowania,
 - **dokładnie te same maski** trafiają do wszystkich modeli, inaczej porównanie jest nieuczciwe.
 
@@ -131,10 +140,10 @@ Zestaw metryk:
 | Metryka | Rola |
 |---|---|
 | Recall ukrytych pozytywnych @ top-k% pacjentów U | **główna** — ilu ukrytych chorych odzyskujemy w puli, którą realnie da się skierować na badania |
-| Precision@k liczona wyłącznie na kontrolowanych ukrytych | uzupełnienie powyższej |
+| Udział kontrolowanych ukrytych pozytywnych w top-k | uzupełnienie powyższej; nie jest estymatorem rzeczywistej precision, bo status pierwotnych KOR pozostaje nieznany |
 | Lift@k względem losowego wyboru | pokazuje, czy model jest lepszy od losowania |
-| PR-AUC | ważniejsza od ROC-AUC przy tej dysproporcji klas |
-| ROC-AUC | pomocnicza |
+| PR-AUC P-vs-U / kontrolowana PR-AUC | ważniejsza od ROC-AUC, ale wymaga wskazania użytych etykiet i puli kandydatów |
+| ROC-AUC P-vs-U / kontrolowana ROC-AUC | pomocnicza, z takim samym zastrzeżeniem |
 | Recall znanych pozytywnych | kontrola, czy nie tracimy oczywistych przypadków |
 | Odsetek pacjentów kierowanych na badanie | koszt operacyjny decyzji |
 
@@ -146,13 +155,15 @@ Dodatkowo: ROC-AUC i PR-AUC liczone z KOR jako klasą negatywną trzeba w raporc
 
 Wcześniejszy pomysł „metryki ważonej" z ręcznie dobraną karą za false positives trzeba porzucić w tej formie. Nie da się sensownie ustalić kary za FP, skoro prawdziwych FP w KOR nie potrafimy rozpoznać. Wagi mogą wynikać albo z kosztu diagnostyki, albo z dostępnej przepustowości badań — a nie z naszego przeczucia.
 
-Główna funkcja celu dla Optuny:
+Główna funkcja celu dla Optuny w kontrolowanym benchmarku:
 
 ```
 RecallHidden@q
 ```
 
 gdzie `q` to odsetek pacjentów U, których realnie dałoby się skierować na diagnostykę (np. 5% albo 10%).
+
+Pula rankingowa musi być zdefiniowana identycznie w każdym eksperymencie: obejmuje pacjentów z `observed_label=0`, a licznik odzyskania korzysta wyłącznie z ukrytych pozytywnych. Wynik nie jest estymatorem czułości w całej populacji KOR.
 
 Wariant rozszerzony, jeśli chcemy pilnować też znanych pozytywnych:
 
@@ -166,11 +177,13 @@ S(q) = α · RecallHidden@q + (1 − α) · RecallKnown
 
 ## Zamrożenie przed treningiem
 
-Zanim ruszy cokolwiek z `PLAN_MODELOWANIE_PU.md`, zamrażamy i zapisujemy do repo trzy rzeczy:
+Zanim ruszy cokolwiek z `03_PLAN_MODELOWANIE.md`, zamrażamy i zapisujemy do repo:
 
 1. **foldy** — konkretny podział pacjentów, nie sam przepis na niego,
 2. **maski ukrywania** — wszystkie udziały i wszystkie ziarna,
-3. **główne metryki wraz z `q` i `α`**.
+3. **główne metryki wraz z `q` i `α`**,
+4. **scenariusz główny** — wariant kohorty, zestaw cech i udział ukrywania; pozostałe warianty są analizami wrażliwości,
+5. **wersje środowiska i seedy**.
 
 Od tego momentu te elementy są niezmienne. Każda ich modyfikacja po zobaczeniu wyników musi być odnotowana w raporcie jako zmiana protokołu.
 
@@ -186,7 +199,7 @@ Etap 0 (decyzje protokołu: 0.1 - 0.6)
                └─> 4 (metryki na poziomie pacjenta)
                     └─> 5 (funkcja celu: RecallHidden@q, ustalone q i alfa)
                          └─> ZAMROŻENIE
-                              └─> PLAN_MODELOWANIE_PU.md
+                              └─> 03_PLAN_MODELOWANIE.md
 ```
 
 ---
@@ -196,6 +209,7 @@ Etap 0 (decyzje protokołu: 0.1 - 0.6)
 1. Zapisane decyzje z etapu 0 — zwłaszcza rozstrzygnięcie 63 pacjentów i chronologii diagnozy.
 2. Udokumentowana konfiguracja podziału (`n_splits`, `shuffle`, `random_state`) wraz z danymi, na podstawie których ją wybraliśmy.
 3. Pipeline foldów jako importowalna funkcja, obsługujący walidację zagnieżdżoną, plus zapisane foldy i tabela `patient_id → fold`.
-4. Zbiór z kolumnami `true_label`, `observed_label`, `is_hidden` oraz komplet masek ukrywania (udziały × ziarna), identyczny dla wszystkich modeli.
+4. Bazowa tabela z `true_label` oraz manifesty masek zawierające `patient_id`, `observed_label`, `is_hidden`, udział ukrywania i seed; identyczne dla wszystkich modeli.
 5. Zaimplementowany i przetestowany zestaw metryk pacjentowych wraz z funkcją celu `RecallHidden@q`.
 6. Spisane ograniczenia: założenie SCAR, selekcja cech z użyciem etykiety, brak możliwości zmierzenia rzeczywistego FP rate w KOR.
+7. Rozstrzygnięcie rozjazdu czasowego kohort oraz z góry zaplanowana analiza wrażliwości dla wspólnego okna dat.
