@@ -101,7 +101,42 @@ Rozrzut wartości w obrębie jednego pacjenta (tylko pacjenci z wieloma rekordam
 
 Przy 41% pacjentów i takim rozrzucie (PLT potrafi się wahać o 49 jednostek u tej samej osoby) wybór między średnią, medianą, maksimum a ostatnim pomiarem realnie zmienia wynik. Wysokie odchylenie standardowe GLU sugeruje pojedyncze skoki glikemii — tam średnia i maksimum dadzą zupełnie różne obrazy.
 
-**Propozycja:** mediana jako reguła domyślna (odporna na pojedyncze skoki) oraz maksimum jako wariant w analizie wrażliwości. Decyzja powinna zapaść przed treningiem i zostać zamrożona.
+### Porównanie czterech reguł — wyniki
+
+Skrypt `4-pu-setup/etap0_agregacja.py` (branch `etap0-agregacja-lk`) porównał średnią, medianę, maksimum i ostatni pomiar. Punktem wyjścia jest nierównowaga, która przesądza sprawę:
+
+| Klasa | Pacjentów | Mediana rekordów | Średnia | Maks. | Ma >1 rekord |
+|---|---:|---:|---:|---:|---:|
+| KOR | 39 164 | 1 | 1,83 | 11 | 40% |
+| NEURO | 1 823 | 2 | 3,65 | 38 | 67% |
+
+Pacjenci NEURO mają średnio dwukrotnie więcej badań. Każda reguła wrażliwa na liczbę pomiarów tworzy więc sygnał z samej częstości badania — a częstość wynika z hospitalizacji, nie ze stanu zdrowia.
+
+**Czy reguła przemyca liczbę badań** (korelacja Spearmana liczby rekordów z wartością cechy, liczona wyłącznie wewnątrz KOR, żeby nie mieszać z efektem choroby):
+
+| Reguła | Mediana \|ρ\| | Maks. \|ρ\| | Cech z \|ρ\| > 0,2 |
+|---|---:|---:|---:|
+| mediana | 0,079 | 0,257 | **2** |
+| ostatni | 0,083 | 0,296 | 1 |
+| średnia | 0,125 | 0,284 | 6 |
+| maksimum | 0,190 | 0,379 | **17** |
+
+**Czy reguła wciąga wartości nierealne** (liczba pacjentów poza orientacyjnym zakresem przeżycia):
+
+| Cecha | Mediana | Średnia | Ostatni | Maksimum |
+|---|---:|---:|---:|---:|
+| K | 20 | 24 | 31 | **78** |
+| WBC | 1 | 1 | 2 | **7** |
+
+Pozorna siła sygnału jest przy tym niemal identyczna dla średniej, mediany i maksimum (mediana \|AUC−0,5\| odpowiednio 0,0440, 0,0438 i 0,0467), więc maksimum nie kupuje nam nic w zamian za te wady. Reguły dają zbliżone, ale nie wymienne profile — korelacja między nimi waha się od 0,985 (średnia vs mediana) do 0,806 (maksimum vs ostatni).
+
+**Propozycja:** **mediana jako reguła główna**, **średnia jako analiza wrażliwości** (najbliższa medianie, ρ = 0,985).
+
+Maksimum odpada — nie jako wariant zapasowy, tylko w ogóle. Koreluje z liczbą badań dla 17 cech i wciąga cztery razy więcej pacjentów z niemożliwym potasem, czyli wzmacnia dokładnie te błędy wpisu, które opisano w punkcie 0.5.
+
+Ostatni pomiar wypada dobrze w liczbach, ale przy założeniu, że wyniki NEURO pochodzą z hospitalizacji, „ostatni" oznacza u chorych pomiar po leczeniu, a u KOR zwykły wynik kontrolny. To reguła, która znaczy co innego w każdej klasie, więc jej nie bierzemy.
+
+Decyzja powinna zostać zamrożona przed treningiem.
 
 ---
 
