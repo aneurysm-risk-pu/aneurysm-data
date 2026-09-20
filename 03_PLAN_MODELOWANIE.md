@@ -109,10 +109,11 @@ wejście z 02_PLAN_PRZED_MODELOWANIEM.md (zamrożone)
 
 ## Ograniczenia, które muszą trafić do raportu
 
-Niezależnie od wyników, pięć rzeczy trzeba powiedzieć wprost:
+Niezależnie od wyników, sześć rzeczy trzeba powiedzieć wprost:
 
 1. **Nie mierzymy rzeczywistego false-positive rate.** Ukrywanie pozytywnych testuje odzyskiwanie znanych przypadków. Nie mówi, ilu pacjentów KOR jest naprawdę zdrowych.
 2. **Założenie SCAR jest wątpliwe.** NEURO to kohorta neurologiczna, prawdopodobnie bardziej objawowa niż przeciętny nierozpoznany chory, więc znani pozytywni nie są losową próbką wszystkich pozytywnych.
 3. **ROC-AUC i PR-AUC liczone z KOR jako klasą negatywną to metryki P-vs-U**, a nie skuteczność wykrywania choroby.
 4. **Kohorty są silnie rozdzielone czasowo i źródłowo.** Wynik może odzwierciedlać epokę, laboratorium, hospitalizację lub sposób pozyskania danych; analiza w oknie wspólnym jest obowiązkową analizą wrażliwości.
 5. **Brak daty diagnozy ogranicza interpretację predykcyjną.** Przejście pacjenta z rekordu KOR do NEURO nie dowodzi, że pierwszy rekord był sprzed rozpoznania.
+6. **Wyniki NEURO pochodzą najprawdopodobniej z hospitalizacji, w trakcie której rozpoznano i leczono tętniaka.** Przy tym założeniu model rozpoznaje profil pacjenta hospitalizowanego, a nie profil ryzyka przed rozpoznaniem. Część sygnału może pochodzić z zabiegu, kontrastu i reakcji okołooperacyjnej, dlatego wyniku nie wolno opisywać jako modelu przesiewowego.
