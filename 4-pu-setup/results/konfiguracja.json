@@ -1,0 +1,34 @@
+{
+  "zestaw_cech": "38",
+  "mieszani": "pozytywni",
+  "kontrola_czasu": "brak",
+  "wartosci_skrajne": "zostaw",
+  "jednostka_treningu": "pacjent",
+  "regula_agregacji": "mediana",
+  "poziom_podzialu": "pacjent",
+  "n_splits_outer": 5,
+  "n_splits_inner": 3,
+  "shuffle": true,
+  "seed_podzialu": 42,
+  "udzial_ukrycia_glowny": 0.4,
+  "udzialy_ukrycia_wrazliwosc": [
+    0.2,
+    0.6
+  ],
+  "seedy_ukrycia": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "q": 0.05,
+  "alfa": 1.0,
+  "scaler_na_kompletnych": true,
+  "mice_max_iter": 7,
+  "mice_n_estimators": 78,
+  "mice_max_depth": 10,
+  "seed_imputacji": 42,
+  "notatka": "Rekomendacje z etapu 0, przed zamrozeniem na spotkaniu 21.09.2026",
+  "sciezka_danych": "C:\\Users\\kjub2\\Desktop\\ZPB TĘTNIAKI\\PU DATASET\\data\\imputation-inputs\\aneurysm_concatted.csv"
+}
