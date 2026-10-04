@@ -5,7 +5,7 @@
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
 
-Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych. Dalsze prace są rozpisane w `02_PLAN_PRZED_MODELOWANIEM.md` i `03_PLAN_MODELOWANIE.md`.
+Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych. Stan prac po raporcie przejściowym opisują `04_PODSUMOWANIE_STANU_PROJEKTU.md` i `05_REALIZACJA_DO_SGKF.md`; wstępne plany modelowania (02/03) są zachowane na branchu `pu-pipeline-1-5-lk`.
 
 ---
 
@@ -83,7 +83,7 @@ Zaimplementowano **StratifiedGroupKFold** na 5 foldach: mechanizm *Group* pilnuj
 
 Podział zintegrowano z imputacją tak, aby MICE działał **wewnątrz** foldu: scaler dopasowywany wyłącznie na kompletnych obserwacjach z części treningowej, imputer uczony tylko na treningu, walidacja jedynie transformowana, na końcu odwrotna transformacja skalera. Dzięki temu żadna informacja ze zbioru walidacyjnego nie wpływa ani na skalowanie, ani na uzupełnianie braków.
 
-Ten podział nie jest jeszcze zamrożonym protokołem modelowania. Aktualna implementacja używa `shuffle=False`, więc foldy zależą od kolejności wierszy, nie zapisuje przydziału pacjentów na dysk i nie rozwiązuje 63 pacjentów z obiema etykietami. Są to zadania etapu 0 z `02_PLAN_PRZED_MODELOWANIEM.md`.
+Ten podział nie jest jeszcze zamrożonym protokołem modelowania. Aktualna implementacja używa `shuffle=False`, więc foldy zależą od kolejności wierszy, nie zapisuje przydziału pacjentów na dysk i nie rozwiązuje 63 pacjentów z obiema etykietami. Są to zadania etapu 0. **Rozwiązane 04.10.2026 w wersji 2 podziału**: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 
 ## 5. Stan danych na koniec etapu
 
@@ -109,7 +109,7 @@ Liczby przeliczone bezpośrednio na pliku `data/processed/aneurysm_concatted_cle
 6. Brak daty rozpoznania tętniaka uniemożliwia potwierdzenie, że cechy NEURO pochodzą sprzed diagnozy i leczenia.
 7. 63 pacjentów występuje w obu kohortach źródłowych; ich interpretacja i etykieta pacjentowa nie zostały jeszcze zamrożone.
 
-Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `02_PLAN_PRZED_MODELOWANIEM.md` oraz `4-pu-setup/ETAP0_USTALENIA.md`: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
+Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `4-pu-setup/ETAP0_USTALENIA.md` i `05_REALIZACJA_DO_SGKF.md`: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
 
 ---
 

@@ -5,7 +5,7 @@
 **Data:** 11.09.2026
 **Status:** wyniki diagnostyki i propozycje robocze — decyzje protokołu nie są jeszcze zamrożone
 
-Dokument dostarcza danych do pytań postawionych w etapie 0 w `02_PLAN_PRZED_MODELOWANIEM.md`. Liczby opierają się na wyliczeniach, natomiast interpretacje i propozycje wymagają zatwierdzenia przez zespół oraz, tam gdzie wskazano, konsultacji klinicznej.
+Dokument dostarcza danych do pytań postawionych w etapie 0 w `02_PLAN_PRZED_MODELOWANIEM.md` (branch `pu-pipeline-1-5-lk`). Liczby opierają się na wyliczeniach, natomiast interpretacje i propozycje wymagają zatwierdzenia przez zespół oraz, tam gdzie wskazano, konsultacji klinicznej.
 
 ---
 
@@ -166,7 +166,7 @@ Problem dotyczy ok. 1% rekordów i występuje w obu kohortach, ale podobny udzia
 
 ## Co z tego wynika dla planu
 
-1. **Rozjazd czasowy kohort trafia do `02_PLAN_PRZED_MODELOWANIEM.md` jako nowy punkt etapu 0** — jest ważniejszy niż pierwotne pytanie o datę diagnozy i wymaga decyzji zespołu oraz konsultacji z prowadzącym.
+1. **Rozjazd czasowy kohort trafia do `02_PLAN_PRZED_MODELOWANIEM.md` (branch `pu-pipeline-1-5-lk`) jako nowy punkt etapu 0** — jest ważniejszy niż pierwotne pytanie o datę diagnozy i wymaga decyzji zespołu oraz konsultacji z prowadzącym.
 2. **55 pacjentów z rekordami KOR poprzedzającymi pierwszy rekord NEURO** to zasób, którego nie mieliśmy w planie — potencjalny mały zbiór walidacji czasowej po potwierdzeniu relacji względem diagnozy.
 3. **Reguła agregacji i naprawa KREA** mogą zostać rozstrzygnięte w zespole na podstawie powyższych liczb.
 4. Pierwotne pytanie 0.2 o datę rozpoznania **nadal pozostaje bez odpowiedzi** — w danych nie ma kolumny z datą diagnozy. Dla 55 pacjentów z punktu 0.1 znamy wyłącznie kolejność źródeł KOR→NEURO; nie daje ona dolnego oszacowania daty rozpoznania.

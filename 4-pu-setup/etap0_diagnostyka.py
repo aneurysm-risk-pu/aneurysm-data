@@ -2,7 +2,7 @@
 etap0_diagnostyka.py
 =====================
 
-Diagnostyka do etapu 0 z 02_PLAN_PRZED_MODELOWANIEM.md — dostarcza danych
+Diagnostyka do etapu 0 z 02_PLAN_PRZED_MODELOWANIEM.md (branch pu-pipeline-1-5-lk) — dostarcza danych
 do rozstrzygnięć, które muszą zapaść przed pisaniem pipeline'u modelowania.
 
 Nic nie modyfikuje. Tylko czyta dane i liczy statystyki:

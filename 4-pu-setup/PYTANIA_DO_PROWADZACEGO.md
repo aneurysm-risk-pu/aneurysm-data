@@ -47,4 +47,4 @@ Do rozstrzygnięcia, czy nadajemy im status pozytywny z flagą pochodzenia rekor
 
 ## Czego te pytania nie blokują
 
-Równolegle domykamy to, co nie zależy od odpowiedzi: konfigurację podziału danych (punkt 0.6, wyniki w `4-pu-setup/results/`), regułę agregacji rekordów do pacjenta (punkt 0.3) oraz metryki pacjentowe i funkcję celu (punkty 4–5).
+Niezależnie od odpowiedzi domknięte są: konfiguracja podziału danych (punkt 0.6, wersja 2 zamrożona 04.10.2026 w `3-sgkf-split/results/`) oraz analiza reguły agregacji rekordów do pacjenta (punkt 0.3, `4-pu-setup/results/`).

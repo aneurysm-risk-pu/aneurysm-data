@@ -2,7 +2,7 @@
 etap0_agregacja.py
 ==================
 
-Punkt 0.3 z 02_PLAN_PRZED_MODELOWANIEM.md — wybor reguly agregacji rekordow
+Punkt 0.3 z 02_PLAN_PRZED_MODELOWANIEM.md (branch pu-pipeline-1-5-lk) — wybor reguly agregacji rekordow
 do pacjenta.
 
 41,3% pacjentow ma wiecej niz jeden rekord, wiec regula decyduje o tym, jaki
