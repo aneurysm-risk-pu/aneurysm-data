@@ -10,13 +10,18 @@ CZĘŚĆ A — przygotowanie danych do SGKF (3-sgkf-split/przygotowanie/)
   A1  przygotuj_dane.py               decyzje -> data/processed/aneurysm_sgkf_input.csv + spis zmian
   A2  tests/test_przygotowanie.py     reguły + zgodność pliku z kodem
   A3  analiza_decyzji.py              liczby uzasadniające decyzje
+  A4  analiza_selekcji_cech.py        dlaczego 38 cech (odtworzenie selekcji z etapu 1)
 
 CZĘŚĆ B — podział i imputacja w foldach (3-sgkf-split/sgkf/)
   B1  podzial.py --porownanie         zamrożony przydział pacjent -> fold + porównanie strategii
   B2  tests/test_podzial.py           testy podziału
-  B3  aneurysm_sgkf_mice_pipeline.py  MICE w foldach, 38 cech (wariant główny)
-  B4  aneurysm_sgkf_mice_pipeline.py  MICE w foldach, 35 cech (analiza wrażliwości)
-  B5  porownanie_cech.py              wpływ wyboru 38 / 35 na imputację
+  B3  aneurysm_sgkf_mice_pipeline.py  MICE w foldach, 38 cech
+  B4  ocena_imputacji.py              jakość imputacji protokołem z etapu 2 (maski na kompletnych wierszach)
+  B5  analiza_wynikow.py              diagnostyka wyników: rozkłady uzupełnień, skróty, profil kohort
+
+Jednorazowa analiza porównawcza 38 vs 35 cech (podkładka pod decyzję, wyniki
+w sgkf/results/porownanie_38_35/) nie jest częścią tego przebiegu — polecenia
+w sgkf/porownanie_cech.py.
 
 Uruchomienie:
     python 3-sgkf-split/uruchom_sgkf.py                 # całość (~35 min na M-series)
@@ -38,18 +43,19 @@ KROKI = [
     ("A", "A1_przygotuj_dane", "przygotowanie", ["przygotuj_dane.py"], False),
     ("A", "A2_testy", "przygotowanie", ["tests/test_przygotowanie.py"], False),
     ("A", "A3_analiza_decyzji", "przygotowanie", ["analiza_decyzji.py"], False),
+    ("A", "A4_analiza_selekcji_cech", "przygotowanie", ["analiza_selekcji_cech.py"], False),
     ("B", "B1_podzial", "sgkf", ["podzial.py", "--porownanie"], False),
     ("B", "B2_testy", "sgkf", ["tests/test_podzial.py"], False),
-    ("B", "B3_mice_38", "sgkf", ["aneurysm_sgkf_mice_pipeline.py", "--zapisz", "--cechy", "38"], True),
-    ("B", "B4_mice_35", "sgkf", ["aneurysm_sgkf_mice_pipeline.py", "--zapisz", "--cechy", "35"], True),
-    ("B", "B5_porownanie_cech", "sgkf", ["porownanie_cech.py"], True),
+    ("B", "B3_mice_38", "sgkf", ["aneurysm_sgkf_mice_pipeline.py", "--zapisz"], True),
+    ("B", "B4_ocena_imputacji", "sgkf", ["ocena_imputacji.py"], True),
+    ("B", "B5_analiza_wynikow", "sgkf", ["analiza_wynikow.py"], True),
 ]
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Etap 3: przygotowanie danych (A) i SGKF (B)")
     ap.add_argument("--czesc", choices=["A", "B"], help="uruchom tylko jedną część")
-    ap.add_argument("--bez-mice", action="store_true", help="pomiń imputację i porównanie cech")
+    ap.add_argument("--bez-mice", action="store_true", help="pomiń imputację, jej ocenę i analizę wyników (B3–B5)")
     args = ap.parse_args()
 
     start = time.time()

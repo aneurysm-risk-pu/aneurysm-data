@@ -21,8 +21,8 @@ Zmiany w wersji 2 (04.10.2026), uzasadnienie w RAPORT_SGKF_MICE.md:
   - dane czytane przez podzial.wczytaj_rekordy() z pliku przygotowanego
     w części A (data/processed/aneurysm_sgkf_input.csv); zmiana tego pliku
     od zapisu podziału przerywa przebieg (odcisk w results/podzial_meta.json)
-  - --cechy 38|35: oba warianty na tym samym przydziale pacjentów do foldów
-    (38 = wariant główny, 35 = analiza wrażliwości)
+  - zestaw cech: 38 (jeden wariant projektu, decyzja z 04.10.2026);
+    --cechy 35 tylko na potrzeby jednorazowej analizy porównawczej (porownanie_cech.py)
   - dodatkowe kontrole: każdy pacjent dokładnie raz w części testowej,
     brak wartości ujemnych, udział imputowanych komórek per kohorta
   - --zapisz: zaimputowane foldy do results/foldy_imputowane_<cechy>/ (parquet,
@@ -34,7 +34,6 @@ Uruchomienie (całość etapu jednym poleceniem: python 3-sgkf-split/uruchom_sgk
     python 3-sgkf-split/sgkf/podzial.py                                   # raz: zbuduj i zapisz foldy
     python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py               # pełny przebieg (~5 x 3 min na M-series)
     python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --zapisz      # + zapis foldów (38 cech)
-    python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --zapisz --cechy 35
     python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --podprobka 3000 --szybkie-mice
 """
 
@@ -104,18 +103,22 @@ def build_mice_imputer(seed: int = RANDOM_STATE, params: dict = MICE_PARAMS) -> 
     )
 
 
-def prepare_fold(
+def dopasuj_fold(
     X_train_raw: pd.DataFrame,
-    X_test_raw:  pd.DataFrame,
     seed: int = RANDOM_STATE,
     params: dict = MICE_PARAMS,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[MinMaxScaler, IterativeImputer, np.ndarray]:
     """
-    Skaluje i imputuje jeden fold.
+    Dopasowuje preprocessing jednego foldu WYŁĄCZNIE na części treningowej.
 
     Zwraca
     -------
-    X_train_imp, X_test_imp : ndarray w oryginalnej skali (po inwersji scalera)
+    scaler            : MinMaxScaler dopasowany na kompletnych wierszach treningu
+    imputer           : IterativeImputer (MICE) dopasowany na treningu po skalowaniu
+    X_train_imp_scaled: trening po imputacji, w skali [0, 1]
+
+    Wydzielone z prepare_fold, żeby ocena jakości imputacji (ocena_imputacji.py)
+    używała dokładnie tego samego dopasowania co produkcja.
     """
     # --- Scaler fitowany na complete cases z train ---
     # MinMaxScaler ignoruje NaN przy fit i zachowuje je przy transform.
@@ -123,22 +126,38 @@ def prepare_fold(
     train_complete = X_train_raw.dropna()
     scaler = MinMaxScaler()
     scaler.fit(train_complete.values.astype(float))
-
     X_train_scaled = scaler.transform(X_train_raw.values.astype(float))
-    X_test_scaled  = scaler.transform(X_test_raw.values.astype(float))
 
-    # --- MICE: fit na train, transform na test ---
+    # --- MICE: fit tylko na train ---
     imputer = build_mice_imputer(seed=seed, params=params)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         X_train_imp_scaled = imputer.fit_transform(X_train_scaled)
-        X_test_imp_scaled  = imputer.transform(X_test_scaled)
+    return scaler, imputer, X_train_imp_scaled
+
+
+def prepare_fold(
+    X_train_raw: pd.DataFrame,
+    X_test_raw:  pd.DataFrame,
+    seed: int = RANDOM_STATE,
+    params: dict = MICE_PARAMS,
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Skaluje i imputuje jeden fold: dopasowanie na train, test tylko transformowany.
+
+    Zwraca
+    -------
+    X_train_imp, X_test_imp : ndarray w oryginalnej skali (po inwersji scalera)
+    """
+    scaler, imputer, X_train_imp_scaled = dopasuj_fold(X_train_raw, seed=seed, params=params)
+
+    X_test_scaled = scaler.transform(X_test_raw.values.astype(float))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        X_test_imp_scaled = imputer.transform(X_test_scaled)   # nigdy fit_transform na teście
 
     # --- Inwersja skalera → oryginalna skala ---
-    X_train_imp = scaler.inverse_transform(X_train_imp_scaled)
-    X_test_imp  = scaler.inverse_transform(X_test_imp_scaled)
-
-    return X_train_imp, X_test_imp
+    return scaler.inverse_transform(X_train_imp_scaled), scaler.inverse_transform(X_test_imp_scaled)
 
 
 def odcisk_wyniku(X_train_imp: np.ndarray, X_test_imp: np.ndarray) -> str:
@@ -178,7 +197,7 @@ def main(argv=None):
     ap.add_argument("--zapisz", action="store_true",
                     help="zapisz zaimputowane foldy (parquet) i podsumowanie przebiegu")
     ap.add_argument("--cechy", choices=["38", "35"], default="38",
-                    help="zestaw cech: 38 (główny) albo 35 (bez CRP, MONO, %%MONO)")
+                    help="38 = zestaw projektu; 35 (bez CRP, MONO, %%MONO) tylko do analizy porównawczej")
     args = ap.parse_args(argv)
     params = MICE_PARAMS_SZYBKIE if args.szybkie_mice else MICE_PARAMS
     pelny = not (args.podprobka or args.szybkie_mice)
