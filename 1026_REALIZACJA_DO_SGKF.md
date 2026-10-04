@@ -4,7 +4,7 @@
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
 **Stan na:** 04.10.2026
-**Zakres:** etapy 1–3: przygotowanie danych, imputacja braków, kontrolowany podział (SGKF). Wstępna infrastruktura modelowania PU (plany i punkty 1–5) powstała we wrześniu i jest zachowana na branchu `pu-pipeline-1-5-lk` jako odniesienie. Plan modelowania zostanie ustalony na nowo po spotkaniu z prowadzącym.
+**Zakres:** etapy 1–3: przygotowanie danych, imputacja braków, kontrolowany podział (SGKF). Propozycja dalszych prac (modelowanie PU) jest w `4-pu-setup/PLAN_MODELOWANIA.md`; plan obowiązujący zostanie ustalony po spotkaniu z prowadzącym.
 
 Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej podstawie i z jakim wynikiem**, do momentu, w którym dane są gotowe do modelowania. Zastępuje rozproszone raporty cząstkowe jako punkt wejścia. Szczegóły techniczne zostają w raportach etapów, do których prowadzą odnośniki.
 
@@ -72,7 +72,7 @@ Udział mierzony liczbą commitów (Łukasz 40, Liwia 16, Adrian 5, Dominika 2) 
 | 10–11.06 | integracja: SGKF + MICE w foldzie, raport metodologiczny | Łukasz |
 | **12.06** | **raport przejściowy** | zespół |
 | 11–20.09 | plan modelowania PU, reorganizacja repo, diagnostyka etapu 0, recenzja metodologiczna, pytania do prowadzącego, analiza reguły agregacji, siatka stabilności podziału | Łukasz |
-| 25.09 | wstępna infrastruktura PU, punkty 1–5 (poza zakresem; branch `pu-pipeline-1-5-lk`) | Łukasz |
+| 25.09 | prototyp infrastruktury PU, punkty 1–5 (poza zakresem; wnioski w `4-pu-setup/PLAN_MODELOWANIA.md`, sekcja 6) | Łukasz |
 | **04.10** | **audyt i wersja 2 podziału; to podsumowanie** | Łukasz |
 
 ---
@@ -245,7 +245,7 @@ Około jednej czwartej profilu NEURO jest odtwarzane przez imputer uczony w 91% 
 
 ## 6. Weryfikacja po raporcie przejściowym (etap 0)
 
-We wrześniu przejrzano cały dotychczasowy materiał pod kątem tego, czy wynik modelu będzie mówił o tętniakach, czy o tym, jak powstały dane. Skrypty: `4-pu-setup/etap0_diagnostyka.py`, `4-pu-setup/etap0_agregacja.py`, `3-sgkf-split/etap0_sgkf_stabilnosc.py`; ustalenia: `4-pu-setup/ETAP0_USTALENIA.md`. Poniżej tylko punkty, które dotyczą etapów 1–3.
+We wrześniu przejrzano cały dotychczasowy materiał pod kątem tego, czy wynik modelu będzie mówił o tętniakach, czy o tym, jak powstały dane. Skrypty: `4-pu-setup/etap0_diagnostyka.py`, `4-pu-setup/etap0_agregacja.py`, `3-sgkf-split/etap0_sgkf_stabilnosc.py`; ustalenia: `4-pu-setup/USTALENIA_DANYCH.md`. Poniżej tylko punkty, które dotyczą etapów 1–3.
 
 | Punkt | Ustalenie | Wpływ na etapy 1–3 | Status |
 |---|---|---|---|
@@ -301,11 +301,11 @@ Wykryte przy tym podsumowaniu, bez wpływu na wyniki, ale do uporządkowania:
 
 | Sprawa | Propozycja |
 |---|---|
-| `master` nie zawiera prac z września. Po porządkach z 04.10 branche to: `pu-modeling-setup-lk` (bieżąca praca: etapy 1–3 + etap 0), `pu-pipeline-1-5-lk` (odniesienie: wstępne plany i implementacja PU), `dataset_analysis_lf`; skrypty z dawnych `etap0-*` przeniesiono do `pu-modeling-setup-lk` | po zatwierdzeniu zmergować `pu-modeling-setup-lk` do `master` |
+| `master` nie zawiera prac z września. Po porządkach z 04.10 cała praca jest na jednym branchu `pu-modeling-setup-lk` (obok `dataset_analysis_lf`); skrypty z dawnych branchy `etap0-*` przeniesiono tutaj, a plany z `pu-pipeline-1-5-lk` streszczono w `4-pu-setup/PLAN_MODELOWANIA.md` | po zatwierdzeniu zmergować `pu-modeling-setup-lk` do `master` |
 | `1-data-preparation/scripts-lf/aneurysm_data_analysis.ipynb` to zapisana strona HTML z GitHuba, a nie notebook; prawdziwy notebook to `aneurysm_data_analysis (1).ipynb` | zastąpić plik notebookiem, usunąć duplikat z „(1)” |
 | notebooki czytają dane z `/content/…` (Colab) | ścieżki względne do `data/` |
 | kopie tych samych CSV w kilku miejscach (`data/interim/`, `data/interim/cleaned/`, `2-imputation/knn-am/`) | jedna kopia w `data/`, w pozostałych miejscach odwołania |
-| wstępna implementacja PU (`pu-pipeline-1-5-lk`) liczy własny podział ze stratyfikacją tylko po etykiecie | przyszły kod modelowania ma czytać przydział z etapu 3 (`podzial.wczytaj_podzial()`) |
+| prototyp PU z września liczył własny podział ze stratyfikacją tylko po etykiecie | przyszły kod modelowania ma czytać przydział z etapu 3 (`podzial.wczytaj_podzial()`) |
 | wersje bibliotek różnią się między komputerami (sklearn 1.8 vs 1.6) | wspólny `requirements.txt` z przypiętymi wersjami w korzeniu repo |
 
 ---
@@ -314,11 +314,8 @@ Wykryte przy tym podsumowaniu, bez wpływu na wyniki, ale do uporządkowania:
 
 | Dokument | Zawartość |
 |---|---|
-| `01_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | materiał do raportu przejściowego z 12.06 |
+| `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | materiał do raportu przejściowego z 12.06 |
 | `2-imputation/RAPORT_IMPUTACJA.md` | pełny benchmark imputacji |
 | `3-sgkf-split/RAPORT_SGKF_MICE.md` | metodologia podziału, audyt v1, wersja 2 |
-| `4-pu-setup/ETAP0_USTALENIA.md` | diagnostyka danych po raporcie przejściowym |
-| `4-pu-setup/PYTANIA_DO_PROWADZACEGO.md` | kwestie do potwierdzenia klinicznego |
-| `04_PODSUMOWANIE_STANU_PROJEKTU.md` | synteza: istota problemu, wykryte problemy danych, decyzje |
-| `4-pu-setup/README.md` | co dalej (ogólnie, do ustalenia po spotkaniu) |
-| branch `pu-pipeline-1-5-lk` | wstępne plany modelowania (02/03) i implementacja punktów 1–5: tylko odniesienie |
+| `4-pu-setup/USTALENIA_DANYCH.md` | 10 problemów wykrytych w danych, decyzje do podjęcia, pytania do prowadzącego |
+| `4-pu-setup/PLAN_MODELOWANIA.md` | propozycja planu modelowania PU (do ustalenia na spotkaniu) |

@@ -5,7 +5,7 @@
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
 
-Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych. Stan prac po raporcie przejściowym opisują `04_PODSUMOWANIE_STANU_PROJEKTU.md` i `05_REALIZACJA_DO_SGKF.md`; wstępne plany modelowania (02/03) są zachowane na branchu `pu-pipeline-1-5-lk`.
+Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych. Stan prac po raporcie przejściowym opisuje `1026_REALIZACJA_DO_SGKF.md`, problemy wykryte w danych `4-pu-setup/USTALENIA_DANYCH.md`, a propozycję dalszych prac `4-pu-setup/PLAN_MODELOWANIA.md`.
 
 ---
 
@@ -109,7 +109,7 @@ Liczby przeliczone bezpośrednio na pliku `data/processed/aneurysm_concatted_cle
 6. Brak daty rozpoznania tętniaka uniemożliwia potwierdzenie, że cechy NEURO pochodzą sprzed diagnozy i leczenia.
 7. 63 pacjentów występuje w obu kohortach źródłowych; ich interpretacja i etykieta pacjentowa nie zostały jeszcze zamrożone.
 
-Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `4-pu-setup/ETAP0_USTALENIA.md` i `05_REALIZACJA_DO_SGKF.md`: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
+Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `4-pu-setup/USTALENIA_DANYCH.md` i `1026_REALIZACJA_DO_SGKF.md`: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
 
 ---
 

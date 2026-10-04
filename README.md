@@ -11,7 +11,7 @@
 
 Rekord = jeden tydzień zagregowanych (średnia) wyników laboratoryjnych danego pacjenta; klucz: `{patient_id}-{rok}-W{tydzień}`.
 
-Liczby dotyczą plików surowych. Po czyszczeniu: 78 197 rekordów, 40 924 pacjentów (1 823 pozytywnych) — patrz `05_REALIZACJA_DO_SGKF.md`.
+Liczby dotyczą plików surowych. Po czyszczeniu: 78 197 rekordów, 40 924 pacjentów (1 823 pozytywnych) — patrz `1026_REALIZACJA_DO_SGKF.md`.
 
 ## Cechy
 
@@ -27,7 +27,8 @@ Dla każdego parametru: wartość + flaga normy (`-1` / `0` / `1`).
 | Przygotowanie danych | `1-data-preparation/` |
 | Imputacja | `2-imputation/` (`RAPORT_IMPUTACJA.md`) |
 | Podział na foldy (zamrożony) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`, `results/pacjent_fold.csv`) |
-| Etap 0 (diagnostyka danych), co dalej | `4-pu-setup/` |
-| **Realizacja etapów 1–3, podział pracy** | `05_REALIZACJA_DO_SGKF.md` |
-| Synteza: problem, problemy danych, decyzje | `04_PODSUMOWANIE_STANU_PROJEKTU.md` |
-| Wstępne plany modelowania (odniesienie) | branch `pu-pipeline-1-5-lk` |
+| Ustalenia z danych i plan modelowania | `4-pu-setup/` |
+| Materiał do raportu przejściowego (12.06) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
+| **Realizacja etapów 1–3, podział pracy** | `1026_REALIZACJA_DO_SGKF.md` |
+| Problemy wykryte w danych, pytania do prowadzącego | `4-pu-setup/USTALENIA_DANYCH.md` |
+| Propozycja planu modelowania | `4-pu-setup/PLAN_MODELOWANIA.md` |

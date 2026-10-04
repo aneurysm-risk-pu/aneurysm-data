@@ -2,7 +2,7 @@
 etap0_diagnostyka.py
 =====================
 
-Diagnostyka do etapu 0 z 02_PLAN_PRZED_MODELOWANIEM.md (branch pu-pipeline-1-5-lk) — dostarcza danych
+Diagnostyka do etapu 0 (USTALENIA_DANYCH.md) — dostarcza danych
 do rozstrzygnięć, które muszą zapaść przed pisaniem pipeline'u modelowania.
 
 Nic nie modyfikuje. Tylko czyta dane i liczy statystyki:
@@ -201,7 +201,7 @@ def main():
 
     print()
     print("=" * 78)
-    print("  Koniec diagnostyki. Wnioski -> 4-pu-setup/ETAP0_USTALENIA.md")
+    print("  Koniec diagnostyki. Wnioski -> 4-pu-setup/USTALENIA_DANYCH.md")
     print("=" * 78)
 
 

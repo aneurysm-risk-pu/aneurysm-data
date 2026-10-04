@@ -32,7 +32,7 @@ Konsekwencje, które warto mieć w głowie:
 
 - **„False positive” traci sens.** Pacjent KOR z wysokim wynikiem może być błędem modelu albo niewykrytym chorym, i nie da się tego rozróżnić. Dlatego w dokumentach mówimy „wysoko sklasyfikowany pacjent U”.
 - **Accuracy jest bezużyteczna.** 95,5% pacjentów to U, więc model mówiący zawsze „0” ma 95,5% trafności.
-- **Ocena przez ukrywanie.** Bierzemy część znanych chorych, udajemy, że są nieoznaczeni (`observed_label = 0`, `true_label = 1`), i sprawdzamy, czy model wypchnie ich na górę rankingu. To pomysł prowadzącego i rdzeń ewaluacji (wstępna implementacja: `4-pu-setup/pu/ukrywanie.py`, `metryki.py` na branchu `pu-pipeline-1-5-lk`).
+- **Ocena przez ukrywanie.** Bierzemy część znanych chorych, udajemy, że są nieoznaczeni (`observed_label = 0`, `true_label = 1`), i sprawdzamy, czy model wypchnie ich na górę rankingu. To pomysł prowadzącego i rdzeń ewaluacji (`4-pu-setup/PLAN_MODELOWANIA.md`, sekcja 3.2).
 - **SCAR** (*Selected Completely At Random*) to założenie wielu metod PU, że znani chorzy są losową próbką wszystkich chorych. U nas to nieprawda: NEURO to chorzy objawowi, którzy trafili do szpitala. Tego nie da się naprawić, da się tylko uczciwie opisać.
 
 ---
@@ -47,15 +47,16 @@ data/processed/aneurysm_concatted_cleaned.csv     ← wariant 35 cech
 1-data-preparation/    czyszczenie i EDA (Twoje skrypty + notebooki Liwii)
 2-imputation/          benchmark imputacji; final/ to wspólny kod, reszta to fazy indywidualne
 3-sgkf-split/          PODZIAŁ: podzial.py (v2) + MICE w foldzie
-4-pu-setup/            etap 0 (diagnostyka danych) + README: co dalej
-01, 04, 05_*.md        podsumowania
+4-pu-setup/            USTALENIA_DANYCH.md (problemy w danych) + PLAN_MODELOWANIA.md (propozycja)
+0626_, 1026_*.md       raport przejściowy (06.2026), realizacja etapów 1–3 (10.2026)
+PRZEWODNIK_LK.md       ten plik
 ```
 
 Kolejność czytania przy powrocie:
-1. `05_REALIZACJA_DO_SGKF.md`: co zrobiliśmy i kto co robił.
+1. `1026_REALIZACJA_DO_SGKF.md`: co zrobiliśmy i kto co robił.
 2. `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6: najnowsza zmiana.
-3. `4-pu-setup/ETAP0_USTALENIA.md`: problemy z danymi.
-4. `4-pu-setup/README.md`: co dalej. Wstępne plany modelowania (02/03) i implementacja punktów 1–5 leżą na branchu `pu-pipeline-1-5-lk`, tylko jako odniesienie; nowy plan powstanie po spotkaniu.
+3. `4-pu-setup/USTALENIA_DANYCH.md`: problemy z danymi i pytania do prowadzącego.
+4. `4-pu-setup/PLAN_MODELOWANIA.md`: propozycja dalszych prac; plan obowiązujący powstanie po spotkaniu.
 
 ---
 
@@ -70,7 +71,7 @@ Wyciek (*leakage*) to sytuacja, w której informacja z danych testowych dostaje 
 | **etykieta w selekcji cech** | CRP, MONO i %MONO usunięte na podstawie korelacji z `label` na całym zbiorze | powrót do 38 cech; selekcja, jeśli w ogóle, tylko wewnątrz foldu |
 | **strojenie na danych oceny** | przebieg 1 benchmarku imputacji: Optuna i ocena na tej samej masce | osobne maski: seed 43 do strojenia, seed 42 do oceny. W modelowaniu analogicznie: walidacja zagnieżdżona |
 
-Zasada ogólna: **wszystko, co się uczy (a scaler i imputer też się uczą!), musi widzieć tylko train.** Tego samego dotyczy walidacja zagnieżdżona (wstępnie w `pu/foldy.py` na branchu `pu-pipeline-1-5-lk`): foldy wewnętrzne do strojenia są budowane wyłącznie z outer-train, a preprocessing jest dopasowywany od nowa w każdym z nich.
+Zasada ogólna: **wszystko, co się uczy (a scaler i imputer też się uczą!), musi widzieć tylko train.** Tego samego dotyczy walidacja zagnieżdżona (`4-pu-setup/PLAN_MODELOWANIA.md`, sekcja 3.1): foldy wewnętrzne do strojenia są budowane wyłącznie z outer-train, a preprocessing jest dopasowywany od nowa w każdym z nich.
 
 ---
 
@@ -167,7 +168,7 @@ Nie wiemy, który efekt przeważa. To dobry kandydat do analizy wrażliwości pr
 ## 8. Pułapki: rzeczy, które łatwo zepsuć
 
 1. **Nie używaj `2-imputation/final/results/aneurysm_imputed_*.csv` do modeli.** To imputacja globalna, przydatna tylko jako walidacja metody.
-2. **Nie licz podziału od nowa w kolejnych etapach.** Czytaj `3-sgkf-split/results/pacjent_fold.csv` przez `wczytaj_podzial()`. Uwaga: wstępna implementacja PU (`pu/foldy.py` na `pu-pipeline-1-5-lk`) liczy własny podział; w nowym kodzie modelowania tego nie powtarzać.
+2. **Nie licz podziału od nowa w kolejnych etapach.** Czytaj `3-sgkf-split/results/pacjent_fold.csv` przez `wczytaj_podzial()`. Prototyp PU z września liczył własny podział; w nowym kodzie modelowania tego nie powtarzać.
 3. **Metryki licz na pacjentach, nie na rekordach.** Inaczej pacjent z 38 rekordami waży 38 razy więcej.
 4. **Nie dodawaj roku ani liczby rekordów jako cechy.** Ułatwiłoby to modelowi rozpoznanie kohorty, a nie choroby.
 5. **Nie nazywaj wyniku „prawdopodobieństwem tętniaka”**, tylko *risk score*, dopóki nie jest skalibrowany.

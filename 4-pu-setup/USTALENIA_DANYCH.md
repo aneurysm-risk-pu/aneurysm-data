@@ -1,117 +1,32 @@
-# Podsumowanie stanu projektu
+# Ustalenia: problemy wykryte w danych
 
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
-**Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
-**Opiekun:** dr inż. Patryk Jasik (IFiIS)
-**Data:** 20.09.2026; przycięty 04.10.2026 do danych, etapów 1–3 i etapu 0. Pełna wersja, z infrastrukturą PU (punkty 1–5), jest na branchu `pu-pipeline-1-5-lk`.
+**Zakres:** weryfikacja danych po raporcie przejściowym (etap 0, 11–20.09.2026) uzupełniona o audyt podziału (04.10.2026)
+**Dane:** `data/processed/aneurysm_concatted_cleaned.csv` / `data/imputation-inputs/aneurysm_concatted.csv`, 78 197 rekordów, 40 924 pacjentów
+**Status:** liczby policzone; decyzje oznaczone „do decyzji” czekają na spotkanie z prowadzącym
 
-Dokument spina w jedno miejsce wszystko, co wiemy i co zrobiliśmy: stan danych, wszystkie problemy wykryte w etapie 0 wraz z liczbami i konsekwencjami oraz listę decyzji, które musi podjąć zespół.
-
-Jest napisany tak, żeby dało się go przeczytać bez zaglądania do kodu i bez pamiętania wcześniejszych ustaleń. Każde twierdzenie opiera się na wyliczeniu, nie na przypuszczeniu — liczby pochodzą z aktualnych plików w repozytorium.
-
-**Mapa dokumentów:**
-
-| Dokument | Zawiera |
-|---|---|
-| `01_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | prace do raportu przejściowego |
-| `05_REALIZACJA_DO_SGKF.md` | realizacja etapów 1–3 z podziałem pracy |
-| `3-sgkf-split/RAPORT_SGKF_MICE.md` | podział danych, audyt i wersja 2 |
-| `4-pu-setup/ETAP0_USTALENIA.md` | wyniki diagnostyki danych |
-| `4-pu-setup/README.md` | co dalej |
-| `4-pu-setup/PYTANIA_DO_PROWADZACEGO.md` | kwestie wymagające potwierdzenia klinicznego |
-| **ten dokument** | **synteza całości** |
+Dokument zbiera wszystko, co znaleźliśmy w danych, a co może sprawić, że model będzie rozpoznawał **sposób powstania danych zamiast tętniaka**. Każde ustalenie wynika z policzenia czegoś w danych, nie z przypuszczenia. Problemy są ułożone od najgroźniejszego.
 
 ---
 
-## Część I — Na czym polega ten projekt
+## W skrócie
 
-### Problem w jednym akapicie
-
-Mamy dwie bazy wyników laboratoryjnych. Pierwsza, **KOR**, to populacja ogólna — nie wiemy o tych ludziach nic poza morfologią krwi i biochemią. Druga, **NEURO**, to pacjenci oddziału neurologicznego z rozpoznanym tętniakiem mózgu. Chcemy nauczyć model wskazywać osoby o profilu podobnym do chorych, żeby skierować je na badanie obrazowe.
-
-### Dlaczego to nie jest zwykła klasyfikacja
-
-Kluczowa trudność: **nie mamy grupy kontrolnej.** Gdybyśmy mieli listę osób z potwierdzonym brakiem tętniaka, byłby to zwykły problem klasyfikacji dwuklasowej. Ale nikt nie przebadał obrazowo 39 164 pacjentów KOR. Wśród nich prawie na pewno są osoby z niewykrytym tętniakiem — tętniaki bywają bezobjawowe przez całe życie.
-
-Formalnie: mamy klasę **P** (positive, potwierdzeni chorzy) i klasę **U** (unlabeled, nieoznaczeni), a nie P i N. Stąd nazwa **Positive-Unlabeled learning**.
-
-Ma to trzy poważne konsekwencje:
-
-1. **Nie możemy zmierzyć, ile pomyłek robi model.** Jeśli model wskaże pacjenta z KOR jako podwyższonego ryzyka, nie wiemy, czy się pomylił, czy właśnie wykrył niezdiagnozowanego chorego. Klasyczne „false positive" traci sens.
-2. **Accuracy jest bezużyteczna.** Model, który każdemu przypisze „zdrowy", osiągnie 95,5% trafności, bo tylko 4,45% pacjentów ma etykietę pozytywną. I będzie kompletnie bezwartościowy.
-3. **Potrzebujemy zastępczego sposobu oceny.** Stosujemy **kontrolowany test odzyskiwania**: bierzemy część znanych chorych, ukrywamy ich w grupie nieoznaczonej i sprawdzamy, czy model mimo to wypchnie ich na górę rankingu ryzyka. To jest pomysł z uwag prowadzącego i stanowi rdzeń naszej ewaluacji.
-
-### Skąd wiadomo, że to zadziała
-
-Nie wiadomo z góry — i to jest uczciwa odpowiedź. Dlatego cały protokół jest zbudowany wokół jednego pytania: *czy wynik, który zobaczymy, mówi coś o tętniakach, czy tylko o tym, jak powstały nasze dane?* Większość problemów opisanych w Części III to właśnie odpowiedzi na to pytanie.
-
----
-
-## Część II — Co zostało zrobione do tej pory
-
-### Etap 1: eksploracja i czyszczenie danych
-
-Dane surowe to dwa pliki po 128 kolumn:
-
-| Kohorta | Plik surowy | Wiersze × kolumny |
-|---|---|---|
-| KOR | `data/raw/kor_merged_aggregated_1W_mean.csv` | 73 679 × 128 |
-| NEURO | `data/raw/neuro_merged_aggregated_1W_mean.csv` | 7 655 × 128 |
-
-Jeden rekord to **tydzień zagregowanych wyników** jednego pacjenta, z kluczem `{patient_id}-{rok}-W{tydzień}`.
-
-Co zrobiono: usunięto kolumny z zakresami referencyjnymi i zmienne techniczne, naprawiono kolumny zapisane błędnie jako `{'values': [...]}`, odfiltrowano wiek poza 18–100 lat, usunięto pacjentów i kolumny z ponad 60% braków (1 793 pacjentów KOR), obcięto najstarsze pomiary u pacjentów z długą historią hospitalizacji.
-
-Zbadano też zależność cech z etykietą czterema miarami (Pearson, Spearman, Kendall, Phi-K) i usunięto trzy najsłabiej związane: CRP, MONO i %MONO. **Ta decyzja okazała się problematyczna** — patrz problem 4 w Części III.
-
-**Wynik:** jeden zbiór **78 197 wierszy × 39 kolumn** (35 cech + 4 kolumny meta).
-
-| Klasa | Rekordy | Pacjenci |
-|---|---:|---:|
-| `label = 0` (KOR, nieoznaczeni) | 71 546 | 39 164 |
-| `label = 1` (NEURO, pozytywni) | 6 651 | 1 823 |
-| **Razem** | **78 197** | **40 924** |
-
-Rekordów na pacjenta: mediana 1, średnia 1,91, maksimum 38.
-
-### Etap 2: uzupełnianie braków danych
-
-W finalnym zbiorze brakuje **377 236 wartości, czyli 13,8% wszystkich komórek**. Kompletnych wierszy jest tylko 23 092 z 78 197. Bez uzupełnienia braków większość modeli po prostu nie zadziała.
-
-Porównano trzy metody na tej samej, losowo zamaskowanej próbce. Zabezpieczenie, które warto podkreślić: maska do strojenia parametrów (seed 43) była **oddzielona** od maski do oceny (seed 42), więc parametry nie były dopasowywane do tych samych braków, na których liczono wynik.
-
-| Zbiór | MissForest | MICE | KNN |
+| # | Ustalenie | Waga | Status |
 |---|---|---|---|
-| KOR | **0,0783** | 0,0865 | 0,1022 |
-| NEURO | 0,1017 | **0,0978** | 0,1291 |
-
-Żadna metoda nie wygrała na obu zbiorach. MissForest korzysta z dużej liczby kompletnych obserwacji w KOR, MICE lepiej radzi sobie na małym NEURO. Dla jednego spójnego pipeline'u wybrano **MICE z estymatorem ExtraTrees**: `max_iter=7, n_estimators=78, max_depth=10`.
-
-Stabilność sprawdzono na niezależnej masce (seed 7) i na wielu ziarnach — ranking metod się nie zmienił.
-
-**Zastrzeżenie techniczne:** to, co nazywamy MICE, jest technicznie pojedynczą, deterministyczną imputacją iteracyjną (`sample_posterior=False`), a nie klasycznym multiple imputation generującym wiele kompletnych zbiorów. Nie propagujemy niepewności uzupełnienia do wyników końcowych.
-
-### Etap 3: kontrolowany podział danych
-
-Zwykły losowy podział był wykluczony, bo jeden pacjent ma zwykle kilka rekordów. Część jego pomiarów trafiłaby do treningu, część do walidacji, a model byłby oceniany na osobie, którą już widział — i dostałby za to sztucznie wysoką ocenę.
-
-Zastosowano **StratifiedGroupKFold** na 5 foldach: *Group* pilnuje, żeby wszystkie rekordy jednego pacjenta trafiły do jednej części, *Stratified* wyrównuje proporcje klas.
-
-Imputację **wciągnięto do wnętrza foldu**: scaler uczy się tylko na kompletnych wierszach treningu, imputer tylko na treningu, walidacja jest jedynie transformowana. Dzięki temu informacja ze zbioru walidacyjnego nie wpływa na uzupełnianie braków treningowych.
-
-To był stan na raport przejściowy. Potem zaczęła się weryfikacja — i wtedy wyszło to, co opisuje Część III. Podział został przebudowany 04.10.2026 (wersja 2, patrz Problem 7).
+| 1 | kohorty prawie nie pokrywają się w czasie (KOR: 2020–2021, NEURO: 2000–2024) | **krytyczna** | do decyzji (zespół + prowadzący) |
+| 2 | nie wiemy, kiedy pobrano krew chorym; wzorzec wskazuje na hospitalizację | **krytyczna** dla wniosków | założenie przyjęte, do potwierdzenia |
+| 3 | 63 pacjentów jest w obu kohortach | niska (0,15%) | do decyzji |
+| 4 | selekcja cech użyła etykiety na całym zbiorze | średnia | rekomendacja: 38 cech |
+| 5 | wartości niemożliwe fizjologicznie, mieszane jednostki KREA | średnia | do konsultacji klinicznej |
+| 6 | reguła agregacji do pacjenta może przemycać liczbę badań | średnia | rekomendacja: mediana |
+| 7 | podział danych nie był tasowany ani zapisany | — | **rozwiązane** (podział v2) |
+| 8 | założenie SCAR jest wątpliwe | nieusuwalna | ograniczenie do raportu |
+| 9 | nie zmierzymy rzeczywistego odsetka pomyłek | nieusuwalna | ograniczenie do raportu |
+| 10 | braki rozłożone bardzo nierówno między kohortami | średnia | do analizy wrażliwości |
 
 ---
 
-## Część III — Etap 0: wszystkie wykryte problemy
-
-Etap 0 to nie praca programistyczna, tylko **decyzje protokołu**. Każdy problem poniżej został wykryty przez policzenie czegoś w danych, nie przez przypuszczenie. Skrypty: `4-pu-setup/etap0_diagnostyka.py`, `4-pu-setup/etap0_agregacja.py`, `3-sgkf-split/etap0_sgkf_stabilnosc.py`.
-
-Problemy są ułożone od najgroźniejszego.
-
----
-
-### Problem 1 (0.2): Kohorty prawie nie pokrywają się w czasie
+## Problem 1 (0.2): Kohorty prawie nie pokrywają się w czasie
 
 **Co widzimy.** Rozkład rekordów według roku badania:
 
@@ -165,7 +80,7 @@ Dochodzi jeszcze jeden czynnik: KOR to niemal w całości okres pandemii COVID-1
 
 ---
 
-### Problem 2 (0.2): Nie wiemy, kiedy pobrano krew chorym
+## Problem 2 (0.2): Nie wiemy, kiedy pobrano krew chorym
 
 **Co widzimy.** W danych nie ma kolumny z datą rozpoznania tętniaka. Mamy tylko datę badania laboratoryjnego.
 
@@ -189,7 +104,7 @@ Jeśli pochodzą z hospitalizacji, w trakcie której pacjenta diagnozowano i ope
 
 ---
 
-### Problem 3 (0.1): 63 pacjentów jest w obu kohortach naraz
+## Problem 3 (0.1): 63 pacjentów jest w obu kohortach naraz
 
 **Co widzimy.** 63 pacjentów ma rekordy zarówno w KOR, jak i w NEURO — łącznie 264 rekordy (145 KOR + 119 NEURO). Relacja czasowa jest wymowna:
 
@@ -213,7 +128,7 @@ Dla tych 55 osób odstęp między ostatnim badaniem w KOR a pierwszym w NEURO wy
 
 ---
 
-### Problem 4 (0.4): Selekcja cech użyła etykiety na całym zbiorze
+## Problem 4 (0.4): Selekcja cech użyła etykiety na całym zbiorze
 
 **Co widzimy.** CRP, MONO i %MONO usunięto na podstawie korelacji z `label`, liczonej na skonsolidowanym zbiorze — czyli także na danych, które później trafią do walidacji. Formalnie jest to wyciek informacji o etykiecie do etapu przygotowania danych.
 
@@ -237,7 +152,7 @@ Czyli **odrzucono szum**, a nie silne predyktory. Wpływ na wyniki jest zapewne 
 
 ---
 
-### Problem 5 (0.5): Wartości niemożliwe fizjologicznie i mieszane jednostki
+## Problem 5 (0.5): Wartości niemożliwe fizjologicznie i mieszane jednostki
 
 **Co widzimy.**
 
@@ -263,13 +178,21 @@ Problem dotyczy około 1% rekordów i występuje w obu kohortach w zbliżonej pr
 
 Potrzebna jest informacja, czy w systemie źródłowym zapisana jest jednostka konkretnego oznaczenia.
 
-**Status: DO KONSULTACJI KLINICZNEJ.** We wstępnej infrastrukturze PU (branch `pu-pipeline-1-5-lk`) jest przełącznik zamieniający wartości spoza zakresu przeżycia na braki (i pozwalający imputacji je odtworzyć), domyślnie wyłączony.
+**Status: DO KONSULTACJI KLINICZNEJ.** Wariant techniczny na wypadek braku informacji o jednostkach: wartości spoza zakresu przeżycia zamieniać na braki, żeby imputacja wewnątrz foldu odtworzyła je z reszty profilu (`PLAN_MODELOWANIA.md`, sekcja 3).
 
 ---
 
-### Problem 6 (0.3): Wybór reguły agregacji realnie zmienia dane
+## Problem 6 (0.3): Wybór reguły agregacji realnie zmienia dane
 
-**Co widzimy.** 41,3% pacjentów ma więcej niż jeden rekord, więc trzeba z kilku wyników zrobić jeden profil. Ale punktem wyjścia jest nierównowaga, która przesądza sprawę:
+**Co widzimy.** 41,3% pacjentów (16 897) ma więcej niż jeden rekord, więc trzeba z kilku wyników zrobić jeden profil; dla pozostałych 58,7% (24 027) wybór reguły nie ma znaczenia. Rozrzut wewnątrz pacjenta jest realny:
+
+| Cecha | Mediana \|max−min\| | Mediana odch. std |
+|---|---:|---:|
+| WBC | 2,78 | 1,68 |
+| GLU | 2,00 | 15,98 |
+| KREA | 0,14 | 0,10 |
+| PLT | 49,00 | 30,64 |
+ Ale punktem wyjścia jest nierównowaga, która przesądza sprawę:
 
 | Klasa | Pacjentów | Mediana rekordów | Średnia | Maksimum | Ma >1 rekord |
 |---|---:|---:|---:|---:|---:|
@@ -298,9 +221,9 @@ Do tego wciąga wartości nierealne z Problemu 5 — liczba pacjentów poza zakr
 | K | 20 | 24 | 31 | **78** |
 | WBC | 1 | 1 | 2 | **7** |
 
-A pozorna siła sygnału jest przy tym praktycznie identyczna (mediana \|AUC−0,5\|: 0,0440 dla średniej, 0,0438 dla mediany, 0,0467 dla maksimum). **Maksimum nie kupuje nic w zamian za te wady.**
+Reguły dają zbliżone, ale nie wymienne profile: korelacja między nimi waha się od 0,985 (średnia vs mediana) do 0,806 (maksimum vs ostatni). A pozorna siła sygnału jest przy tym praktycznie identyczna (mediana \|AUC−0,5\|: 0,0440 dla średniej, 0,0438 dla mediany, 0,0467 dla maksimum). **Maksimum nie kupuje nic w zamian za te wady.**
 
-**Rekomendacja: mediana jako reguła główna, średnia jako analiza wrażliwości.**
+**Rekomendacja: mediana jako reguła główna, średnia jako analiza wrażliwości** (najbliższa medianie, ρ = 0,985).
 
 Maksimum odpada całkowicie, nie jako wariant zapasowy. Ostatni pomiar też odpada, ale z innego powodu: przy założeniu o hospitalizacji „ostatni" oznacza u chorych pomiar **po leczeniu**, a u KOR zwykły wynik kontrolny. Reguła, która znaczy co innego w każdej klasie, jest bezużyteczna.
 
@@ -308,7 +231,7 @@ Maksimum odpada całkowicie, nie jako wariant zapasowy. Ostatni pomiar też odpa
 
 ---
 
-### Problem 7 (0.6): Podział danych nie był tasowany
+## Problem 7 (0.6): Podział danych nie był tasowany
 
 **Co widzimy.** W `3-sgkf-split/aneurysm_sgkf_mice_pipeline.py` podział powstaje jako `StratifiedGroupKFold(n_splits=5)`. Domyślnie `shuffle=False`, więc **nie ma tasowania**, a stała `RANDOM_STATE = 42` nie ma na podział żadnego wpływu — działa wyłącznie wewnątrz MICE.
 
@@ -343,7 +266,7 @@ Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 
 ---
 
-### Problem 8 (przekrojowy): Założenie SCAR jest wątpliwe
+## Problem 8 (przekrojowy): Założenie SCAR jest wątpliwe
 
 **O co chodzi.** Metody PU zwykle zakładają **SCAR** (Selected Completely At Random): że znani pozytywni są losową próbką wszystkich pozytywnych. Czyli że pacjenci z NEURO niczym się nie różnią od niezdiagnozowanych chorych ukrytych w KOR — poza tym, że akurat ich wykryto.
 
@@ -355,7 +278,7 @@ Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 
 ---
 
-### Problem 9 (przekrojowy): Nie zmierzymy rzeczywistego odsetka pomyłek
+## Problem 9 (przekrojowy): Nie zmierzymy rzeczywistego odsetka pomyłek
 
 **O co chodzi.** Ukrywanie pozytywnych mierzy, czy model potrafi odzyskać **znanych** chorych. Nie mówi nic o tym, ilu pacjentów KOR jest naprawdę zdrowych.
 
@@ -365,7 +288,28 @@ Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 
 ---
 
-## Część IV — Decyzje do podjęcia
+## Problem 10 (przekrojowy): Braki są rozłożone nierówno między kohortami
+
+**Co widzimy.** Wykryte przy audycie podziału (04.10.2026):
+
+| | KOR | NEURO |
+|---|---:|---:|
+| komórki cech uzupełniane przez MICE | 12,3% | **26,0%** |
+| kompletne wiersze | 20 663 | 780 |
+| braki NRBC / %NRBC | 2,6% | 47,7% |
+| braki NEUT / %NEUT | 2,9% | 42,3% |
+| braki CRP | 18,6% | 47,6% |
+| braki eGFR (oba wzory) | 17,2% | ~41,7% |
+
+**Dlaczego to groźne.** Około jednej czwartej profilu NEURO odtwarza imputer uczony w 91% na KOR, a scaler opiera się na kompletnych wierszach, które w 96% pochodzą z KOR. Możliwe skutki idą w przeciwnych kierunkach: imputowane wartości NEURO mogą być „podobne do KOR” i zacierać różnice, albo sam wzorzec braków może zostawić ślad odróżniający kohorty. Nie wiemy, który efekt przeważa.
+
+**Co można zrobić.** Analiza wrażliwości na etapie modelowania: model na cechach o niskim odsetku braków w obu kohortach, porównanie rozkładów wartości imputowanych z obserwowanymi w NEURO, ewentualnie jawne flagi braków (z zastrzeżeniem, że one same odróżniają kohorty).
+
+**Status: DO ANALIZY WRAŻLIWOŚCI.** Udział imputowanych komórek per kohorta jest raportowany w każdym foldzie przez `3-sgkf-split/aneurysm_sgkf_mice_pipeline.py`.
+
+---
+
+## Decyzje do podjęcia
 
 | Nr | Decyzja | Rekomendacja | Kto decyduje | Koszt zmiany później |
 |---|---|---|---|---|
@@ -377,20 +321,24 @@ Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 | 0.5 | wartości skrajne i KREA | czeka na jednostki | konsultacja kliniczna | niski |
 | 0.6 | konfiguracja podziału | pacjenci, shuffle, ziarno 42, 5 foldów, stratyfikacja etykieta × okno × liczba rekordów | — | **zamrożone (v2)** |
 
-Koszt zmiany decyzji to w większości nie kod, lecz **czas obliczeń**: pełna imputacja to ~23 minuty na fold, a przy walidacji zagnieżdżonej wielokrotność tego. Dlatego decyzje powinny zapaść **przed** ustaleniem planu modelowania.
+Koszt zmiany decyzji to w większości nie kod, lecz **czas obliczeń**: pełna imputacja to ok. 20 minut na fold, a przy walidacji zagnieżdżonej wielokrotność tego. Dlatego decyzje powinny zapaść **przed** ustaleniem planu modelowania (`PLAN_MODELOWANIA.md`).
 
 ---
 
-## Część V — Co dalej
+## Pytania do prowadzącego
 
-Plan modelowania zostanie ustalony na nowo po spotkaniu z prowadzącym, gdy zapadną decyzje z Części IV. Wstępny plan i implementacja punktów 1–5 z września są zachowane na branchu `pu-pipeline-1-5-lk` jako odniesienie. Ogólny kierunek: `4-pu-setup/README.md`.
+1. **Pochodzenie wyników NEURO (problem 2).** Czy wyniki laboratoryjne pacjentów NEURO pochodzą z okresu przed rozpoznaniem tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Roboczo zakładamy hospitalizację. Za tym przemawia mediana rozpiętości badań 35 dni u pacjentów z wieloma rekordami. Założenie zmienia tylko interpretację: model rozpoznaje wtedy profil pacjenta **hospitalizowanego** z tętniakiem, a nie ryzyko przesiewowe.
+2. **Rozjazd czasowy (problem 1).** Czy analiza główna zostaje na całości z jawną kontrolą czasu i źródła (wariant C), czy przenosimy się do wspólnego okna dat (wariant A, 271 pacjentów pozytywnych zamiast 1 823)?
+3. **Jednostki kreatyniny (problem 5).** Czy w systemie źródłowym zapisana jest jednostka konkretnego oznaczenia? Automatyczna korekta powyżej progu skasowałaby prawdziwe przypadki ciężkiej niewydolności nerek.
+4. **63 pacjentów w obu kohortach (problem 3).** Status pozytywny z flagą pochodzenia czy wykluczenie jako niejednoznacznych? Przy założeniu hospitalizacji ich wcześniejsze rekordy KOR nie są materiałem sprzed rozpoznania.
 
 ---
 
-## Podsumowanie w pięciu zdaniach
+## Skrypty źródłowe
 
-1. Dane są przygotowane, opisane i zweryfikowane: 78 197 rekordów, 40 924 pacjentów, 4,45% z potwierdzonym tętniakiem.
-2. Podział danych jest zamrożony i zapisany: 5 foldów po pacjentach, imputacja MICE wewnątrz foldu, foldy wyrównane pod względem klasy, epoki badania i liczby rekordów.
-3. Etap 0 wykrył dziewięć problemów, z których **najpoważniejszy jest rozjazd czasowy kohort** — model może rozpoznawać epokę zamiast choroby.
-4. Jeden problem jest rozwiązany (podział), trzy mają gotowe rekomendacje oparte na liczbach, trzy wymagają decyzji zespołu lub konsultacji klinicznej, dwa są nieusuwalne i idą do ograniczeń raportu.
-5. Kolejny krok to decyzje z Części IV na spotkaniu, a dopiero potem nowy plan modelowania.
+| Skrypt | Co liczy |
+|---|---|
+| `4-pu-setup/etap0_diagnostyka.py` | rozkład czasowy kohort, pacjenci mieszani, wartości skrajne, rozrzut wewnątrz pacjenta |
+| `4-pu-setup/etap0_agregacja.py` (+ `results/etap0_agregacja_*.csv`) | porównanie reguł agregacji (problem 6) |
+| `3-sgkf-split/etap0_sgkf_stabilnosc.py`, `3-sgkf-split/podzial.py --porownanie` | stabilność i balans podziału (problem 7) |
+| `3-sgkf-split/aneurysm_sgkf_mice_pipeline.py` | udział imputowanych komórek per kohorta (problem 10) |
