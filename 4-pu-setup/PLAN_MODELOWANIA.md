@@ -27,7 +27,7 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 | dane po decyzjach z 04.10.2026 (38 cech, przed imputacją) | `data/processed/aneurysm_sgkf_input.csv` (część A etapu 3) | **gotowe** |
 | przydział pacjent → fold (5 foldów, stratyfikacja etykieta × okno × liczba rekordów) | `3-sgkf-split/sgkf/results/pacjent_fold.csv` | **zamrożone** |
 | MICE wewnątrz foldu (ExtraTrees 7/78/10) | `3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py` | gotowe |
-| zaimputowane foldy zewnętrzne: 38 cech (główne) i 35 cech (wrażliwość) | `3-sgkf-split/sgkf/results/foldy_imputowane_{38,35}/` (lokalnie, poza gitem) | **policzone**, odtwarzalne jednym poleceniem |
+| zaimputowane foldy zewnętrzne (38 cech) | `3-sgkf-split/sgkf/results/foldy_imputowane_38/` (lokalnie, poza gitem) | **policzone**, odtwarzalne jednym poleceniem |
 
 **Zasada nadrzędna:** foldy wyłącznie z `podzial.wczytaj_podzial()`, nigdy liczone od nowa. Każde dopasowanie (scaler, imputer, selekcja cech, model, próg) odbywa się tylko na części treningowej.
 
@@ -41,17 +41,30 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 
 | Decyzja | Co to oznacza dla modelowania |
 |---|---|
-| 63 pacjentów w obu kohortach: pozytywni, rekordy KOR usunięte | nic do zrobienia; flaga `pacjent_mieszany` pozwala ich wykluczyć w analizie wrażliwości |
+| 63 pacjentów w obu kohortach: pozytywni, rekordy KOR usunięte | nic do zrobienia; lista tych pacjentów jest w `3-sgkf-split/przygotowanie/results/usuniete_rekordy.csv`, gdyby trzeba było ich wykluczyć w analizie wrażliwości |
 | wartości niemożliwe (KREA, K, Na) → brak, uzupełniane w foldzie | nic do zrobienia |
-| zestaw cech: 38 główne, 35 jako wrażliwość | oba warianty mają gotowe foldy na tym samym podziale |
-| rozjazd czasowy kohort: **bez korekty**, opisany jako ograniczenie | **nie dodawać roku ani daty jako cechy**, bo ułatwia rozpoznanie kohorty; analiza we wspólnym oknie dat (271 pozytywnych) tylko jako ewentualna, dodatkowa wrażliwość |
-| asymetria braków (NEURO 26%, KOR 12% komórek uzupełnianych): **bez korekty** | zalecana analiza wrażliwości: model na cechach o niskim odsetku braków w obu kohortach |
+| zestaw cech: **38, jeden wariant** (selekcja z etapu 1 cofnięta) | ewentualny wybór cech tylko **wewnątrz** walidacji krzyżowej; MONO i %MONO są redundantne (rozmaz sumuje się do 100%), co jest istotne dla modeli liniowych |
+| rozjazd czasowy kohort: **bez korekty**, opisany jako ograniczenie | **nie dodawać roku ani daty jako cechy**, bo ułatwia rozpoznanie kohorty. Diagnostyka pokazała, że epokę widać w wynikach samych chorych (AUC 0,83), więc **analiza wrażliwości we wspólnym oknie dat jest konieczna**, a nie tylko „ewentualna” (decyzja do potwierdzenia z prowadzącym) |
+| asymetria braków (NEURO 26%, KOR 12% komórek uzupełnianych): **bez korekty** | sam wzorzec braków odróżnia kohorty z AUC 0,82, a imputacja zostawia ślad (podpis NRBC). Zalecana analiza wrażliwości: model na cechach o niskim odsetku braków w obu kohortach |
+
+**Co pokazała analiza wyników SGKF** (`3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcje 4.3 i 5), czyli rzeczy, które plan musi uwzględnić:
+
+| Ustalenie | Konsekwencja dla modelowania |
+|---|---|
+| kohorty rozdzielne na cechach po imputacji z AUC **0,93** (pacjenci), a we wspólnym oknie dat z AUC 0,80 | wysokie AUC P-vs-U **nie jest** dowodem wykrywania tętniaka; raportujemy je wyłącznie jako metrykę P-vs-U |
+| sam wzorzec braków (które badania zlecono) odróżnia kohorty z AUC **0,82** | analiza wrażliwości na cechach z niskim odsetkiem braków w obu kohortach (morfologia, wiek, płeć); porównanie z modelem na pełnym zestawie |
+| **podpis imputacji NRBC / %NRBC**: zmierzone to w 78% dokładne zera, uzupełnione nigdy nie są zerem; NRBC brakuje w 48% rekordów NEURO i 3% KOR | przed modelowaniem rozstrzygnąć: wykluczyć NRBC i %NRBC (niska wartość kliniczna u dorosłych) albo sprawdzić ważność tych cech w modelu; inaczej model nauczy się „uzupełniony NRBC = NEURO” |
+| przy brakach całymi panelami (koagulogram, glukoza: ~50% rekordów) uzupełnienia ≈ średnia z treningu; przy skośnych rozkładach zawyżone (CRP, GLU) | ważność tych cech interpretować ostrożnie; rozważyć wskaźniki braków jako jawną informację zamiast ukrytego śladu |
+| epoka rozpoznawalna w wynikach NEURO z AUC **0,83** | analiza wrażliwości we wspólnym oknie dat (patrz wyżej) |
+| KOR ma profil szpitalny (CRP > 5 mg/l w 61% rekordów) | interpretacja klasy U i zastosowania „przesiewowego” zależy od odpowiedzi prowadzącego, skąd pochodzi KOR |
 
 **Zostaje do potwierdzenia lub decyzji przy planie:**
 
 | Kwestia | Stan | Wpływ |
 |---|---|---|
+| pochodzenie kohorty KOR | profil laboratoryjny wskazuje na pacjentów szpitalnych z lat 2020–2021, a nie populację ogólną | interpretacja klasy U; sens zastosowania przesiewowego |
 | pochodzenie wyników NEURO | założenie robocze: hospitalizacja (mediana rozpiętości badań 35 dni u 1 215 pacjentów z >1 rekordem) | interpretacja: model rozpoznaje pacjenta **hospitalizowanego** z tętniakiem, nie ryzyko przesiewowe |
+| NRBC i %NRBC | rekomendacja: wykluczyć z modelowania albo kontrolować (podpis imputacji) | zestaw cech modelu |
 | reguła agregacji rekordów do pacjenta | rekomendacja: **mediana**, średnia jako wrażliwość | parametr pipeline'u |
 
 **Uzasadnienie reguły agregacji** (`4-pu-setup/etap0_agregacja.py`, wyniki w `4-pu-setup/results/`, dane z 09.2026 sprzed przygotowania). 41% pacjentów ma więcej niż jeden rekord, a NEURO ma ich średnio dwa razy więcej niż KOR (3,65 wobec 1,83), bo pacjenci leżą w szpitalu. Reguła wrażliwa na liczbę pomiarów tworzy sygnał z samej częstości badania. Korelacja liczby rekordów z wartością cechy, liczona wewnątrz KOR:
@@ -158,7 +171,7 @@ Scenariusz: 5 foldów, 40% ukrywania, `q = 5%`. Na fold testowy przypada:
 |---:|---:|---:|---:|---:|
 | 8 185 | ~365 | **~146** | ~7 966 | ~399 |
 
-Rozdzielczość `RecallHidden@q` wynosi 1/146 ≈ 0,7 pp. Gdyby ograniczyć dane do wspólnego okna dat, zostałoby ~22 ukrytych na fold i rozdzielczość spadłaby do 4,5 pp. To kolejny powód, dla którego rozjazdu czasowego nie korygujemy przez obcięcie danych.
+Rozdzielczość `RecallHidden@q` wynosi 1/146 ≈ 0,7 pp. Gdyby ograniczyć dane do wspólnego okna dat, zostałoby ~22 ukrytych na fold i rozdzielczość spadłaby do 4,5 pp. Dlatego wspólne okno nadaje się na analizę wrażliwości (czy wnioski są zgodne co do kierunku), a nie na scenariusz główny.
 
 ---
 
@@ -177,13 +190,16 @@ We wrześniu powstała robocza implementacja punktów 3.1–3.5: moduły konfigu
 
 ## 7. Do ustalenia z prowadzącym
 
-1. Pochodzenie wyników NEURO: czy pochodzą sprzed rozpoznania tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Od tego zależy, jak wolno opisać model.
-2. Wartość `q`: z jakiej przepustowości diagnostyki obrazowej ją wyprowadzić?
-3. Czy 40% jako główny udział ukrywania jest uzasadnione, skoro zmienia proporcję klas widzianą przez model?
-4. Stratyfikacja foldów po prawdziwym statusie pacjenta (element konstrukcji benchmarku, model go nie widzi): akceptowalna?
-5. Kolejność: imputacja rekordów, potem agregacja do pacjenta (zgodne z benchmarkiem imputacji), czy odwrotnie (taniej, mniej braków)?
-6. Jednostka treningu: jeden profil na pacjenta czy rekordy tygodniowe z wagami 1/n?
-7. Które metody PU: PU Bagging i Elkan–Noto wystarczą?
+1. **Skąd pochodzi kohorta KOR?** Profil laboratoryjny (CRP > 5 mg/l w 61% rekordów, WBC > 10 G/l w 37%) wskazuje na pacjentów szpitalnych z lat 2020–2021, a nie na populację ogólną. Od tego zależy interpretacja klasy U.
+2. **Pochodzenie wyników NEURO:** czy pochodzą sprzed rozpoznania tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Od tego zależy, jak wolno opisać model.
+3. **Rozjazd czasowy:** epokę widać w wynikach chorych z AUC 0,83. Czy przyjmujemy „bez korekty, z analizą wrażliwości we wspólnym oknie dat”?
+4. **NRBC i %NRBC:** wykluczyć z modelowania (podpis imputacji, niska wartość kliniczna u dorosłych) czy zostawić i kontrolować?
+5. Wartość `q`: z jakiej przepustowości diagnostyki obrazowej ją wyprowadzić?
+6. Czy 40% jako główny udział ukrywania jest uzasadnione, skoro zmienia proporcję klas widzianą przez model?
+7. Stratyfikacja foldów po prawdziwym statusie pacjenta (element konstrukcji benchmarku, model go nie widzi): akceptowalna?
+8. Kolejność: imputacja rekordów, potem agregacja do pacjenta (zgodne z benchmarkiem imputacji), czy odwrotnie (taniej, mniej braków)?
+9. Jednostka treningu: jeden profil na pacjenta czy rekordy tygodniowe z wagami 1/n?
+10. Które metody PU: PU Bagging i Elkan–Noto wystarczą?
 
 ---
 

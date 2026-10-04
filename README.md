@@ -25,7 +25,7 @@ Liczby dotyczą plików surowych. Po czyszczeniu (etap 1) i przygotowaniu danych
 | koagulologia | PT, INR, APTT, WAPTT |
 | demografia | patient_age, patient_sex |
 
-Wariant 35 cech (analiza wrażliwości) to te same dane bez CRP, MONO i %MONO. Kolumny meta (nie są cechami): `patient_id`, `custom_id`, `examination_date`, `label`, `pacjent_mieszany`.
+Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CRP, MONO i %MONO, została cofnięta (`3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 2.6). Kolumny meta (nie są cechami): `patient_id`, `custom_id`, `examination_date`, `label`.
 
 ## Struktura i dokumenty
 
@@ -33,10 +33,11 @@ Wariant 35 cech (analiza wrażliwości) to te same dane bez CRP, MONO i %MONO. K
 |---|---|
 | 1. Przygotowanie danych | `1-data-preparation/` |
 | 2. Imputacja (benchmark metod) | `2-imputation/` (`RAPORT_IMPUTACJA.md`) |
-| 3. Przygotowanie danych do SGKF (A) i podział z imputacją w foldach (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
+| 3. Przygotowanie danych do SGKF (A), podział z imputacją w foldach, ocena imputacji i diagnostyka (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
 | 4. Plan modelowania PU | `4-pu-setup/PLAN_MODELOWANIA.md` |
 | Materiał do raportu przejściowego (06.2026, historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
 | **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `1026_REALIZACJA_DO_SGKF.md` |
+| Materiał na spotkanie z prowadzącym (10.2026) | `1026_SPOTKANIE_PROWADZACY.md` |
 | Archiwum sprintów i raportów cząstkowych | `docs/` |
 
 ## Środowisko

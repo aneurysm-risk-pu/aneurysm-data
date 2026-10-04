@@ -3,7 +3,7 @@
 **Wersja 1:** 11.06.2026, StratifiedGroupKFold na rekordach, materiał do raportu przejściowego (`archiwum/`)
 **Wersja 2:** 04.10.2026, decyzje dotyczące danych, zamrożony podział po pacjentach, pełna imputacja w foldach
 **Wejście etapu:** `data/imputation-inputs/aneurysm_concatted.csv` (78 197 rekordów, 38 cech, przed imputacją)
-**Wyjście etapu:** zamrożony przydział `sgkf/results/pacjent_fold.csv` oraz zaimputowane foldy dla wariantów 38 i 35 cech
+**Wyjście etapu:** zamrożony przydział `sgkf/results/pacjent_fold.csv` oraz zaimputowane foldy (38 cech)
 
 ---
 
@@ -16,11 +16,13 @@
 | przygotowane dane (decyzje 04.10.2026) | **gotowe**, 78 052 rekordy, spis każdej zmiany | `data/processed/aneurysm_sgkf_input.csv`, `przygotowanie/results/` |
 | liczby uzasadniające decyzje | gotowe | `przygotowanie/results/analiza_decyzji.json` |
 | przydział pacjent → fold | **zamrożony**, z odciskiem danych | `sgkf/results/pacjent_fold.csv`, `podzial_meta.json` |
-| imputacja MICE w foldach, 38 cech (wariant główny) | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_38.json` |
-| imputacja MICE w foldach, 35 cech (wrażliwość) | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_35.json` |
-| porównanie 38 vs 35 | gotowe: mały wpływ na imputację, 38 nieznacznie lepsze | `sgkf/results/porownanie_cech_38_35.json` |
-| zaimputowane foldy | lokalnie, poza gitem (40–44 MB na wariant), odtwarzalne jednym poleceniem | `sgkf/results/foldy_imputowane_{38,35}/` |
-| testy | 6/6 (część A), 11/11 (część B) | `przygotowanie/tests/`, `sgkf/tests/` |
+| zestaw cech: **38, jeden wariant** | selekcja z etapu 1 (usunięcie CRP, MONO, %MONO) cofnięta | `przygotowanie/results/analiza_selekcji_cech.json`, sekcja 2.6 |
+| imputacja MICE w foldach | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_38.json` |
+| zaimputowane foldy | lokalnie, poza gitem (46 MB), odtwarzalne jednym poleceniem; dwa przebiegi dały identyczne odciski | `sgkf/results/foldy_imputowane_38/` |
+| jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami uzupełnienia ≈ średnia | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
+| analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
+| porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | mały wpływ na imputację, 38 nieznacznie lepsze | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
+| testy | 6/6 (część A), 10/10 (część B) | `przygotowanie/tests/`, `sgkf/tests/` |
 
 **Jak użyć wyniku w kolejnym etapie:**
 
@@ -33,7 +35,7 @@ import pandas as pd                            # albo gotowe zaimputowane foldy
 train0 = pd.read_parquet("3-sgkf-split/sgkf/results/foldy_imputowane_38/fold0_train.parquet")
 ```
 
-**Jak odtworzyć cały etap:** `python 3-sgkf-split/uruchom_sgkf.py` (31 min na Macu z procesorem M). Opcja `--czesc A` albo `--czesc B` uruchamia jedną część, a `--bez-mice` pomija imputację.
+**Jak odtworzyć cały etap:** `python 3-sgkf-split/uruchom_sgkf.py` (około 35 min na Macu z procesorem M, w tym 15 min imputacji i 15 min jej oceny). Opcja `--czesc A` albo `--czesc B` uruchamia jedną część, a `--bez-mice` pomija imputację.
 
 ---
 
@@ -56,7 +58,7 @@ To trzeba rozstrzygnąć **przed** zamrożeniem podziału, bo zmiana danych po f
 
 ## 2. Część A: przygotowanie danych do SGKF
 
-**Kod:** `przygotowanie/przygotuj_dane.py` · **testy:** `przygotowanie/tests/test_przygotowanie.py` · **podkładka liczbowa:** `przygotowanie/analiza_decyzji.py`
+**Kod:** `przygotowanie/przygotuj_dane.py` · **testy:** `przygotowanie/tests/test_przygotowanie.py` · **podkładka liczbowa:** `przygotowanie/analiza_decyzji.py`, `przygotowanie/analiza_selekcji_cech.py`
 
 Część A jest osobnym krokiem. Czyta plik źródłowy i zapisuje przygotowany plik `data/processed/aneurysm_sgkf_input.csv`, który jest jedynym wejściem części B. Plik źródłowy zostaje nietknięty. Każdą zmianę zapisuje się do spisu: `przygotowanie/results/usuniete_rekordy.csv` i `usuniete_wartosci.csv`.
 
@@ -64,13 +66,14 @@ Część A jest osobnym krokiem. Czyta plik źródłowy i zapisuje przygotowany 
 
 | # | Problem | Decyzja | Skutek w danych |
 |---|---|---|---|
-| 1 | 63 pacjentów ma rekordy i w KOR, i w NEURO | zostają jako **pozytywni**, ich rekordy KOR są usuwane; kolumna `pacjent_mieszany` (0/1) zachowuje informację | −145 rekordów KOR; pacjentów bez zmian (40 924) |
+| 1 | 63 pacjentów ma rekordy i w KOR, i w NEURO | zostają jako **pozytywni**, ich rekordy KOR są usuwane; kto to był, zapisuje spis `przygotowanie/results/usuniete_rekordy.csv` (dane nie mają dodatkowej kolumny) | −145 rekordów KOR; pacjentów bez zmian (40 924) |
 | 2 | KREA > 50 mg/dl | wartość → brak | 210 wartości (KOR 195, NEURO 15) |
 | 3 | KREA > 10 mg/dl przy eGFR-MDRD ≥ 30 | wartość → brak | 516 wartości (KOR 478, NEURO 38) |
 | 4 | K > 15 mmol/l | wartość → brak | 25 wartości (wszystkie KOR, maks. 28,3) |
 | 5 | Na < 80 mmol/l | wartość → brak | 1 wartość (NEURO, 74) |
 | 6 | rozjazd czasowy kohort | **bez korekty**: dane są, jakie są; opisane jako ograniczenie; stratyfikacja podziału wyrównuje epokę między foldami | — |
 | 7 | asymetria braków między kohortami | **bez korekty**: ograniczenie, raportowane w każdym foldzie | — |
+| 8 | zestaw cech (w etapie 1 usunięto CRP, MONO, %MONO) | **38 cech, jeden wariant**: selekcja z etapu 1 cofnięta (sekcja 2.6) | CRP, MONO, %MONO wracają |
 
 Łącznie **752 wartości zamienione na brak** (726 KREA, czyli 1,1% jej pomiarów; 25 K, czyli 0,04%; 1 Na) i **145 usuniętych rekordów**. Wynik to 78 052 rekordy, 40 924 pacjentów, w tym 1 823 pozytywnych.
 
@@ -143,6 +146,36 @@ Pacjent nie może być jednocześnie pozytywny (NEURO) i nieoznaczony (KOR), bo 
 - płeć i wiek bez braków (wiek 18–100), więc MICE ich nie uzupełnia i nie powstaje „ułamkowa płeć”,
 - żaden rekord nie jest pusty.
 
+### 2.6 Zestaw cech: dlaczego 38, a nie 35
+
+W etapie 1 (notebook `1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb`, 08.06.2026) usunięto CRP, MONO i %MONO. Skrypt `przygotowanie/analiza_selekcji_cech.py` odtwarza tę procedurę na danych źródłowych. Wynik jest identyczny z notebookiem: te same trzy cechy, wartości korelacji zgodne co do cyfry we wszystkich czterech miarach.
+
+**Jak wybrano te cechy.** Dla każdej z czterech miar zależności z etykietą (Pearson, Spearman, Kendall, Phi-K) wzięto 10 cech najsłabiej skorelowanych. Zliczono, ile razy każda cecha znalazła się na tych listach, i usunięto trzy najczęstsze.
+
+| Cecha | „Głosy” (na 4 możliwe) |
+|---|---:|
+| CRP | 4 |
+| MONO | 4 |
+| %MONO | 3 |
+| HCT, MPV, `patient_age` | po 3 |
+
+**Dlaczego tej selekcji nie utrzymujemy:**
+1. **Użyto etykiety na całym zbiorze**, czyli także na pacjentach, którzy później trafiają do testu. To formalny wyciek: decyzja o cechach „widziała” wynik oceny.
+2. **W PU etykieta oznacza kohortę, nie chorobę.** Kryterium „słaba korelacja z etykietą” usuwa cechy, które nie odróżniają KOR od NEURO, a zostawia te, które odróżniają, łącznie z różnicami epoki i sposobu pozyskania danych. To odwrotność tego, czego potrzebujemy.
+3. **Korelacja jednowymiarowa nie mierzy przydatności cechy** w modelu wielowymiarowym.
+4. **Wybór na granicy był przypadkowy.** Trzecie miejsce to remis czterech cech po 3 głosy, rozstrzygnięty sortowaniem alfabetycznym („%” jest przed literami). Ta sama procedura z inną kolejnością usunęłaby HCT, MPV albo wiek pacjenta.
+
+**Co mówią same cechy, niezależnie od etykiety** (`analiza_selekcji_cech.json`, sekcja 5):
+- %MONO jest **w pełni redundantne**: równa się 100 − (%NEUT + %LYMPH + %EO + %BAZO), korelacja 0,9995, mediana różnicy 0,0 pp.
+- MONO jest **prawie redundantne**: MONO ≈ %MONO × WBC / 100, mediana błędu względnego 0,4%.
+- CRP **nie jest redundantne i nie odróżnia kohort**: mediana 10,7 mg/l w KOR i 12,1 w NEURO, Spearman z etykietą 0,008. Brakuje go w 18,6% rekordów KOR i 47,7% NEURO, ale podobną asymetrię braków mają cechy, których nikt nie proponował usuwać (NRBC, NEUT).
+
+**Decyzja (04.10.2026): jeden zestaw, 38 cech.** Selekcja z etapu 1 jest cofnięta, a ewentualny wybór cech przechodzi do modelowania, gdzie może odbywać się wewnątrz walidacji krzyżowej. Za takim wyborem przemawiają też dwie rzeczy praktyczne:
+- benchmark imputacji z etapu 2 był liczony na 38 cechach, więc parametry MICE pasują do tego zestawu bez ponownego benchmarku,
+- jednorazowe porównanie wykazało, że imputacja na 38 cechach jest nieznacznie lepsza (sekcja 4.5).
+
+Redundancja MONO i %MONO zostaje: imputacji pomaga (suma rozmazu pozwala odtworzyć brakujące procenty), a z kolinearnością radzą sobie modele drzewiaste i regresja z regularyzacją.
+
 ---
 
 ## 3. Część B: podział na foldy
@@ -194,19 +227,19 @@ Wnioski:
 
 `sgkf/results/podzial_diagnostyka.csv`:
 
-| Fold | Pacjenci | Rekordy | Pozytywni | Udział poz. | NEURO z okna KOR | NEURO z 5+ rek. | Mediana roku NEURO | Mieszani |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 0 | 8 185 | 15 722 | 364 | 4,45% | 8,5% | 20,6% | 2019 | 13 |
-| 1 | 8 185 | 15 540 | 365 | 4,46% | 8,5% | 20,8% | 2019 | 13 |
-| 2 | 8 185 | 15 601 | 365 | 4,46% | 9,0% | 20,8% | 2018 | 7 |
-| 3 | 8 185 | 15 608 | 365 | 4,46% | 9,0% | 20,8% | 2019 | 17 |
-| 4 | 8 184 | 15 581 | 364 | 4,45% | 8,5% | 20,6% | 2018 | 13 |
+| Fold | Pacjenci | Rekordy | Pozytywni | Udział poz. | NEURO z okna KOR | NEURO z 5+ rek. | Mediana roku NEURO |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 8 185 | 15 722 | 364 | 4,45% | 8,5% | 20,6% | 2019 |
+| 1 | 8 185 | 15 540 | 365 | 4,46% | 8,5% | 20,8% | 2019 |
+| 2 | 8 185 | 15 601 | 365 | 4,46% | 9,0% | 20,8% | 2018 |
+| 3 | 8 185 | 15 608 | 365 | 4,46% | 9,0% | 20,8% | 2019 |
+| 4 | 8 184 | 15 581 | 364 | 4,45% | 8,5% | 20,6% | 2018 |
 
-Pacjentów, którzy byli w obu kohortach (63), nie dodano do klucza stratyfikacji, bo dałoby to warstwy po kilka osób. Rozkład 7–17 na fold jest akceptowalny przy 0,15% udziale w danych.
+Pacjentów, którzy byli w obu kohortach (63), nie dodano do klucza stratyfikacji, bo dałoby to warstwy po kilka osób. Ich listę zawiera spis części A.
 
 ### 3.5 Odtwarzalność
 
-- `podzial_meta.json` przechowuje konfigurację, odcisk SHA-256 pliku wejściowego (`4179b1596019915b`), metadane części A, wersje bibliotek i datę.
+- `podzial_meta.json` przechowuje konfigurację, odcisk SHA-256 pliku wejściowego (`5b822c09ebc03011`), metadane części A, wersje bibliotek i datę.
 - `wczytaj_podzial()` przelicza odcisk i **odmawia działania**, jeśli plik wejściowy się zmienił. Każda zmiana w części A (reguły, dane źródłowe) unieważnia więc zapisany podział i wymusza świadome przebudowanie.
 - Odcisk liczony jest po ujednoliceniu końców linii, więc ten sam podział wczytuje się na Windowsie (CRLF po checkoucie) i na macOS.
 
@@ -246,35 +279,52 @@ Uwagi metodologiczne:
 
 ### 4.2 Wyniki pełnego przebiegu
 
-`python 3-sgkf-split/uruchom_sgkf.py`, 04.10.2026: wszystkie kroki OK, całość 31,1 min (Mac M-series, Python 3.9.6, sklearn 1.6.1). Logi każdego kroku: `sgkf/results/logi/`.
+`python 3-sgkf-split/uruchom_sgkf.py`, 04.10.2026: wszystkie kroki OK (Mac M-series, Python 3.9.6, sklearn 1.6.1). Logi każdego kroku: `przygotowanie/results/logi/`, `sgkf/results/logi/`.
 
-**Kontrole w każdym foldzie obu wariantów:** 0 wspólnych pacjentów train/test, 0 braków i 0 wartości ujemnych po imputacji; każdy z 40 924 pacjentów trafił do części testowej dokładnie raz.
+**Kontrole w każdym foldzie:** 0 wspólnych pacjentów train/test, 0 braków i 0 wartości ujemnych po imputacji; każdy z 40 924 pacjentów trafił do części testowej dokładnie raz.
 
-**Wariant 38 cech (główny)**, `sgkf/results/przebieg_imputacji_38.json`, łącznie 15,5 min:
+`sgkf/results/przebieg_imputacji_38.json`, łącznie 15,6 min:
 
 | Fold | Rekordy train / test | Pacjenci test | Udział `label=1` w teście (rekordy) | Uzupełnione komórki w teście: KOR / NEURO | Czas | Odcisk wyniku |
 |---:|---|---:|---:|---|---:|---|
 | 0 | 62 330 / 15 722 | 8 185 | 9,18% | 12,1% / 27,5% | 2,9 min | `cf84e0d1d6e15e45` |
-| 1 | 62 512 / 15 540 | 8 185 | 8,07% | 12,3% / 25,5% | 3,1 min | `a42c7f1088cff2eb` |
+| 1 | 62 512 / 15 540 | 8 185 | 8,07% | 12,3% / 25,5% | 3,2 min | `a42c7f1088cff2eb` |
 | 2 | 62 451 / 15 601 | 8 185 | 8,21% | 12,3% / 25,8% | 3,1 min | `71a04bd6f5aae1f7` |
 | 3 | 62 444 / 15 608 | 8 185 | 8,70% | 12,3% / 25,3% | 3,2 min | `b51c96cf1e45b725` |
 | 4 | 62 471 / 15 581 | 8 184 | 8,43% | 12,5% / 25,8% | 3,2 min | `3712e06c85c32b52` |
 
-**Wariant 35 cech (wrażliwość)**, `sgkf/results/przebieg_imputacji_35.json`, łącznie 13,5 min:
-
-| Fold | Rekordy train / test | Pacjenci test | Udział `label=1` w teście (rekordy) | Uzupełnione komórki w teście: KOR / NEURO | Czas | Odcisk wyniku |
-|---:|---|---:|---:|---|---:|---|
-| 0 | 62 330 / 15 722 | 8 185 | 9,18% | 12,5% / 27,6% | 2,7 min | `4bca56a49c41190d` |
-| 1 | 62 512 / 15 540 | 8 185 | 8,07% | 12,6% / 25,8% | 2,7 min | `8ddbc0502f56df90` |
-| 2 | 62 451 / 15 601 | 8 185 | 8,21% | 12,6% / 26,0% | 2,7 min | `71c526a0b57d2e4a` |
-| 3 | 62 444 / 15 608 | 8 185 | 8,70% | 12,7% / 25,5% | 2,7 min | `3e71be677d83e5a3` |
-| 4 | 62 471 / 15 581 | 8 184 | 8,43% | 12,9% / 25,9% | 2,7 min | `1c6921b291412afa` |
+**Powtarzalność.** Dwa niezależne pełne przebiegi z 04.10.2026 (przed i po usunięciu kolumny meta) dały **identyczne odciski wyników we wszystkich 5 foldach**. Imputacja jest więc deterministyczna na danym środowisku. Na innym komputerze lub przy innej wersji sklearn porównanie odcisków od razu pokaże ewentualną różnicę.
 
 Udział `label=1` liczony na **rekordach** waha się między foldami (8,1–9,2%), bo pacjenci NEURO mają różną liczbę rekordów. Na **pacjentach**, czyli tam, gdzie będą liczone metryki, foldy są wyrównane do 0,01 pp (sekcja 3.4).
 
-Zaimputowane foldy mają 44 MB (38 cech) i 40 MB (35 cech) w formacie parquet: `sgkf/results/foldy_imputowane_{38,35}/fold{0..4}_{train,test}.parquet`. Każdy plik zawiera kolumny meta (`patient_id`, `custom_id`, `examination_date`, `label`, `pacjent_mieszany`) i cechy po imputacji, w oryginalnych jednostkach. Pliki są poza gitem; na innym komputerze odtwarza je `uruchom_sgkf.py`. Zgodność wyniku sprawdza się, porównując pole `odcisk_wyniku`.
+Zaimputowane foldy mają 46 MB w formacie parquet: `sgkf/results/foldy_imputowane_38/fold{0..4}_{train,test}.parquet`. Każdy plik zawiera kolumny meta (`patient_id`, `custom_id`, `examination_date`, `label`) i 38 cech po imputacji, w oryginalnych jednostkach. Pliki są poza gitem; na innym komputerze odtwarza je `uruchom_sgkf.py`.
 
-### 4.3 Asymetria braków między kohortami
+### 4.3 Jakość imputacji: protokół z etapu 2 w foldach
+
+**Kod:** `sgkf/ocena_imputacji.py` · **wynik:** `sgkf/results/ocena_imputacji.json`
+
+Błąd imputacji da się zmierzyć tylko na wartościach, które znamy. Dlatego, jak w benchmarku z etapu 2, ukrywamy część wartości w kompletnych wierszach i porównujemy uzupełnienia z prawdą. Funkcje maskowania i metryk są importowane wprost z `2-imputation/final/evaluate.py`. Różnica względem etapu 2: ocena jest **out-of-fold**. Scaler i MICE dopasowano na treningu foldu dokładnie jak w produkcji, a oceniane są kompletne wiersze części testowej, czyli pacjenci niewidziani przy dopasowaniu: około 4 000 wierszy KOR i 142–176 wierszy NEURO na fold.
+
+Dwie maski:
+- **etap 2:** losowe 10% komórek (seed 42), czyli dokładnie protokół benchmarku,
+- **realistyczne wzorce:** każdy kompletny wiersz dostaje wzorzec braków losowo wybranego niekompletnego wiersza tej samej kohorty z treningu. Braki idą wtedy całymi panelami, jak w prawdziwych danych. Ukrytych jest średnio 17% komórek w KOR i 29–34% w NEURO.
+
+Obok RMSE podajemy **stosunek do uzupełniania średnią z treningu** na tych samych maskach. Jest niezależny od skali; 1,0 oznacza, że MICE nie jest lepsze od średniej.
+
+| Maska | Kohorta | RMSE [0,1] (5 foldów) | MAE | RMSE względem średniej | Etap 2 (MICE, parametry produkcyjne) |
+|---|---|---:|---:|---:|---:|
+| losowe 10% | KOR | 0,0829 ± 0,0019 | 0,031 | **0,61** | 0,0861 |
+| losowe 10% | NEURO | 0,0801 ± 0,0078 | 0,031 | **0,65** | 0,0984 |
+| realistyczne wzorce | KOR | 0,1080 ± 0,0014 | 0,060 | **0,98** | — |
+| realistyczne wzorce | NEURO | 0,0792 ± 0,0058 | 0,045 | **0,89** | — |
+
+**Wnioski:**
+1. **MICE w ustawieniu produkcyjnym działa co najmniej tak dobrze jak w benchmarku.** Dla KOR liczby są wprost porównywalne: 0,083 wobec 0,086. Dla NEURO RMSE wyszło niższe niż w benchmarku, ale nie jest wprost porównywalne. W etapie 2 NEURO miało własny skaler z 780 wierszy, a tu skaler pochodzi z treningu, w ~96% z KOR. Miara względna pokazuje, że **NEURO jest uzupełniane praktycznie tak samo dobrze jak KOR** (0,65 wobec 0,61).
+2. **Przy brakach całymi panelami imputacja prawie nic nie wnosi**: w KOR jest o 2% lepsza od średniej, w NEURO o 11%. Gdy brakuje całego panelu, pozostałe cechy niosą o nim mało informacji i uzupełnienie jest bliskie średniej z treningu. Dotyczy to zwłaszcza koagulogramu (PT, INR, APTT, WAPTT) i glukozy, których brakuje w około połowie rekordów obu kohort. **Benchmark z etapu 2, maskujący losowe komórki, przeszacowywał więc użyteczność imputacji dla tych danych.** Skutki opisuje sekcja 5.1.
+3. Najtrudniejsze dla NEURO w protokole z etapu 2 są płeć i wiek, co jest artefaktem protokołu, bo w prawdziwych danych tych cech nigdy nie brakuje. Dalej MPV, CRP i eGFR. Przy realistycznych wzorcach najtrudniejsze są eGFR, MPV i parametry czerwonokrwinkowe (HGB, RBC, HCT).
+4. Wyniki NEURO są bardziej zmienne między foldami (odch. 0,008), bo opierają się na 142–176 kompletnych wierszach na fold. KL dla NEURO (0,06 przy maskach losowych) jest przy tej liczbie wierszy mało wiarygodne.
+
+### 4.4 Asymetria braków między kohortami
 
 `analiza_decyzji.json`, sekcja G, wariant 38 cech po przygotowaniu:
 
@@ -294,9 +344,9 @@ Około jednej czwartej profilu NEURO odtwarza imputer, który uczy się na treni
 
 **Decyzja (04.10.2026): bez korekty, opisujemy jako ograniczenie.** Udział uzupełnionych komórek per kohorta jest raportowany w każdym foldzie. Jako analiza wrażliwości w modelowaniu: model na cechach o niskim odsetku braków w obu kohortach.
 
-### 4.4 Wariant 38 czy 35 cech
+### 4.5 Jednorazowe porównanie 38 vs 35 cech (podkładka pod decyzję)
 
-**Po co.** Wariant 38 jest główny, bo selekcja trzech cech na podstawie korelacji z etykietą na całym zbiorze była formalnym wyciekiem, a etykieta rozróżnia kohorty, nie chorobę. Wariant 35 odpowiada raportowi przejściowemu. Oba warianty mają ten sam podział (ci sami pacjenci, różnią się tylko kolumnami), więc można je porównać bezpośrednio: `sgkf/porownanie_cech.py` → `sgkf/results/porownanie_cech_38_35.json`.
+**Po co.** Zanim zapadła decyzja o jednym zestawie cech (sekcja 2.6), oba warianty policzono na tym samym podziale i porównano ich wpływ na imputację. Porównanie nie jest częścią standardowego przebiegu. Wyniki i logi są w `sgkf/results/porownanie_38_35/`, a polecenia do odtworzenia w `sgkf/porownanie_cech.py`. Przebieg z 04.10.2026: MICE na 35 cechach 13,5 min, te same kontrole spełnione w każdym foldzie.
 
 **Co naprawdę różni warianty.** MONO i %MONO są prawie w całości wyliczalne z innych cech: %NEUT + %LYMPH + %EO + %BAZO + %MONO = 100,0% (odch. std. 0,11), a MONO ≈ %MONO × WBC / 100 (mediana błędu względnego 0,4%). Realną nową informację wnosi tylko **CRP**.
 
@@ -318,29 +368,78 @@ Najbardziej zyskują %NEUT (RMSE 0,020 wobec 0,032), %LYMPH (0,020 wobec 0,029),
 
 Wartości obserwowane są w obu wariantach identyczne; różnią się tylko uzupełnienia.
 
-**Wniosek.** Wybór 38 czy 35 cech ma **mały wpływ na imputację**, a wariant 38 jest nieznacznie lepszy. Zostaje wariantem głównym; 35 to gotowa analiza wrażliwości. Czy CRP, marker stanu zapalnego typowy dla hospitalizacji z 48% braków w NEURO, wpływa na **model**, okaże się w modelowaniu: wystarczy porównać wyniki na obu wariantach foldów.
+**Wniosek.** Wybór 38 czy 35 cech ma **mały wpływ na imputację**, a wariant 38 jest nieznacznie lepszy. Razem z oceną samej selekcji (sekcja 2.6) przesądza to o **jednym zestawie: 38 cech**.
 
 ---
 
-## 5. Przegląd merytoryczny: co sprawdzono
+## 5. Analiza wyników: na czym model mógłby się „przejechać”
+
+**Kod:** `sgkf/analiza_wynikow.py` · **wynik:** `sgkf/results/analiza_wynikow.json`
+
+To nie jest model ryzyka tętniaka, tylko diagnostyka zbioru przygotowanego do modelowania. Sprawdza, jakie różnice między kohortami istnieją niezależnie od choroby i mogłyby posłużyć modelowi za „skrót”.
+
+### 5.1 Jak wyglądają uzupełnione wartości
+
+- **Uzupełnienia brakujących paneli skupiają się wokół średniej z treningu, tak samo w obu kohortach.** APTT: uzupełniona mediana 32,7 wobec średniej zmierzonych 32,5 (mediana zmierzonych 30,0). GLU: 120,8 wobec średniej 124,7 (mediana 107). CRP: 26,6 wobec średniej 41,7 (mediana 10,8). Przy skośnych rozkładach (CRP, GLU) uzupełnienia są więc **systematycznie wyższe niż typowa zmierzona wartość**. To bezpośredni skutek tego, że przy brakach panelowych imputacja ≈ średnia (sekcja 4.3).
+- **Podpis imputacji NRBC i %NRBC.** Zmierzone NRBC wynosi dokładnie 0 w 77,6% rekordów. Uzupełnione nigdy nie jest zerem: 99,5% uzupełnień to wartości z przedziału (0; 0,05). NRBC brakuje w 47,7% rekordów NEURO i w 2,6% KOR. „Mała niezerowa wartość NRBC” oznacza więc w praktyce „rekord NEURO”, a model drzewiasty łatwo to wykorzysta. Tak samo zachowuje się %NRBC.
+- **Imputacja jest stabilna między foldami.** Mediany uzupełnień różnią się między foldami o ułamek jednostki (APTT o 1,1–1,2 s, GLU o 1,3–2,1 mg/dl).
+
+### 5.2 Diagnostyka skrótów
+
+Na zamrożonych foldach (HistGradientBoosting, ocena na części testowej każdego foldu) mierzymy, jak dobrze da się odróżnić grupy, które nie powinny być odróżnialne, gdyby dane różniły się wyłącznie chorobą:
+
+| Test | AUC (rekordy) | AUC (pacjenci) |
+|---|---:|---:|
+| B1 NEURO vs KOR, 38 cech po imputacji | 0,906 (0,891–0,916) | **0,928** |
+| B2 NEURO vs KOR, **tylko wzorzec braków** (które badania zlecono) | 0,819 | **0,823** |
+| B3 NEURO vs KOR, tylko rekordy ze wspólnego okna dat | 0,793 (0,741–0,837) | 0,801 |
+| B4 **NEURO z lat 2020–2021 vs NEURO z innych lat** (ta sama choroba) | **0,832** (0,807–0,854) | — |
+
+Wnioski:
+1. **Kohorty są bardzo łatwe do odróżnienia (0,93 na pacjentach).** To nie jest miara wykrywania tętniaka, bo etykieta oznacza kohortę. Wysokie AUC P-vs-U w modelowaniu będzie się należało przede wszystkim temu.
+2. **Sam wzorzec braków odróżnia kohorty z AUC 0,82.** Informacja o tym, *które* badania zlecono, jest silnym sygnałem kohorty. Imputacja jej nie usuwa: zostaje w podpisie NRBC i w uzupełnieniach równych średniej.
+3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości.
+4. **Epokę widać w wynikach samych chorych (AUC 0,83).** Rozjazd czasowy nie jest więc problemem teoretycznym: wyniki laboratoryjne niosą wyraźny ślad okresu, z którego pochodzą. Decyzja „bez korekty” (sekcja 2.1) wymaga w modelowaniu przynajmniej analizy wrażliwości we wspólnym oknie dat.
+
+### 5.3 Profil kohort względem zakresów referencyjnych
+
+Odsetek rekordów poza typowym zakresem referencyjnym dla dorosłych, wśród wartości zmierzonych:
+
+| Parametr | Granica | KOR | NEURO |
+|---|---|---:|---:|
+| CRP | > 5 mg/l | **61,4%** | 62,2% |
+| WBC | > 10 G/l | 36,9% | 32,5% |
+| NEUT | > 7 G/l | 39,5% | 33,9% |
+| GLU | > 99 mg/dl | 64,0% | 57,7% |
+| HGB | < 12 g/dl | 39,6% | 43,2% |
+| PLT | < 150 G/l | 12,1% | 7,3% |
+
+KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej odbiegający od normy niż NEURO. **KOR nie wygląda na populację ogólną ani przesiewową, tylko raczej na pacjentów szpitalnych z lat 2020–2021**, czyli z okresu pandemii. Zastrzeżenie: to średnie tygodniowe z badań zlecanych z powodów klinicznych. Jeśli się to potwierdzi, zmienia interpretację klasy U i całego zastosowania „przesiewowego”. To pytanie do prowadzącego lub właściciela danych.
+
+---
+
+## 6. Przegląd merytoryczny: co sprawdzono
 
 | Obszar | Sprawdzenie | Wynik |
 |---|---|---|
 | wyciek przez pacjenta | wspólni pacjenci train/test w każdym foldzie; każdy pacjent raz w teście | 0; spełnione (asercje w pipeline, testy) |
 | wyciek przez preprocessing | scaler i MICE dopasowywane tylko na treningu foldu | spełnione (struktura `prepare_fold`) |
 | wyciek przez etykietę | etykieta nie jest cechą imputera ani modelu; używana tylko do stratyfikacji | spełnione |
-| wyciek przez selekcję cech | CRP, MONO, %MONO usunięte na podstawie korelacji z etykietą na całym zbiorze (etap 1) | wariant główny 38 cech, a 35 to wrażliwość; wpływ zmierzony w sekcji 4.4 |
+| wyciek przez selekcję cech | CRP, MONO, %MONO usunięte w etapie 1 na podstawie korelacji z etykietą na całym zbiorze | selekcja cofnięta, jeden zestaw 38 cech (sekcja 2.6); wpływ na imputację zmierzony (sekcja 4.5) |
 | powtarzalność podziału | ziarno działa, wynik nie zależy od kolejności wierszy ani od wersji sklearn | testy `test_podzial_nie_zalezy_od_kolejnosci_wierszy`, `test_ziarno_*`; przydział zapisany |
 | zmiana danych po zamrożeniu | odcisk pliku wejściowego | `test_zmiana_danych_uniewaznia_podzial` |
 | spójność przygotowania | plik w repozytorium = wynik kodu na danych źródłowych | `test_plik_w_repozytorium_zgodny_z_kodem` |
 | jakość danych | unikalność `custom_id`, zakresy, brak ujemnych, płeć i wiek bez braków | spełnione (sekcja 2.5) |
-| redundancja cech | %NEUT + %LYMPH + %EO + %BAZO + %MONO = 100,0 (odch. 0,11); MONO ≈ %MONO × WBC / 100 (mediana błędu 0,4%) | MONO i %MONO są prawie w całości wyliczalne z innych cech, a realna różnica między 38 i 35 to CRP |
+| powtarzalność imputacji | ponowny przebieg na tym samym komputerze daje identyczne odciski wyników | sekcja 4.2 |
+| jakość imputacji w produkcji | protokół z etapu 2 out-of-fold + realistyczne wzorce braków | jak w benchmarku przy losowych brakach; przy brakach panelowych ≈ średnia (sekcja 4.3) |
+| skróty dla modelu | rozdzielność kohort na cechach, na wzorcu braków, we wspólnym oknie; epoka w NEURO | AUC 0,93 / 0,82 / 0,80 / 0,83 (sekcja 5.2) |
+| redundancja cech | %NEUT + %LYMPH + %EO + %BAZO + %MONO = 100,0 (odch. 0,11); MONO ≈ %MONO × WBC / 100 (mediana błędu 0,4%) | MONO i %MONO zostają: pomagają imputacji; kolinearność do obsłużenia w modelowaniu |
 | cenzurowanie eGFR | eGFR-MDRD = 60 w 56% rekordów, eGFR-CKD = 90 w 33% | laboratorium raportuje „≥ 60” / „≥ 90”; reguła KREA (eGFR ≥ 30) działa mimo cenzury; do opisu |
 | zgodność między komputerami | odcisk wartości po imputacji w każdym foldzie (`przebieg_imputacji_*.json`) | pozwala sprawdzić, czy Windows (sklearn 1.8) liczy to samo co Mac (sklearn 1.6) |
 
 ---
 
-## 6. Ograniczenia tego etapu
+## 7. Ograniczenia tego etapu
 
 1. **Rozjazd czasowy kohort** (99,5% KOR to lata 2020–2021, NEURO to lata 2000–2024) nie jest korygowany. Stratyfikacja wyrównuje go między foldami, ale model nadal może rozpoznawać epokę.
 2. **Asymetria braków** (NEURO 26%, KOR 12% komórek uzupełnianych) i **asymetryczne czyszczenie kwantylowe z etapu 1** (NEURO 3,2%, KOR 0,8% usuniętych rekordów).
@@ -348,10 +447,13 @@ Wartości obserwowane są w obu wariantach identyczne; różnią się tylko uzup
 4. **Reguły wartości niemożliwych są zachowawcze.** Usuwają tylko oczywiste przypadki; pojedyncze błędy ukryte w średniej tygodniowej zostają.
 5. **eGFR jest cenzurowane** (60 / 90), co ogranicza jego informatywność w górnym zakresie.
 6. **Zaimputowane foldy są poza gitem** (rozmiar). Odtwarza je jedno polecenie, a ewentualne różnice między wersjami sklearn wykrywa odcisk wyniku.
+7. **Przy brakach całymi panelami uzupełnienia ≈ średnia z treningu** (sekcja 4.3). Nie niosą informacji o pacjencie, a przy skośnych rozkładach są zawyżone (CRP, GLU).
+8. **Podpis imputacji NRBC/%NRBC**: uzupełnione wartości są rozpoznawalne i w praktyce oznaczają NEURO (sekcja 5.1).
+9. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w wynikach NEURO z AUC 0,83 (sekcja 5.2). Profil KOR sugeruje populację szpitalną, a nie ogólną (sekcja 5.3).
 
 ---
 
-## 7. Pliki i uruchomienie
+## 8. Pliki i uruchomienie
 
 ```
 3-sgkf-split/
@@ -360,25 +462,29 @@ Wartości obserwowane są w obu wariantach identyczne; różnią się tylko uzup
 ├── przygotowanie/                    CZĘŚĆ A
 │   ├── przygotuj_dane.py             decyzje → data/processed/aneurysm_sgkf_input.csv + spis zmian
 │   ├── analiza_decyzji.py            podkładka liczbowa pod decyzje
+│   ├── analiza_selekcji_cech.py      dlaczego 38 cech (odtworzenie selekcji z etapu 1)
 │   ├── etap0_diagnostyka.py          diagnostyka z 09.2026 (stan przed decyzjami)
 │   ├── tests/test_przygotowanie.py   6 testów
-│   └── results/                      usuniete_rekordy.csv, usuniete_wartosci.csv,
-│                                     podsumowanie.json, analiza_decyzji.json, logi/
+│   └── results/                      usuniete_rekordy.csv, usuniete_wartosci.csv, podsumowanie.json,
+│                                     analiza_decyzji.json, analiza_selekcji_cech.json, logi/
 ├── sgkf/                             CZĘŚĆ B
 │   ├── podzial.py                    zamrożony przydział pacjent → fold
-│   ├── aneurysm_sgkf_mice_pipeline.py  MICE wewnątrz foldów (--cechy 38|35, --zapisz)
-│   ├── porownanie_cech.py            wpływ wyboru 38 / 35
+│   ├── aneurysm_sgkf_mice_pipeline.py  MICE wewnątrz foldów (--zapisz)
+│   ├── ocena_imputacji.py            jakość imputacji protokołem z etapu 2 (w foldach)
+│   ├── analiza_wynikow.py            diagnostyka: uzupełnienia, skróty, profil kohort
+│   ├── porownanie_cech.py            jednorazowe porównanie 38 / 35 (podkładka pod decyzję)
 │   ├── etap0_sgkf_stabilnosc.py      siatka stabilności z 09.2026
-│   ├── tests/test_podzial.py         11 testów
+│   ├── tests/test_podzial.py         10 testów
 │   └── results/                      pacjent_fold.csv, podzial_meta.json, podzial_diagnostyka.csv,
-│                                     podzial_porownanie_strategii.csv, przebieg_imputacji_{38,35}.json,
-│                                     porownanie_cech_38_35.json, logi/, foldy_imputowane_{38,35}/ (poza gitem)
+│                                     podzial_porownanie_strategii.csv, przebieg_imputacji_38.json,
+│                                     ocena_imputacji.json, analiza_wynikow.json, logi/,
+│                                     porownanie_38_35/, foldy_imputowane_38/ (poza gitem)
 └── archiwum/
     └── aneurysm_data_StratifiedGroupKFold.ipynb   wersja 1 (Liwia, 08.06.2026)
 ```
 
 ```bash
-python 3-sgkf-split/uruchom_sgkf.py                      # całość (~31 min)
+python 3-sgkf-split/uruchom_sgkf.py                      # całość (~35 min)
 python 3-sgkf-split/uruchom_sgkf.py --czesc A            # tylko przygotowanie danych (sekundy)
 python 3-sgkf-split/uruchom_sgkf.py --czesc B --bez-mice # tylko podział i testy
 python 3-sgkf-split/sgkf/podzial.py --sprawdz            # czy zapisany podział pasuje do danych
