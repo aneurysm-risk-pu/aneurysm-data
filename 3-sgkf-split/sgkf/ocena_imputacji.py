@@ -24,6 +24,12 @@ KL_mean po kolumnach, w skali [0, 1]; osobno dla KOR i NEURO.
 Punkt odniesienia: benchmark MICE z parametrami produkcyjnymi (cross-param,
 2-imputation/final/results/mice_validation.csv): KOR 0,0861, NEURO 0,0984.
 
+Uwaga o skali: RMSE w skali [0, 1] zależy od skalera. W etapie 2 każda kohorta
+miała własny MinMaxScaler; tu skaler pochodzi z treningu foldu (w ~96% KOR),
+więc dla NEURO liczby nie są wprost porównywalne z benchmarkiem. Dlatego obok
+RMSE raportujemy miarę niezależną od skali: RMSE MICE / RMSE uzupełniania
+średnią z treningu (na tych samych maskach; < 1 = MICE lepsze od średniej).
+
 Wynik: sgkf/results/ocena_imputacji.json
 
 Uruchomienie (~15 min — jedno dopasowanie imputera na fold):
@@ -71,9 +77,12 @@ def maska_wzorce(kompletne_y: np.ndarray, braki_train: np.ndarray, y_train: np.n
     return maska
 
 
-def metryki(prawda: np.ndarray, uzup: np.ndarray, maska: np.ndarray, kolumny: list) -> dict:
-    return {"rmse": compute_rmse(prawda, uzup, maska), "mae": compute_mae(prawda, uzup, maska),
+def metryki(prawda: np.ndarray, uzup: np.ndarray, maska: np.ndarray, kolumny: list,
+            uzup_srednia: np.ndarray) -> dict:
+    rmse, rmse_sr = compute_rmse(prawda, uzup, maska), compute_rmse(prawda, uzup_srednia, maska)
+    return {"rmse": rmse, "mae": compute_mae(prawda, uzup, maska),
             "kl_mean": compute_kl_mean(pd.DataFrame(prawda, columns=kolumny), pd.DataFrame(uzup, columns=kolumny)),
+            "rmse_srednia_z_treningu": rmse_sr, "rmse_wzgledem_sredniej": rmse / rmse_sr,
             "zamaskowane_komorki": int(maska.sum()), "udzial_zamaskowanych": float(maska.mean())}
 
 
@@ -85,6 +94,7 @@ def ocen_fold(df: pd.DataFrame, feat: list, train_idx: np.ndarray, test_idx: np.
     t0 = time.time()
     scaler, imputer, _ = dopasuj_fold(X_train, seed=RANDOM_STATE, params=MICE_PARAMS)
     czas = time.time() - t0
+    srednie_train = np.nanmean(scaler.transform(X_train.to_numpy(dtype=float)), axis=0)   # punkt odniesienia
 
     kompletne = test.dropna(subset=feat).reset_index(drop=True)
     prawda = scaler.transform(kompletne[feat].to_numpy(dtype=float))
@@ -100,10 +110,11 @@ def ocen_fold(df: pd.DataFrame, feat: list, train_idx: np.ndarray, test_idx: np.
         zamaskowane = prawda.copy()
         zamaskowane[maska] = np.nan
         uzup = imputer.transform(zamaskowane)
+        uzup_sr = np.where(maska, srednie_train[None, :], prawda)
         wynik[nazwa] = {}
         for k, kohorta in ((0, "kor"), (1, "neuro")):
             sel = y == k
-            wynik[nazwa][kohorta] = metryki(prawda[sel], uzup[sel], maska[sel], feat)
+            wynik[nazwa][kohorta] = metryki(prawda[sel], uzup[sel], maska[sel], feat, uzup_sr[sel])
         # RMSE per cecha dla NEURO — gdzie imputacja myli się najbardziej
         sel = y == 1
         per = {}
@@ -121,7 +132,8 @@ def podsumuj(foldy: list) -> dict:
     for maska in ("etap2", "wzorce"):
         out[maska] = {}
         for k in ("kor", "neuro"):
-            for m in ("rmse", "mae", "kl_mean", "udzial_zamaskowanych"):
+            for m in ("rmse", "mae", "kl_mean", "rmse_srednia_z_treningu", "rmse_wzgledem_sredniej",
+                      "udzial_zamaskowanych"):
                 v = [f[maska][k][m] for f in foldy]
                 out[maska].setdefault(k, {})[m] = {"srednia": round(float(np.mean(v)), 4),
                                                    "odch_std": round(float(np.std(v)), 4),
@@ -148,6 +160,8 @@ def main() -> None:
         foldy.append(w)
         for maska in ("etap2", "wzorce"):
             print(f"    {maska:7s} RMSE KOR {w[maska]['kor']['rmse']:.4f}  NEURO {w[maska]['neuro']['rmse']:.4f}  "
+                  f"| względem średniej KOR {w[maska]['kor']['rmse_wzgledem_sredniej']:.2f}  "
+                  f"NEURO {w[maska]['neuro']['rmse_wzgledem_sredniej']:.2f}  "
                   f"(zamaskowane: KOR {w[maska]['kor']['udzial_zamaskowanych']:.1%}, "
                   f"NEURO {w[maska]['neuro']['udzial_zamaskowanych']:.1%})", flush=True)
 
@@ -165,8 +179,10 @@ def main() -> None:
     for maska in ("etap2", "wzorce"):
         for k in ("kor", "neuro"):
             r = pods[maska][k]["rmse"]
+            w = pods[maska][k]["rmse_wzgledem_sredniej"]
             ref = f" | etap 2: {odn[k]['rmse']}" if maska == "etap2" else ""
-            print(f"  {maska:7s} {k.upper():5s} {r['srednia']:.4f} ± {r['odch_std']:.4f}{ref}")
+            print(f"  {maska:7s} {k.upper():5s} {r['srednia']:.4f} ± {r['odch_std']:.4f}  "
+                  f"(względem średniej {w['srednia']:.2f}){ref}")
     print(f"\nZapisano -> {(WYNIKI / 'ocena_imputacji.json').relative_to(BASE_DIR)}")
 
 

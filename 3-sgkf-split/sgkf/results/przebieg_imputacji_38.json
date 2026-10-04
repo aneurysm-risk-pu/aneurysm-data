@@ -40,7 +40,7 @@
     },
     "wartosci_na_brak_lacznie": 752
   },
-  "odcisk_danych_sha256": "4179b1596019915b",
+  "odcisk_danych_sha256": "5b822c09ebc03011",
   "podzial": {
     "seed": 42,
     "n_splits": 5,
@@ -107,7 +107,7 @@
       "imputowane_train_neuro": 0.25622896303558973,
       "imputowane_test_kor": 0.12142899270869427,
       "imputowane_test_neuro": 0.2752770083102493,
-      "czas_imputacji_s": 175.8,
+      "czas_imputacji_s": 175.3,
       "odcisk_wyniku": "cf84e0d1d6e15e45"
     },
     {
@@ -120,7 +120,7 @@
       "imputowane_train_neuro": 0.26155368967164994,
       "imputowane_test_kor": 0.1225878114016667,
       "imputowane_test_neuro": 0.2552463695122975,
-      "czas_imputacji_s": 186.3,
+      "czas_imputacji_s": 190.2,
       "odcisk_wyniku": "a42c7f1088cff2eb"
     },
     {
@@ -133,7 +133,7 @@
       "imputowane_train_neuro": 0.2608742526707831,
       "imputowane_test_kor": 0.12282968244633931,
       "imputowane_test_neuro": 0.2582275360532479,
-      "czas_imputacji_s": 188.6,
+      "czas_imputacji_s": 188.2,
       "odcisk_wyniku": "71a04bd6f5aae1f7"
     },
     {
@@ -146,7 +146,7 @@
       "imputowane_train_neuro": 0.26217347638887506,
       "imputowane_test_kor": 0.12329085872576177,
       "imputowane_test_neuro": 0.2533136966126657,
-      "czas_imputacji_s": 190.0,
+      "czas_imputacji_s": 192.8,
       "odcisk_wyniku": "b51c96cf1e45b725"
     },
     {
@@ -159,16 +159,16 @@
       "imputowane_train_neuro": 0.26088971726674753,
       "imputowane_test_kor": 0.1250917649489252,
       "imputowane_test_neuro": 0.2582311944244172,
-      "czas_imputacji_s": 190.7,
+      "czas_imputacji_s": 189.2,
       "odcisk_wyniku": "3712e06c85c32b52"
     }
   ],
-  "czas_laczny_min": 15.5,
+  "czas_laczny_min": 15.6,
   "wersje": {
     "python": "3.9.6",
     "sklearn": "1.6.1",
     "pandas": "2.3.3",
     "numpy": "2.0.2"
   },
-  "utworzono": "2026-10-04T15:36:42"
+  "utworzono": "2026-10-04T18:39:33"
 }

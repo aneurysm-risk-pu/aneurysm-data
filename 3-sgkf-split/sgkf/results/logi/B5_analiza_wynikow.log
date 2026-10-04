@@ -1,0 +1,30 @@
+[A] Imputacja per kohorta ...
+[B] Diagnostyka skrótów (5 foldów) ...
+    B1_neuro_vs_kor_cechy ...
+    B2_neuro_vs_kor_wzorzec_brakow ...
+    B3_neuro_vs_kor_wspolne_okno ...
+    B4_neuro_epoka ...
+[C] Profil kohort względem zakresów referencyjnych ...
+[D] Zgodność imputacji między foldami ...
+
+=== Najważniejsze liczby
+  B1_neuro_vs_kor_cechy              AUC rekordy 0.906 | pacjenci 0.928
+  B2_neuro_vs_kor_wzorzec_brakow     AUC rekordy 0.819 | pacjenci 0.823
+  B3_neuro_vs_kor_wspolne_okno       AUC rekordy 0.793 | pacjenci 0.801
+  B4_neuro_epoka                     AUC rekordy 0.832
+  Cechy z największymi brakami w NEURO (udział uzupełnionych, położenie mediany uzupełnień 0=NEURO, 1=KOR):
+    APTT       56.0%  położenie 3.61
+    WAPTT      56.0%  położenie 2.63
+    GLU        55.2%  położenie None
+    PT         54.1%  położenie None
+    INR        53.9%  położenie -0.47
+    WPT        53.9%  położenie 1.9
+  Profil KOR / NEURO (udział poza zakresem referencyjnym):
+    CRP   powyżej 5.0 mg/l     KOR 61.4%  NEURO 62.2%
+    WBC   powyżej 10.0 G/l     KOR 36.9%  NEURO 32.5%
+    NEUT  powyżej 7.0 G/l      KOR 39.5%  NEURO 33.9%
+    GLU   powyżej 99.0 mg/dl   KOR 64.0%  NEURO 57.7%
+    HGB   poniżej 12.0 g/dl    KOR 39.6%  NEURO 43.2%
+    PLT   poniżej 150.0 G/l    KOR 12.1%  NEURO 7.3%
+
+Zapisano -> 3-sgkf-split/sgkf/results/analiza_wynikow.json

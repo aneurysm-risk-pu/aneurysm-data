@@ -1,6 +1,6 @@
 [1] Wczytywanie aneurysm_sgkf_input.csv (wynik części A), 38 cech ...
-    Foldy: results/pacjent_fold.csv (seed=42, warstwy=etykieta+okno+n_rek, odcisk danych 4179b1596019915b)
-    Kształt: (78052, 43)   |   label=0: 71,401   label=1: 6,651
+    Foldy: results/pacjent_fold.csv (seed=42, warstwy=etykieta+okno+n_rek, odcisk danych 5b822c09ebc03011)
+    Kształt: (78052, 42)   |   label=0: 71,401   label=1: 6,651
     Kolumny cech: 38
     Braki w cechach: 399,655 (13.5%)
 
@@ -18,7 +18,7 @@
     Proporcja label=1 (rekordy): train=8.63%  test=8.07%
     Wspólne patient_id: 0  (oczekiwane: 0)
     Imputowane komórki w test: KOR=12.3%  NEURO=25.5%
-    Czas imputacji: 3.1 min
+    Czas imputacji: 3.2 min
 
   Fold 3/5 — imputacja MICE ...
     Rozmiar: train=62,451  test=15,601  (pacjenci test: 8,185)

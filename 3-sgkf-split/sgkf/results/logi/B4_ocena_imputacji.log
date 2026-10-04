@@ -1,0 +1,25 @@
+Odniesienie (etap 2, MICE z parametrami produkcyjnymi): {'kor': {'rmse': 0.0861, 'mae': 0.0315, 'kl': 0.0037}, 'neuro': {'rmse': 0.0984, 'mae': 0.043, 'kl': 0.011}}
+
+  Fold 1/5 — dopasowanie i ocena ...
+    etap2   RMSE KOR 0.0832  NEURO 0.0762  | względem średniej KOR 0.62  NEURO 0.62  (zamaskowane: KOR 9.9%, NEURO 9.9%)
+    wzorce  RMSE KOR 0.1063  NEURO 0.0746  | względem średniej KOR 0.98  NEURO 0.89  (zamaskowane: KOR 17.5%, NEURO 30.7%)
+  Fold 2/5 — dopasowanie i ocena ...
+    etap2   RMSE KOR 0.0837  NEURO 0.0953  | względem średniej KOR 0.61  NEURO 0.73  (zamaskowane: KOR 9.9%, NEURO 10.1%)
+    wzorce  RMSE KOR 0.1078  NEURO 0.0858  | względem średniej KOR 0.99  NEURO 0.91  (zamaskowane: KOR 17.2%, NEURO 30.4%)
+  Fold 3/5 — dopasowanie i ocena ...
+    etap2   RMSE KOR 0.0813  NEURO 0.0761  | względem średniej KOR 0.60  NEURO 0.65  (zamaskowane: KOR 9.9%, NEURO 9.9%)
+    wzorce  RMSE KOR 0.1094  NEURO 0.0785  | względem średniej KOR 0.98  NEURO 0.90  (zamaskowane: KOR 17.6%, NEURO 34.3%)
+  Fold 4/5 — dopasowanie i ocena ...
+    etap2   RMSE KOR 0.0858  NEURO 0.0736  | względem średniej KOR 0.63  NEURO 0.61  (zamaskowane: KOR 9.9%, NEURO 10.0%)
+    wzorce  RMSE KOR 0.1068  NEURO 0.0857  | względem średniej KOR 0.98  NEURO 0.88  (zamaskowane: KOR 17.2%, NEURO 29.1%)
+  Fold 5/5 — dopasowanie i ocena ...
+    etap2   RMSE KOR 0.0805  NEURO 0.0792  | względem średniej KOR 0.60  NEURO 0.66  (zamaskowane: KOR 9.9%, NEURO 9.9%)
+    wzorce  RMSE KOR 0.1096  NEURO 0.0714  | względem średniej KOR 0.99  NEURO 0.87  (zamaskowane: KOR 17.0%, NEURO 29.1%)
+
+=== Średnio po 5 foldach (RMSE, skala [0,1])
+  etap2   KOR   0.0829 ± 0.0019  (względem średniej 0.61) | etap 2: 0.0861
+  etap2   NEURO 0.0801 ± 0.0078  (względem średniej 0.65) | etap 2: 0.0984
+  wzorce  KOR   0.1080 ± 0.0014  (względem średniej 0.98)
+  wzorce  NEURO 0.0792 ± 0.0058  (względem średniej 0.89)
+
+Zapisano -> 3-sgkf-split/sgkf/results/ocena_imputacji.json
