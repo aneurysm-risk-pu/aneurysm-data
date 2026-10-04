@@ -1,0 +1,37 @@
+{
+  "konfiguracja": {
+    "zestaw_cech": "38",
+    "mieszani": "pozytywni",
+    "n_splits": 5,
+    "shuffle": true,
+    "seed": 42,
+    "warstwy": [
+      "etykieta",
+      "okno",
+      "n_rek"
+    ],
+    "min_warstwa": 20
+  },
+  "plik_danych": "data/imputation-inputs/aneurysm_concatted.csv",
+  "odcisk_danych_sha256": "e2ec333b83d9ff15",
+  "pacjenci": 40924,
+  "pozytywni": 1823,
+  "rozstepy": {
+    "udzial_poz_pacjenci_pp": 0.012217470983506146,
+    "udzial_poz_rekordy_pp": 0.47746588810815005,
+    "rekordy_wzgl_proc": 0.9527219714311291,
+    "poz_w_oknie_pp": 0.794821616739426,
+    "poz_5plus_rek_pp": 0.48998946259220244,
+    "mieszani_min_max": [
+      8,
+      15
+    ]
+  },
+  "wersje": {
+    "python": "3.9.6",
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2"
+  },
+  "utworzono": "2026-10-04T13:44:52"
+}
