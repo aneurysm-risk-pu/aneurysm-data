@@ -1,0 +1,160 @@
+{
+  "test_kontrolowany": {
+    "fold": 0,
+    "wiersze_kompletne": 16889,
+    "wiersze_neuro": 630,
+    "zamaskowane_komorki": 59011,
+    "rmse_38": 0.08458760272916359,
+    "mae_38": 0.031213050235413115,
+    "rmse_38_kor": 0.08493864919003871,
+    "rmse_38_neuro": 0.0749745355796027,
+    "rmse_35": 0.08594318120581945,
+    "mae_35": 0.03197687421860777,
+    "rmse_35_kor": 0.08630477177711648,
+    "rmse_35_neuro": 0.07603230287248787,
+    "per_cecha_najwieksze_roznice": {
+      "%NEUT": {
+        "rmse_38": 0.019701983151979467,
+        "rmse_35": 0.031935452308356364,
+        "roznica": 0.012233469156376898
+      },
+      "%LYMPH": {
+        "rmse_38": 0.020313693858490182,
+        "rmse_35": 0.02872897347355695,
+        "roznica": 0.008415279615066766
+      },
+      "patient_sex": {
+        "rmse_38": 0.41362730810599346,
+        "rmse_35": 0.4214539618058171,
+        "roznica": 0.00782665369982366
+      },
+      "%EO": {
+        "rmse_38": 0.027189782615056904,
+        "rmse_35": 0.029944491968993896,
+        "roznica": 0.002754709353936992
+      },
+      "WBC": {
+        "rmse_38": 0.00777138457878823,
+        "rmse_35": 0.009795843061719215,
+        "roznica": 0.002024458482930985
+      }
+    }
+  },
+  "foldy": {
+    "per_fold": [
+      {
+        "fold": 0,
+        "czesc": "train",
+        "uzupelnione_komorki": 300998,
+        "srednia_roznica_sd": 0.10849062513896048,
+        "mediana_roznica_sd": 0.05216910182467546,
+        "udzial_roznic_ponad_0_5_sd": 0.024475245682695566,
+        "srednia_roznica_sd_kor": 0.11550831346056929,
+        "srednia_roznica_sd_neuro": 0.07060853347486169,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 0,
+        "czesc": "test",
+        "uzupelnione_komorki": 76378,
+        "srednia_roznica_sd": 0.11018265723277726,
+        "mediana_roznica_sd": 0.053243890920501705,
+        "udzial_roznic_ponad_0_5_sd": 0.02500720102647359,
+        "srednia_roznica_sd_kor": 0.11868072085935098,
+        "srednia_roznica_sd_neuro": 0.07213273579979504,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 1,
+        "czesc": "train",
+        "uzupelnione_komorki": 302969,
+        "srednia_roznica_sd": 0.11139869728390592,
+        "mediana_roznica_sd": 0.03774130331526254,
+        "udzial_roznic_ponad_0_5_sd": 0.028224009717165783,
+        "srednia_roznica_sd_kor": 0.12028525996792415,
+        "srednia_roznica_sd_neuro": 0.0660902679227074,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 1,
+        "czesc": "test",
+        "uzupelnione_komorki": 74407,
+        "srednia_roznica_sd": 0.10742430738001621,
+        "mediana_roznica_sd": 0.03751621616456057,
+        "udzial_roznic_ponad_0_5_sd": 0.026274409665757253,
+        "srednia_roznica_sd_kor": 0.1146473711571159,
+        "srednia_roznica_sd_neuro": 0.06712778614715513,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 2,
+        "czesc": "train",
+        "uzupelnione_komorki": 302376,
+        "srednia_roznica_sd": 0.11511628558307223,
+        "mediana_roznica_sd": 0.027164757134422235,
+        "udzial_roznic_ponad_0_5_sd": 0.031116887583670663,
+        "srednia_roznica_sd_kor": 0.12583935114647035,
+        "srednia_roznica_sd_neuro": 0.0600853069616417,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 2,
+        "czesc": "test",
+        "uzupelnione_komorki": 75000,
+        "srednia_roznica_sd": 0.11644386880145095,
+        "mediana_roznica_sd": 0.02742125418662069,
+        "udzial_roznic_ponad_0_5_sd": 0.03150666666666667,
+        "srednia_roznica_sd_kor": 0.1273593004432774,
+        "srednia_roznica_sd_neuro": 0.05725676806299105,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 3,
+        "czesc": "train",
+        "uzupelnione_komorki": 301949,
+        "srednia_roznica_sd": 0.11107107472272049,
+        "mediana_roznica_sd": 0.04957056818673808,
+        "udzial_roznic_ponad_0_5_sd": 0.026388562306879637,
+        "srednia_roznica_sd_kor": 0.11950488773824991,
+        "srednia_roznica_sd_neuro": 0.06737425506217835,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 3,
+        "czesc": "test",
+        "uzupelnione_komorki": 75427,
+        "srednia_roznica_sd": 0.11339175368472545,
+        "mediana_roznica_sd": 0.049549564041720874,
+        "udzial_roznic_ponad_0_5_sd": 0.02703276015220014,
+        "srednia_roznica_sd_kor": 0.1222484897841165,
+        "srednia_roznica_sd_neuro": 0.0672161943916816,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 4,
+        "czesc": "train",
+        "uzupelnione_komorki": 301212,
+        "srednia_roznica_sd": 0.11719388725130889,
+        "mediana_roznica_sd": 0.04495732298937977,
+        "udzial_roznic_ponad_0_5_sd": 0.02866419664555197,
+        "srednia_roznica_sd_kor": 0.12704680865964108,
+        "srednia_roznica_sd_neuro": 0.06656672544864992,
+        "obserwowane_identyczne": true
+      },
+      {
+        "fold": 4,
+        "czesc": "test",
+        "uzupelnione_komorki": 76164,
+        "srednia_roznica_sd": 0.11928878216588057,
+        "mediana_roznica_sd": 0.045046819835096896,
+        "udzial_roznic_ponad_0_5_sd": 0.02975158867706528,
+        "srednia_roznica_sd_kor": 0.12931218450782636,
+        "srednia_roznica_sd_neuro": 0.06525593211883834,
+        "obserwowane_identyczne": true
+      }
+    ],
+    "srednia_roznica_sd_test": 0.1133462738529701,
+    "udzial_roznic_ponad_0_5_sd_test": 0.027914525237632586,
+    "obserwowane_identyczne_wszedzie": true
+  }
+}

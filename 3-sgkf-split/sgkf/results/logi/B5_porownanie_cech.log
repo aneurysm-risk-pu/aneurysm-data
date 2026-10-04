@@ -1,0 +1,15 @@
+Dodatkowe kolumny wariantu 38: CRP, MONO, %MONO
+
+[1] Test kontrolowany na kompletnych wierszach treningu foldu 0 ...
+    wariant 38: MICE 55 s
+    wariant 35: MICE 48 s
+    38 cech: RMSE 0.0846 (KOR 0.0849, NEURO 0.0750), MAE 0.0312
+    35 cech: RMSE 0.0859 (KOR 0.0863, NEURO 0.0760), MAE 0.0320
+    różnica RMSE (35 - 38): +0.0014
+
+[2] Wartości uzupełnione w zapisanych foldach: 38 vs 35 ...
+    średnia |różnica| uzupełnionych wartości (test): 0.113 SD
+    udział różnic > 0,5 SD (test): 2.79%
+    wartości obserwowane identyczne w obu wariantach: True
+
+Zapisano -> results/porownanie_cech_38_35.json

@@ -1,0 +1,49 @@
+[1] Wczytywanie aneurysm_sgkf_input.csv (wynik części A), 35 cech ...
+    Foldy: results/pacjent_fold.csv (seed=42, warstwy=etykieta+okno+n_rek, odcisk danych 4179b1596019915b)
+    Kształt: (78052, 43)   |   label=0: 71,401   label=1: 6,651
+    Kolumny cech: 35
+    Braki w cechach: 377,376 (13.8%)
+
+[2] Foldy po pacjentach (n=5) + MICE ...
+
+  Fold 1/5 — imputacja MICE ...
+    Rozmiar: train=62,330  test=15,722  (pacjenci test: 8,185)
+    Proporcja label=1 (rekordy): train=8.35%  test=9.18%
+    Wspólne patient_id: 0  (oczekiwane: 0)
+    Imputowane komórki w test: KOR=12.5%  NEURO=27.6%
+    Czas imputacji: 2.7 min
+
+  Fold 2/5 — imputacja MICE ...
+    Rozmiar: train=62,512  test=15,540  (pacjenci test: 8,185)
+    Proporcja label=1 (rekordy): train=8.63%  test=8.07%
+    Wspólne patient_id: 0  (oczekiwane: 0)
+    Imputowane komórki w test: KOR=12.6%  NEURO=25.8%
+    Czas imputacji: 2.7 min
+
+  Fold 3/5 — imputacja MICE ...
+    Rozmiar: train=62,451  test=15,601  (pacjenci test: 8,185)
+    Proporcja label=1 (rekordy): train=8.60%  test=8.21%
+    Wspólne patient_id: 0  (oczekiwane: 0)
+    Imputowane komórki w test: KOR=12.6%  NEURO=26.0%
+    Czas imputacji: 2.7 min
+
+  Fold 4/5 — imputacja MICE ...
+    Rozmiar: train=62,444  test=15,608  (pacjenci test: 8,185)
+    Proporcja label=1 (rekordy): train=8.48%  test=8.70%
+    Wspólne patient_id: 0  (oczekiwane: 0)
+    Imputowane komórki w test: KOR=12.7%  NEURO=25.5%
+    Czas imputacji: 2.7 min
+
+  Fold 5/5 — imputacja MICE ...
+    Rozmiar: train=62,471  test=15,581  (pacjenci test: 8,184)
+    Proporcja label=1 (rekordy): train=8.54%  test=8.43%
+    Wspólne patient_id: 0  (oczekiwane: 0)
+    Imputowane komórki w test: KOR=12.9%  NEURO=25.9%
+    Czas imputacji: 2.7 min
+
+[zapis] foldy -> sgkf/results/foldy_imputowane_35, podsumowanie -> przebieg_imputacji_35.json
+
+[3] Gotowe. Zwrócono listę `splits` z kluczami:
+    X_train, X_test  — DataFrame, zaimputowane, oryginalna skala
+    y_train, y_test  — Series z labelami
+    groups_train, groups_test — patient_id
