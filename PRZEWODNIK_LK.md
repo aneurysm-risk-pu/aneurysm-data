@@ -42,21 +42,24 @@ Konsekwencje, które warto mieć w głowie:
 ```
 data/raw/              dwa surowe CSV (nie ruszamy)
 data/interim/          stany pośrednie czyszczenia
-data/imputation-inputs/aneurysm_concatted.csv     ← WEJŚCIE (38 cech, przed imputacją)
-data/processed/aneurysm_concatted_cleaned.csv     ← wariant 35 cech
+data/imputation-inputs/aneurysm_concatted.csv     ← stan po etapie 1 (38 cech, przed imputacją)
+data/processed/aneurysm_sgkf_input.csv            ← WEJŚCIE do podziału i modelowania (po decyzjach 04.10)
+data/processed/aneurysm_concatted_cleaned.csv     ← historyczny wariant 35 cech (raport przejściowy)
 1-data-preparation/    czyszczenie i EDA (Twoje skrypty + notebooki Liwii)
 2-imputation/          benchmark imputacji; final/ to wspólny kod, reszta to fazy indywidualne
-3-sgkf-split/          PODZIAŁ: podzial.py (v2) + MICE w foldzie
-4-pu-setup/            USTALENIA_DANYCH.md (problemy w danych) + PLAN_MODELOWANIA.md (propozycja)
+3-sgkf-split/          etap 3, dwie części:
+   przygotowanie/      A: decyzje dotyczące danych → aneurysm_sgkf_input.csv (+ spis zmian, podkładka liczbowa)
+   sgkf/               B: zamrożony podział + MICE w foldach (38 i 35 cech)
+   uruchom_sgkf.py     cały etap jednym poleceniem
+4-pu-setup/            PLAN_MODELOWANIA.md (jedyny dokument: co dalej) + analiza reguły agregacji
 0626_, 1026_*.md       raport przejściowy (06.2026), realizacja etapów 1–3 (10.2026)
 PRZEWODNIK_LK.md       ten plik
 ```
 
 Kolejność czytania przy powrocie:
 1. `1026_REALIZACJA_DO_SGKF.md`: co zrobiliśmy i kto co robił.
-2. `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6: najnowsza zmiana.
-3. `4-pu-setup/USTALENIA_DANYCH.md`: problemy z danymi i pytania do prowadzącego.
-4. `4-pu-setup/PLAN_MODELOWANIA.md`: propozycja dalszych prac; plan obowiązujący powstanie po spotkaniu.
+2. `3-sgkf-split/RAPORT_SGKF_MICE.md`: sekcja „W skrócie”, potem 2 (decyzje dotyczące danych) i 4 (wyniki imputacji).
+3. `4-pu-setup/PLAN_MODELOWANIA.md`: co dalej, założenia wejściowe i pytania do prowadzącego.
 
 ---
 
@@ -75,7 +78,7 @@ Zasada ogólna: **wszystko, co się uczy (a scaler i imputer też się uczą!), 
 
 ---
 
-## 5. Podział danych: co się zmieniło i dlaczego (v1 → v2)
+## 5. Przygotowanie danych i podział: co się zmieniło i dlaczego (v1 → v2)
 
 ### 5.1 Jak działa `StratifiedGroupKFold`
 
@@ -88,7 +91,7 @@ Zasada ogólna: **wszystko, co się uczy (a scaler i imputer też się uczą!), 
 
 **(a) `random_state` bez `shuffle=True` nic nie robi.** W sklearn większość splitterów ignoruje `random_state`, gdy `shuffle=False`. W v1 stała `RANDOM_STATE = 42` działała tylko w MICE. Podział wynikał z kolejności wierszy w CSV, a plik jest posortowany: najpierw cały KOR, potem NEURO. Przesortowanie pliku po cichu zmieniłoby foldy.
 
-**(b) Algorytm SGKF z tasowaniem zmienił się między wersjami sklearn.** Ta sama konfiguracja (shuffle, seed 42) daje u Ciebie na Windowsie (sklearn 1.8) rozstęp udziału pozytywnych 0,11 pp, a na Macu (sklearn 1.6, bo jest tu tylko Python 3.9) 0,80 pp. To **inne podziały**. Wniosek ogólny: **przepis na podział nie jest powtarzalny między środowiskami, a zapisany przydział jest.** Stąd `results/pacjent_fold.csv` jako źródło prawdy. `StratifiedKFold` na pacjentach okazał się stabilny między wersjami: zapisany plik z Windowsa odtworzył się na Macu w 100%.
+**(b) Algorytm SGKF z tasowaniem zmienił się między wersjami sklearn.** Ta sama konfiguracja (shuffle, seed 42) daje u Ciebie na Windowsie (sklearn 1.8) rozstęp udziału pozytywnych 0,11 pp, a na Macu (sklearn 1.6, bo jest tu tylko Python 3.9) 0,80 pp. To **inne podziały**. Wniosek ogólny: **przepis na podział nie jest powtarzalny między środowiskami, a zapisany przydział jest.** Stąd `3-sgkf-split/sgkf/results/pacjent_fold.csv` jako źródło prawdy. `StratifiedKFold` na pacjentach okazał się stabilny między wersjami: zapisany plik z Windowsa odtworzył się na Macu w 100%.
 
 **(c) Wyrównanie klas nie oznacza wyrównania foldów.** Wrześniowa rekomendacja (pacjenci, stratyfikacja po etykiecie) daje idealny balans klas (0,01 pp), ale przy niektórych ziarnach jeden fold dostaje wyraźnie więcej NEURO z epoki KOR albo więcej NEURO z wieloma rekordami: do 5 i 8 pp różnicy. Dlaczego to ważne: te dwie zmienne to znane skróty (sekcja 1). Jeśli fold 2 ma więcej NEURO z lat 2020–2021, to model będzie tam miał **trudniej** (mniej epokowego skrótu), więc wyniki między foldami będą się różnić z powodów niezwiązanych z modelem. Większa wariancja oznacza mniej wiarygodne porównanie modeli.
 
@@ -103,13 +106,41 @@ Siatka stabilności z września tego nie wychwyciła, bo mierzyła udział lat 2
 "0_okno_n1"       ← nieoznaczony, w oknie, 1 rekord
 ```
 
-i stratyfikujesz po kluczu. Każda kombinacja jest rozkładana równo między foldy. Ograniczenie: każda warstwa musi mieć co najmniej `n_splits` członków, a w praktyce kilka razy więcej. Stąd `min_warstwa = 20` i scalanie małych warstw do `<etykieta>_inne`. U nas najmniejsza warstwa ma 34 osoby, więc scalanie nie zachodzi. Mieszanych (63) nie wkładamy do klucza, bo powstałyby warstwy po kilka osób.
+i stratyfikujesz po kluczu. Każda kombinacja jest rozkładana równo między foldy. Ograniczenie: każda warstwa musi mieć co najmniej `n_splits` członków, a w praktyce kilka razy więcej. Stąd `min_warstwa = 20` i scalanie małych warstw do `<etykieta>_inne`. U nas najmniejsza warstwa ma 24 osoby, więc scalanie nie zachodzi. Mieszanych (63) nie wkładamy do klucza, bo powstałyby warstwy po kilka osób.
 
 Dlaczego podział na tabeli pacjentów wciąż jest „Group”: skoro jeden wiersz to jeden pacjent, nie da się go rozdzielić. Warunek grupowania jest spełniony z konstrukcji. Potem `indeksy_foldow()` tłumaczy przydział pacjentów na indeksy rekordów.
 
 ### 5.4 Odcisk danych
 
-`podzial_meta.json` zawiera SHA-256 pliku danych. `wczytaj_podzial()` przelicza go i odmawia działania, jeśli dane się zmieniły, bo przydział do starych danych nie musi pasować do nowych. Szczegół, który zjadłby Ci godzinę: git na Windowsie domyślnie zamienia `\n` na `\r\n` przy checkoucie, więc surowe bajty CSV różnią się między komputerami. Dlatego hash liczony jest po ujednoliceniu końców linii.
+`podzial_meta.json` zawiera SHA-256 pliku wejściowego (`aneurysm_sgkf_input.csv`). `wczytaj_podzial()` przelicza go i odmawia działania, jeśli dane się zmieniły, bo przydział do starych danych nie musi pasować do nowych. Przygotowanie danych (część A) zapisuje ten plik, więc każda zmiana reguł też zmienia odcisk i wymusza przebudowanie podziału. Szczegół, który zjadłby Ci godzinę: git na Windowsie domyślnie zamienia `\n` na `\r\n` przy checkoucie, więc surowe bajty CSV różnią się między komputerami. Dlatego hash liczony jest po ujednoliceniu końców linii.
+
+### 5.5 Dlaczego przygotowanie danych jest osobnym krokiem
+
+Część A (`3-sgkf-split/przygotowanie/przygotuj_dane.py`) czyta dane źródłowe, stosuje decyzje i **zapisuje plik** `data/processed/aneurysm_sgkf_input.csv`. Część B (`3-sgkf-split/sgkf/`) czyta tylko ten plik. Korzyści:
+- każdą decyzję widać w jednym miejscu, a jej skutek w spisie zmian (`usuniete_wartosci.csv`: która komórka, jaka wartość, jaka reguła),
+- podział nie wie nic o regułach; wie tylko, że plik się zmienił, i wtedy odmawia działania,
+- test `test_plik_w_repozytorium_zgodny_z_kodem` pilnuje, żeby plik w repo był dokładnie wynikiem kodu, czyli nikt go nie poprawił ręcznie.
+
+### 5.6 Reguła dla kreatyniny: dlaczego przez eGFR
+
+To dobry przykład, jak przy brudnych danych szukać **sprzeczności wewnętrznej** zamiast arbitralnego progu.
+
+- eGFR laboratorium **wylicza z kreatyniny** (oraz wieku i płci): im wyższa kreatynina, tym niższe eGFR.
+- Dla KREA 5–10 mg/dl mediana eGFR wynosi 8, czyli fizjologicznie poprawnie (ciężka niewydolność nerek).
+- Dla KREA 20–50 mediana eGFR wynosi **60**, czyli prawidłowe nerki. To niemożliwe przy prawdziwej kreatyninie 20–50 mg/dl. Najprostsze wyjaśnienie: do kolumny trafiła wartość w µmol/l (norma 50–110), a eGFR policzono z prawidłowej wartości.
+- Stąd reguła: **KREA > 50 → brak** (w mg/dl niemożliwe) i **KREA > 10 przy eGFR ≥ 30 → brak** (sprzeczność). KREA 25 przy eGFR 8 zostaje, bo to wiarygodny pacjent dializowany.
+- Prosty próg „> 20” wyrzuciłby 83 takich wiarygodnych pacjentów i zostawił sprzeczne wartości 10–20.
+- Nie przeliczamy ÷ 88,4, bo nie znamy jednostki konkretnego pomiaru. Zamieniamy na brak, a MICE odtworzy wartość z reszty profilu, w tym z eGFR tego rekordu.
+
+Dwie pułapki, które przy tym wyszły:
+- **eGFR jest cenzurowane**: laboratorium raportuje „≥ 60” jako 60 (56% rekordów) i „≥ 90” jako 90 dla CKD-EPI. Próg „eGFR ≥ 30” działa mimo tego, ale eGFR nie odróżnia nerek „dobrych” od „bardzo dobrych”.
+- **Dane to średnie tygodniowe.** Niemożliwa średnia (K = 26) oznacza, że w tym tygodniu był niemożliwy pomiar. Możliwa średnia może jednak ukrywać pojedynczy błąd, którego już nie wykryjemy.
+
+Pozostałe wartości niemożliwe: **K > 15 mmol/l i Na < 80 mmol/l**, czyli wartości niezgodne z życiem. Skrajne, ale możliwe zostają: K 9–15 (ciężka hiperkaliemia), Na 80–100, WBC > 200 (białaczka). Liwia czyściła kwantylami, ale granice były statystyczne (dla KOR górna granica K wynosiła 29), więc tych wartości nie złapała. Do tego NEURO czyściła ostrzej (3,2% wobec 0,8% rekordów), co jest kolejną asymetrią do opisania.
+
+### 5.7 63 pacjentów w obu kohortach
+
+Pacjent nie może być jednocześnie P i U, bo podział i etykieta są pacjentowe. Rozpoznanie tętniaka jest faktem, a „nieoznaczony” to tylko brak informacji, więc pacjent zostaje **pozytywny**. Jego rekordy KOR usuwamy, bo bez daty diagnozy nie wiadomo, czy są sprzed choroby. Gdyby zostały z etykietą 1, model uczyłby się, że rutynowy wynik sprzed lat to „profil chorego”. Kolumna `pacjent_mieszany` zostaje jako metadana: nie jest cechą, ale pozwala zrobić analizę wrażliwości bez tych pacjentów.
 
 ---
 
@@ -160,7 +191,12 @@ Nie wiemy, który efekt przeważa. To dobry kandydat do analizy wrażliwości pr
 | MICE (ExtraTrees) zamiast MissForest | wygrywa na NEURO, szybszy, jeden imputer dla obu | MissForest lepszy tylko na KOR |
 | 38 cech | selekcja po `label` to wyciek, a etykieta rozróżnia kohorty, nie chorobę | 35: tylko jako wrażliwość |
 | mediana jako agregacja do pacjenta | najmniej koreluje z liczbą badań | maksimum przenosi liczbę badań do 17 cech; „ostatni” znaczy co innego w każdej kohorcie |
-| mieszani jako pozytywni z flagą | byli w NEURO, czyli mają tętniaka | wykluczenie: gotowe jako parametr |
+| mieszani: pozytywni, rekordy KOR usunięte | rozpoznanie jest faktem; rekordy KOR mogą być sprzed choroby | zostawić KOR z etykietą 1: uczy „profilu chorego” na rutynowych wynikach; wykluczyć: −63 z 1 823 pozytywnych |
+| KREA: > 50 albo > 10 przy eGFR ≥ 30 → brak | sprzeczność z eGFR (liczonym z kreatyniny) | próg „> 20”: wyrzuca wiarygodne niewydolności; przeliczanie ÷ 88,4: zgadywanie jednostki |
+| K > 15, Na < 80 → brak; skrajne, ale możliwe zostają | tylko wartości niezgodne z życiem | szersze progi: usuwałyby prawdziwe ciężkie stany |
+| rozjazd czasowy: bez korekty | dane są, jakie są; obcięcie do wspólnego okna zostawia 271 pozytywnych | ważenie po czasie: możliwe później (gniazdo w planie) |
+| asymetria braków: bez korekty | raportowana w każdym foldzie | model na cechach o niskim odsetku braków jako wrażliwość |
+| przygotowanie danych jako osobny krok z plikiem wynikowym | decyzje w jednym miejscu, spis zmian, odcisk pliku chroni podział | czyszczenie „w locie” przy wczytywaniu: decyzje ukryte w kodzie podziału |
 | `q` nie jest hiperparametrem | strojenie `q` to dobieranie definicji sukcesu pod wynik | — |
 
 ---
@@ -168,11 +204,13 @@ Nie wiemy, który efekt przeważa. To dobry kandydat do analizy wrażliwości pr
 ## 8. Pułapki: rzeczy, które łatwo zepsuć
 
 1. **Nie używaj `2-imputation/final/results/aneurysm_imputed_*.csv` do modeli.** To imputacja globalna, przydatna tylko jako walidacja metody.
-2. **Nie licz podziału od nowa w kolejnych etapach.** Czytaj `3-sgkf-split/results/pacjent_fold.csv` przez `wczytaj_podzial()`. Prototyp PU z września liczył własny podział; w nowym kodzie modelowania tego nie powtarzać.
+2. **Nie licz podziału od nowa w kolejnych etapach.** Czytaj `3-sgkf-split/sgkf/results/pacjent_fold.csv` przez `wczytaj_podzial()`. Prototyp PU z września liczył własny podział; w nowym kodzie modelowania tego nie powtarzać.
 3. **Metryki licz na pacjentach, nie na rekordach.** Inaczej pacjent z 38 rekordami waży 38 razy więcej.
 4. **Nie dodawaj roku ani liczby rekordów jako cechy.** Ułatwiłoby to modelowi rozpoznanie kohorty, a nie choroby.
 5. **Nie nazywaj wyniku „prawdopodobieństwem tętniaka”**, tylko *risk score*, dopóki nie jest skalibrowany.
-6. **Pełny przebieg MICE to ~20 min na fold**, a z walidacją zagnieżdżoną wielokrotność tego. Do sprawdzania ścieżki: `--podprobka 3000 --szybkie-mice`.
+6. **Pełny przebieg MICE to ~3 min na fold na Macu (M-series)**, około 16 min na wariant cech; z walidacją zagnieżdżoną wielokrotność tego. Do sprawdzania ścieżki: `--podprobka 3000 --szybkie-mice`.
+7. **Nie poprawiaj ręcznie `data/processed/aneurysm_sgkf_input.csv`.** Zmień regułę w `przygotuj_dane.py` i uruchom `uruchom_sgkf.py`; test w części A wykryje każdą ręczną zmianę.
+8. **Do modelu nie wchodzą kolumny meta**: `patient_id`, `custom_id`, `examination_date`, `label`, `pacjent_mieszany`. `kolumny_cech()` je pomija.
 
 ---
 
@@ -185,6 +223,8 @@ Nie wiemy, który efekt przeważa. To dobry kandydat do analizy wrażliwości pr
 
 Skutki i zalecenia:
 - wyniki zależne od implementacji bibliotek (SGKF z tasowaniem, w mniejszym stopniu ExtraTrees) mogą się różnić, dlatego zapisujemy artefakty, a nie przepisy,
+- zaimputowane foldy są poza gitem (~45 MB na wariant), więc na drugim komputerze odtwarza je `uruchom_sgkf.py`. Czy wyszło to samo, sprawdzisz, porównując pole `odcisk_wyniku` w `przebieg_imputacji_*.json`; jeśli się różni, to różnica numeryczna wersji sklearn, którą trzeba ocenić,
+- GitHub na Macu: zalogowane `gh` (`gh auth status`), więc `git push` działa bez hasła,
 - warto zainstalować na Macu nowszego Pythona (np. przez `uv` albo instalator z python.org) i przypiąć wersje w `requirements.txt` w korzeniu repo,
 - `podzial_meta.json` zapisuje wersje bibliotek, więc zawsze widać, gdzie powstał artefakt.
 
@@ -192,8 +232,9 @@ Szybki start na Macu:
 
 ```bash
 cd ~/repos/aneurysm-data
-.venv/bin/python 3-sgkf-split/podzial.py --sprawdz
-.venv/bin/python 3-sgkf-split/tests/test_podzial.py
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # część A + podział + testy (~20 s)
+.venv/bin/python 3-sgkf-split/sgkf/podzial.py --sprawdz     # czy zapisany podział pasuje do danych
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py               # całość z imputacją (~35 min)
 ```
 
 ---
@@ -226,6 +267,8 @@ Odpowiedz sobie w głowie, a potem sprawdź pod spodem.
 4. Czemu stratyfikacja tylko po etykiecie jest niewystarczająca, skoro idealnie wyrównuje klasy?
 5. Dlaczego „maksimum” jako reguła agregacji jest groźne właśnie w tym projekcie?
 6. Co się stanie, gdy ktoś dopisze 10 rekordów do `aneurysm_concatted.csv` i uruchomi pipeline?
+7. Dlaczego KREA = 25 przy eGFR = 8 zostaje, a KREA = 25 przy eGFR = 60 znika?
+8. Dlaczego warianty 38 i 35 cech różnią się w praktyce głównie CRP, skoro różnią się trzema kolumnami?
 
 <details>
 <summary>Odpowiedzi</summary>
@@ -235,6 +278,8 @@ Odpowiedz sobie w głowie, a potem sprawdź pod spodem.
 3. Bo MICE dopasowany na całym outer-train widziałby rekordy, które w danym foldzie wewnętrznym są walidacją. To wyciek przez preprocessing.
 4. Bo w foldach mogą się różnić czynniki zakłócające (epoka NEURO, liczba rekordów), co zwiększa zmienność wyniku między foldami z powodów niezwiązanych z modelem.
 5. Bo NEURO ma 2 razy więcej rekordów, a maksimum z wielu pomiarów jest systematycznie wyższe. Model dostaje sygnał „liczba badań”, a nie „choroba”.
-6. `wczytaj_podzial()` rzuci `RuntimeError`, bo odcisk danych się nie zgadza. Trzeba świadomie przebudować podział (`podzial.py`) i odnotować to jako zmianę protokołu.
+6. Test części A wykryje, że plik `aneurysm_sgkf_input.csv` nie odpowiada już danym źródłowym. Po ponownym przygotowaniu plik się zmieni, a `wczytaj_podzial()` rzuci `RuntimeError` (inny odcisk). Trzeba świadomie przebudować podział i odnotować to jako zmianę protokołu.
+7. eGFR jest liczone z kreatyniny. Przy eGFR 8 wysoka kreatynina jest spójna (niewydolność nerek), a przy eGFR 60 (prawidłowe nerki) KREA 25 mg/dl jest sprzeczne, więc to najpewniej błąd jednostki.
+8. Bo MONO i %MONO są prawie w całości wyliczalne z innych cech: rozmaz sumuje się do 100%, a MONO ≈ %MONO × WBC / 100. Realnie nowej informacji dokłada tylko CRP.
 
 </details>

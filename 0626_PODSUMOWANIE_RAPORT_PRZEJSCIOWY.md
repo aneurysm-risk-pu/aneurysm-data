@@ -5,7 +5,9 @@
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
 
-Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych. Stan prac po raporcie przejściowym opisuje `1026_REALIZACJA_DO_SGKF.md`, problemy wykryte w danych `4-pu-setup/USTALENIA_DANYCH.md`, a propozycję dalszych prac `4-pu-setup/PLAN_MODELOWANIA.md`.
+> **Dokument historyczny (czerwiec 2026).** Opisuje stan na raport przejściowy. Aktualny stan, w tym decyzje dotyczące danych z 04.10.2026 i podział v2, opisuje `1026_REALIZACJA_DO_SGKF.md`, a propozycję dalszych prac `4-pu-setup/PLAN_MODELOWANIA.md`.
+
+Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych.
 
 ---
 
@@ -109,7 +111,7 @@ Liczby przeliczone bezpośrednio na pliku `data/processed/aneurysm_concatted_cle
 6. Brak daty rozpoznania tętniaka uniemożliwia potwierdzenie, że cechy NEURO pochodzą sprzed diagnozy i leczenia.
 7. 63 pacjentów występuje w obu kohortach źródłowych; ich interpretacja i etykieta pacjentowa nie zostały jeszcze zamrożone.
 
-Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `4-pu-setup/USTALENIA_DANYCH.md` i `1026_REALIZACJA_DO_SGKF.md`: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
+Do tej listy doszły później ustalenia z weryfikacji kodu i diagnostyki, opisane w `1026_REALIZACJA_DO_SGKF.md`, sekcja 6: brak faktycznego tasowania w `StratifiedGroupKFold`, selekcja cech prowadzona z użyciem etykiety na całym zbiorze oraz rozjazd czasowy kohort.
 
 ---
 
@@ -121,8 +123,8 @@ Po reorganizacji struktury:
 |---|---|---|
 | Czyszczenie i EDA | `1-data-preparation/` | `scripts-lk/`, `scripts-lf/`, `cleaning_summary.md` |
 | Imputacja | `2-imputation/` | `RAPORT_IMPUTACJA.md`, `final/`, `mice-lk/`, `missforest-dm/`, `knn-am/` |
-| Podział SGKF | `3-sgkf-split/` | `RAPORT_SGKF_MICE.md`, `aneurysm_sgkf_mice_pipeline.py` |
+| Podział SGKF | `3-sgkf-split/` | `RAPORT_SGKF_MICE.md`; od 04.10.2026 `przygotowanie/` (część A) i `sgkf/aneurysm_sgkf_mice_pipeline.py` (część B), wersja 1 w `archiwum/` |
 | Dane | `data/` | `raw/` → `interim/` → `imputation-inputs/` → `processed/` |
 | Archiwum | `docs/` | `sprints/`, `reports/` |
 
-Wejściem do dalszego modelowania jest **`data/processed/aneurysm_concatted_cleaned.csv`** — zbiór **przed** imputacją, bo imputacja wykonywana jest wewnątrz foldów. Plik `2-imputation/final/results/aneurysm_imputed_cleaned.csv` (imputowany globalnie, przed podziałem) służy wyłącznie do walidacji samej imputacji i **nie może** być używany do trenowania ani oceny modeli.
+Wejściem do dalszego modelowania był w czerwcu **`data/processed/aneurysm_concatted_cleaned.csv`** — zbiór **przed** imputacją, bo imputacja wykonywana jest wewnątrz foldów. **Od 04.10.2026 wejściem jest `data/processed/aneurysm_sgkf_input.csv`** (38 cech, po decyzjach dotyczących danych; `1026_REALIZACJA_DO_SGKF.md`, sekcja 5.3). Plik `2-imputation/final/results/aneurysm_imputed_cleaned.csv` (imputowany globalnie, przed podziałem) służy wyłącznie do walidacji samej imputacji i **nie może** być używany do trenowania ani oceny modeli.

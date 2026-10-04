@@ -2,7 +2,7 @@
 etap0_agregacja.py
 ==================
 
-Punkt 0.3 etapu 0 (USTALENIA_DANYCH.md, problem 6) — wybor reguly agregacji rekordow
+Punkt 0.3 — regula agregacji (4-pu-setup/PLAN_MODELOWANIA.md, sekcja 3.0) — wybor reguly agregacji rekordow
 do pacjenta.
 
 41,3% pacjentow ma wiecej niz jeden rekord, wiec regula decyduje o tym, jaki
