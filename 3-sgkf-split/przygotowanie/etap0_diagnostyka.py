@@ -2,7 +2,7 @@
 etap0_diagnostyka.py
 =====================
 
-Diagnostyka do etapu 0 (USTALENIA_DANYCH.md) — dostarcza danych
+Diagnostyka do etapu 0 (1026_REALIZACJA_DO_SGKF.md, sekcja 6) — dane SPRZED czyszczenia z 04.10.2026 — dostarcza danych
 do rozstrzygnięć, które muszą zapaść przed pisaniem pipeline'u modelowania.
 
 Nic nie modyfikuje. Tylko czyta dane i liczy statystyki:
@@ -13,7 +13,7 @@ Nic nie modyfikuje. Tylko czyta dane i liczy statystyki:
   0.5  wartości skrajne w WBC, Na, K, KREA
 
 Uruchomienie:
-    python 4-pu-setup/etap0_diagnostyka.py
+    python 3-sgkf-split/przygotowanie/etap0_diagnostyka.py
 """
 
 from pathlib import Path
@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
 INPUT_CSV = BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv"
 
 TARGET_COL = "label"
@@ -201,7 +201,7 @@ def main():
 
     print()
     print("=" * 78)
-    print("  Koniec diagnostyki. Wnioski -> 4-pu-setup/USTALENIA_DANYCH.md")
+    print("  Koniec diagnostyki. Wnioski -> 1026_REALIZACJA_DO_SGKF.md, sekcja 6")
     print("=" * 78)
 
 

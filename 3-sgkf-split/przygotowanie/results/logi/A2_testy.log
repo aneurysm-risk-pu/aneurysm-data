@@ -1,0 +1,8 @@
+  OK   test_pacjent_mieszany_zostaje_pozytywny_bez_rekordow_kor
+  OK   test_przygotowanie_nie_usuwa_pacjentow
+  OK   test_wartosci_niemozliwe_na_brak_a_skrajne_mozliwe_zostaja
+  OK   test_reguly_zmieniaja_tylko_wskazane_komorki
+  OK   test_wynik_nie_zalezy_od_kolejnosci_wierszy
+  OK   test_plik_w_repozytorium_zgodny_z_kodem
+
+6/6 testow przeszlo

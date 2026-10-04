@@ -1,0 +1,370 @@
+
+==============================================================================
+  A_dane
+==============================================================================
+{
+  "zrodlo": {
+    "rekordy": 78197,
+    "rekordy_kor": 71546,
+    "rekordy_neuro": 6651,
+    "pacjenci": 40924,
+    "pacjenci_pozytywni": 1823,
+    "pacjenci_w_obu_kohortach": 63
+  },
+  "po_czyszczeniu": {
+    "rekordy": 78052,
+    "rekordy_kor": 71401,
+    "rekordy_neuro": 6651,
+    "pacjenci": 40924,
+    "pacjenci_pozytywni": 1823,
+    "pacjenci_w_obu_kohortach": 0
+  }
+}
+
+==============================================================================
+  B_rozjazd_czasowy
+==============================================================================
+{
+  "lata": {
+    "do 2009": {
+      "kor": 0,
+      "neuro": 1
+    },
+    "2010–2018": {
+      "kor": 0,
+      "neuro": 3937
+    },
+    "2019": {
+      "kor": 326,
+      "neuro": 534
+    },
+    "2020": {
+      "kor": 31259,
+      "neuro": 317
+    },
+    "2021": {
+      "kor": 39816,
+      "neuro": 358
+    },
+    "2022–2024": {
+      "kor": 0,
+      "neuro": 1504
+    }
+  },
+  "kor_udzial_2020_2021": 0.9954,
+  "neuro_zakres_lat": [
+    2000,
+    2024
+  ],
+  "wspolne_okno": [
+    "2019-12-29",
+    "2021-12-26"
+  ],
+  "neuro_rekordy_w_oknie": 680,
+  "neuro_rekordy": 6651,
+  "neuro_pacjenci_w_oknie": 271,
+  "neuro_pacjenci": 1823
+}
+
+==============================================================================
+  C_pacjenci_mieszani
+==============================================================================
+{
+  "pacjenci": 63,
+  "rekordy": 264,
+  "rekordy_kor": 145,
+  "rekordy_neuro": 119,
+  "uklad_czasowy": {
+    "kor_przed_neuro": 55,
+    "neuro_przed_kor": 6,
+    "przeplatane": 2
+  },
+  "odstep_kor_neuro_dni": {
+    "mediana": 546,
+    "min": 35,
+    "max": 1365
+  }
+}
+
+==============================================================================
+  D_krea_egfr
+==============================================================================
+{
+  "wartosci_krea": 64554,
+  "przedzialy": {
+    "(0, 1.2]": {
+      "wartosci": 49108,
+      "egfr_mediana": 60.0,
+      "udzial_egfr_ge_60": 0.8718,
+      "udzial_egfr_ge_30": 0.9743,
+      "udzial_brak_egfr": 0.0257
+    },
+    "(1.2, 5]": {
+      "wartosci": 13421,
+      "egfr_mediana": 37.5,
+      "udzial_egfr_ge_60": 0.0284,
+      "udzial_egfr_ge_30": 0.6812,
+      "udzial_brak_egfr": 0.0104
+    },
+    "(5, 10]": {
+      "wartosci": 1026,
+      "egfr_mediana": 8.0,
+      "udzial_egfr_ge_60": 0.0439,
+      "udzial_egfr_ge_30": 0.0897,
+      "udzial_brak_egfr": 0.0058
+    },
+    "(10, 20]": {
+      "wartosci": 362,
+      "egfr_mediana": 30.8,
+      "udzial_egfr_ge_60": 0.279,
+      "udzial_egfr_ge_30": 0.511,
+      "udzial_brak_egfr": 0.0083
+    },
+    "(20, 50]": {
+      "wartosci": 427,
+      "egfr_mediana": 60.0,
+      "udzial_egfr_ge_60": 0.534,
+      "udzial_egfr_ge_30": 0.7752,
+      "udzial_brak_egfr": 0.0422
+    },
+    "(50, inf]": {
+      "wartosci": 210,
+      "egfr_mediana": 60.0,
+      "udzial_egfr_ge_60": 0.6571,
+      "udzial_egfr_ge_30": 0.8048,
+      "udzial_brak_egfr": 0.1714
+    }
+  },
+  "regula_ponad_50": 210,
+  "regula_sprzecznosc_z_egfr": 516,
+  "usuniete_razem": 726,
+  "usuniete_udzial": 0.0112,
+  "usuniete_pacjenci": 646,
+  "usuniete_neuro": 53,
+  "zostaja_krea_ponad_10": 273,
+  "zostaja_krea_ponad_10_egfr_ponizej_30": 252,
+  "zostaja_krea_ponad_10_brak_egfr": 21,
+  "prosty_prog_20_usunalby": 637,
+  "prosty_prog_20_usunalby_przy_egfr_ponizej_30": 83,
+  "sprzeczne_z_egfr_ge_60_po_przeliczeniu_mg_dl_mediana": 0.29
+}
+
+==============================================================================
+  E_wartosci_graniczne
+==============================================================================
+{
+  "K_ponad_15_usuniete": {
+    "wartosci": 25,
+    "kor": 25,
+    "neuro": 0,
+    "max": 28.32
+  },
+  "K_9_15_zostaja": {
+    "wartosci": 61,
+    "kor": 55,
+    "neuro": 6
+  },
+  "Na_ponizej_80_usuniete": {
+    "wartosci": 1,
+    "kor": 0,
+    "neuro": 1,
+    "min": 74.0
+  },
+  "Na_80_100_zostaja": {
+    "wartosci": 7,
+    "kor": 6,
+    "neuro": 1
+  },
+  "WBC_ponad_200_zostaja": {
+    "wartosci": 7,
+    "kor": 7,
+    "neuro": 0,
+    "max": 253.06
+  }
+}
+
+==============================================================================
+  F_czyszczenie_kwantylowe_etap1
+==============================================================================
+{
+  "rekordy_przed_po": {
+    "KOR": {
+      "przed": 72718,
+      "po": 72133,
+      "usuniete": 585,
+      "udzial": 0.008
+    },
+    "NEURO": {
+      "przed": 7053,
+      "po": 6825,
+      "usuniete": 228,
+      "udzial": 0.0323
+    }
+  },
+  "zakres_kwantyli": {
+    "KOR": [
+      0.0001,
+      0.0007
+    ],
+    "NEURO": [
+      0.0002,
+      0.001
+    ]
+  },
+  "kroki": 72,
+  "granice_wybranych_cech": {
+    "KOR_WBC": [
+      0.12,
+      255.35
+    ],
+    "KOR_KREA": [
+      0.17,
+      211.29
+    ],
+    "KOR_Na": [
+      96.07,
+      173.67
+    ],
+    "KOR_K": [
+      2.38,
+      29.15
+    ],
+    "NEURO_WBC": [
+      1.21,
+      48.77
+    ],
+    "NEURO_KREA": [
+      0.23,
+      75.94
+    ],
+    "NEURO_Na": [
+      76.67,
+      177.09
+    ],
+    "NEURO_K": [
+      2.71,
+      13.59
+    ]
+  }
+}
+
+==============================================================================
+  G_asymetria_brakow
+==============================================================================
+{
+  "38": {
+    "braki_razem": 399655,
+    "udzial_razem": 0.1347,
+    "udzial_kor": 0.123,
+    "udzial_neuro": 0.2604,
+    "kompletne_kor": 20383,
+    "kompletne_neuro": 772,
+    "kompletne_udzial_kor_wsrod_kompletnych": 0.9635
+  },
+  "35": {
+    "braki_razem": 377376,
+    "udzial_razem": 0.1381,
+    "udzial_kor": 0.1266,
+    "udzial_neuro": 0.262,
+    "kompletne_kor": 21674,
+    "kompletne_neuro": 1123,
+    "kompletne_udzial_kor_wsrod_kompletnych": 0.9507
+  },
+  "najwieksze_roznice": {
+    "%NRBC": {
+      "kor": 0.0256,
+      "neuro": 0.4768
+    },
+    "NRBC": {
+      "kor": 0.0256,
+      "neuro": 0.4768
+    },
+    "NEUT": {
+      "kor": 0.0291,
+      "neuro": 0.4228
+    },
+    "%NEUT": {
+      "kor": 0.0291,
+      "neuro": 0.4228
+    },
+    "CRP": {
+      "kor": 0.1862,
+      "neuro": 0.4765
+    },
+    "eGFRCKD": {
+      "kor": 0.1722,
+      "neuro": 0.4184
+    },
+    "eGFR-MDRD": {
+      "kor": 0.1721,
+      "neuro": 0.4165
+    },
+    "%IG": {
+      "kor": 0.0291,
+      "neuro": 0.2711
+    }
+  }
+}
+
+==============================================================================
+  H_zakres_skalera
+==============================================================================
+{
+  "38": {
+    "poza_zakresem": 209,
+    "udzial": 8.1e-05
+  },
+  "35": {
+    "poza_zakresem": 194,
+    "udzial": 8.2e-05
+  }
+}
+
+==============================================================================
+  I_redundancja_mono
+==============================================================================
+{
+  "suma_rozmazu_z_mono": {
+    "srednia": 100.0,
+    "odch_std": 0.11,
+    "min": 88.7,
+    "max": 100.2,
+    "n": 73153
+  },
+  "korelacja_MONO_z_procentMONO_x_WBC": 0.8809,
+  "mediana_bledu_wzglednego": 0.004,
+  "cechy_tylko_w_38": [
+    "CRP",
+    "MONO",
+    "%MONO"
+  ]
+}
+
+==============================================================================
+  J_cenzurowanie_egfr
+==============================================================================
+{
+  "eGFR-MDRD_max": 60.0,
+  "eGFR-MDRD_udzial_rownych_max": 0.5592,
+  "eGFRCKD_max": 90.0,
+  "eGFRCKD_udzial_rownych_max": 0.3269
+}
+
+==============================================================================
+  K_kontrole_jakosci
+==============================================================================
+{
+  "custom_id_unikalny": true,
+  "pacjent_w_jednej_kohorcie": true,
+  "wartosci_ujemne": 0,
+  "procenty_poza_0_100": 0,
+  "braki_plec": 0,
+  "braki_wiek": 0,
+  "wiek_zakres": [
+    18.01,
+    100.0
+  ],
+  "wiersze_bez_zadnej_cechy": 0
+}
+
+Zapisano -> 3-sgkf-split/przygotowanie/results/analiza_decyzji.json

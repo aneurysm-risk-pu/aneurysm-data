@@ -1,0 +1,37 @@
+{
+  "plik_zrodlowy": "data/imputation-inputs/aneurysm_concatted.csv",
+  "plik_wynikowy": "data/processed/aneurysm_sgkf_input.csv",
+  "rekordy_przed": 78197,
+  "rekordy_po": 78052,
+  "pacjenci_przed": 40924,
+  "pacjenci_po": 40924,
+  "usuniete_rekordy_kor_mieszanych": 145,
+  "pacjenci_mieszani": 63,
+  "wartosci_na_brak": {
+    "KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)": {
+      "wartosci": 210,
+      "pacjenci": 197,
+      "kor": 195,
+      "neuro": 15
+    },
+    "KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)": {
+      "wartosci": 516,
+      "pacjenci": 471,
+      "kor": 478,
+      "neuro": 38
+    },
+    "K > 15 mmol/l (niezgodne z życiem)": {
+      "wartosci": 25,
+      "pacjenci": 24,
+      "kor": 25,
+      "neuro": 0
+    },
+    "Na < 80 mmol/l (niezgodne z życiem)": {
+      "wartosci": 1,
+      "pacjenci": 1,
+      "kor": 0,
+      "neuro": 1
+    }
+  },
+  "wartosci_na_brak_lacznie": 752
+}
