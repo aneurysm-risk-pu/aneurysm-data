@@ -18,8 +18,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from przygotuj_dane import (KOL_MIESZANY, KOL_PACJENT, WYJSCIE, ZRODLO,  # noqa: E402
-                            przygotuj)
+from przygotuj_dane import KOL_PACJENT, WYJSCIE, ZRODLO, przygotuj  # noqa: E402
 
 
 def dane_testowe() -> pd.DataFrame:
@@ -41,9 +40,8 @@ def test_pacjent_mieszany_zostaje_pozytywny_bez_rekordow_kor():
     p1 = wynik[wynik[KOL_PACJENT] == 1]
     assert len(rekordy) == 2 and set(rekordy["custom_id"]) == {"1-a", "1-b"}
     assert (p1["label"] == 1).all() and len(p1) == 1
-    assert (p1[KOL_MIESZANY] == 1).all()
-    assert (wynik.loc[wynik[KOL_PACJENT] != 1, KOL_MIESZANY] == 0).all()
     assert (wynik.groupby(KOL_PACJENT)["label"].nunique() == 1).all(), "pacjent nadal w dwóch kohortach"
+    assert list(wynik.columns) == list(dane_testowe().columns), "przygotowanie nie dodaje ani nie usuwa kolumn"
 
 
 def test_przygotowanie_nie_usuwa_pacjentow():

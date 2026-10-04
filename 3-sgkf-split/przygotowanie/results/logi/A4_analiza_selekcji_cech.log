@@ -1,0 +1,29 @@
+[1] Odtworzenie procedury z notebooka na danych źródłowych ...
+    wybrane: ['CRP', 'MONO', '%MONO']   (w notebooku: ['CRP', 'MONO', '%MONO'])
+    remis na granicy (3 głosy): ['%MONO', 'HCT', 'MPV', 'patient_age']
+[2] Zgodność z wartościami wydrukowanymi w notebooku ...
+    {'pearson': {'cechy': 10, 'maks_roznica': 0.0}, 'spearman': {'cechy': 10, 'maks_roznica': 0.0}, 'kendall': {'cechy': 10, 'maks_roznica': 0.0}, 'phik': {'cechy': 10, 'maks_roznica': 0.0}}
+[3] Ta sama procedura na danych po przygotowaniu (04.10.2026) ...
+    wybrane: ['CRP', 'MONO', '%MONO']; remis na granicy: ['%MONO', 'HCT', 'MPV', 'patient_age']
+[4] Własności CRP, MONO, %MONO niezależne od etykiety ...
+{
+  "procentMONO_z_100_minus_reszta_rozmazu": {
+    "korelacja": 0.9995,
+    "mediana_bezwzgl_roznicy_pp": 0.0
+  },
+  "MONO_z_procentMONO_razy_WBC": {
+    "korelacja": 0.8809,
+    "mediana_bledu_wzglednego": 0.004
+  },
+  "CRP": {
+    "braki_kor": 0.1862,
+    "braki_neuro": 0.4765,
+    "mediana_kor": 10.7,
+    "mediana_neuro": 12.09,
+    "p75_kor": 53.54,
+    "p75_neuro": 55.73,
+    "spearman_z_etykieta": 0.0083
+  }
+}
+
+Zapisano -> 3-sgkf-split/przygotowanie/results/analiza_selekcji_cech.json

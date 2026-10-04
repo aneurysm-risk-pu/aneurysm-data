@@ -1,22 +1,21 @@
 [1] Wczytywanie aneurysm_sgkf_input.csv ...
-    78,052 rekordow, 40,924 pacjentow, 1,823 pozytywnych, 63 mieszanych
+    78,052 rekordow, 40,924 pacjentow, 1,823 pozytywnych
     warstw stratyfikacji: 12 (najmniejsza: 24 pacjentow)
 
 [2] Podzial: 5 foldow, shuffle=True, seed=42, warstwy=etykieta+okno+n_rek
 
- fold  pacjenci  rekordy  pozytywni  udzial_poz_pacjenci  udzial_poz_rekordy  poz_w_oknie  poz_5plus_rek  poz_rok_mediana  u_1_rek  mieszani
-    0      8185    15722        364               0.0445              0.0918       0.0852         0.2060        2019.0000   0.5999        13
-    1      8185    15540        365               0.0446              0.0807       0.0849         0.2082        2019.0000   0.6000        13
-    2      8185    15601        365               0.0446              0.0821       0.0904         0.2082        2018.0000   0.6000         7
-    3      8185    15608        365               0.0446              0.0870       0.0904         0.2082        2019.0000   0.6000        17
-    4      8184    15581        364               0.0445              0.0843       0.0852         0.2060        2018.0000   0.5999        13
+ fold  pacjenci  rekordy  pozytywni  udzial_poz_pacjenci  udzial_poz_rekordy  poz_w_oknie  poz_5plus_rek  poz_rok_mediana  u_1_rek
+    0      8185    15722        364               0.0445              0.0918       0.0852         0.2060        2019.0000   0.5999
+    1      8185    15540        365               0.0446              0.0807       0.0849         0.2082        2019.0000   0.6000
+    2      8185    15601        365               0.0446              0.0821       0.0904         0.2082        2018.0000   0.6000
+    3      8185    15608        365               0.0446              0.0870       0.0904         0.2082        2019.0000   0.6000
+    4      8184    15581        364               0.0445              0.0843       0.0852         0.2060        2018.0000   0.5999
 
   rozstep udzial_poz_pacjenci_pp   0.012
   rozstep udzial_poz_rekordy_pp    1.115
   rozstep rekordy_wzgl_proc        1.166
   rozstep poz_w_oknie_pp           0.548
   rozstep poz_5plus_rek_pp         0.218
-  rozstep mieszani_min_max         [7, 17]
 
 [3] Porownanie strategii (dla tasowanych: najgorszy z 5 ziaren)
 

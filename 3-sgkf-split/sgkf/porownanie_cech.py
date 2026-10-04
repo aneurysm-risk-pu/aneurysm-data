@@ -2,7 +2,13 @@
 porownanie_cech.py
 ==================
 
-CZĘŚĆ B etapu 3 — analiza wrażliwości na wybór zestawu cech.
+CZĘŚĆ B etapu 3 — jednorazowa analiza porównawcza 38 vs 35 cech (04.10.2026),
+podkładka pod decyzję o jednym zestawie (38). Nie jest częścią standardowego
+przebiegu uruchom_sgkf.py; odtworzenie:
+
+    python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --zapisz --cechy 38
+    python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --zapisz --cechy 35
+    python 3-sgkf-split/sgkf/porownanie_cech.py
 
 Czy wybór zestawu cech (38 vs 35, czyli z CRP, MONO, %MONO albo bez) zmienia
 imputację wspólnych 35 cech? Decyzja 0.4 z 04.10.2026: liczymy oba warianty
@@ -150,10 +156,12 @@ def main() -> None:
         print(f"    udział różnic > 0,5 SD (test): {foldy['udzial_roznic_ponad_0_5_sd_test']:.2%}")
         print(f"    wartości obserwowane identyczne w obu wariantach: {foldy['obserwowane_identyczne_wszedzie']}")
 
-    (WYNIKI / "porownanie_cech_38_35.json").write_text(
+    katalog = WYNIKI / "porownanie_38_35"
+    katalog.mkdir(parents=True, exist_ok=True)
+    (katalog / "porownanie_cech_38_35.json").write_text(
         json.dumps({"test_kontrolowany": kontrola, "foldy": foldy}, indent=2, ensure_ascii=False),
         encoding="utf-8")
-    print(f"\nZapisano -> {WYNIKI.name}/porownanie_cech_38_35.json")
+    print(f"\nZapisano -> {WYNIKI.name}/porownanie_38_35/porownanie_cech_38_35.json")
 
 
 if __name__ == "__main__":

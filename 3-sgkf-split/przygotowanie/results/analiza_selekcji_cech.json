@@ -1,0 +1,166 @@
+{
+  "procedura_notebook": {
+    "plik": "1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb",
+    "usuniete": [
+      "CRP",
+      "MONO",
+      "%MONO"
+    ]
+  },
+  "odtworzenie_na_zrodle": {
+    "najslabsze_10": {
+      "pearson": {
+        "%MONO": 0.000221,
+        "CRP": 0.000948,
+        "INR": 0.006632,
+        "patient_age": 0.007383,
+        "LYMPH": 0.010766,
+        "MPV": 0.01258,
+        "HCT": 0.013728,
+        "KREA": 0.014903,
+        "MONO": 0.014947,
+        "NRBC": 0.015138
+      },
+      "spearman": {
+        "RDW": 0.003047,
+        "Na": 0.003659,
+        "CRP": 0.008455,
+        "patient_age": 0.011209,
+        "PT": 0.013004,
+        "%MONO": 0.01457,
+        "MPV": 0.0147,
+        "HCT": 0.017522,
+        "PLT": 0.01831,
+        "MONO": 0.018338
+      },
+      "kendall": {
+        "RDW": 0.002503,
+        "Na": 0.003067,
+        "CRP": 0.006915,
+        "patient_age": 0.009153,
+        "PT": 0.011505,
+        "%MONO": 0.011932,
+        "MPV": 0.012102,
+        "HCT": 0.014326,
+        "PLT": 0.014965,
+        "MONO": 0.015016
+      },
+      "phik": {
+        "CRP": 0.0,
+        "MONO": 0.002728,
+        "NRBC": 0.006671,
+        "KREA": 0.00755,
+        "%NRBC": 0.013725,
+        "LYMPH": 0.013932,
+        "WBC": 0.019707,
+        "IG": 0.022182,
+        "%IG": 0.027278,
+        "EO": 0.029021
+      }
+    },
+    "glosy": {
+      "CRP": 4,
+      "MONO": 4,
+      "%MONO": 3,
+      "HCT": 3,
+      "MPV": 3,
+      "patient_age": 3,
+      "KREA": 2,
+      "LYMPH": 2,
+      "NRBC": 2,
+      "Na": 2,
+      "PLT": 2,
+      "PT": 2,
+      "RDW": 2,
+      "%IG": 1,
+      "%NRBC": 1,
+      "EO": 1,
+      "IG": 1,
+      "INR": 1,
+      "WBC": 1
+    },
+    "wybrane": [
+      "CRP",
+      "MONO",
+      "%MONO"
+    ],
+    "remis_na_granicy": [
+      "%MONO",
+      "HCT",
+      "MPV",
+      "patient_age"
+    ],
+    "glosy_na_granicy": 3
+  },
+  "korelacje_usunietych_ze_zrodla": {
+    "CRP": {
+      "pearson": 0.000948,
+      "spearman": 0.008455,
+      "kendall": 0.006915,
+      "phik": 0.0
+    },
+    "MONO": {
+      "pearson": -0.014947,
+      "spearman": -0.018338,
+      "kendall": -0.015016,
+      "phik": 0.002728
+    },
+    "%MONO": {
+      "pearson": -0.000221,
+      "spearman": 0.01457,
+      "kendall": 0.011932,
+      "phik": 0.036688
+    }
+  },
+  "zgodnosc_z_wydrukiem_notebooka": {
+    "pearson": {
+      "cechy": 10,
+      "maks_roznica": 0.0
+    },
+    "spearman": {
+      "cechy": 10,
+      "maks_roznica": 0.0
+    },
+    "kendall": {
+      "cechy": 10,
+      "maks_roznica": 0.0
+    },
+    "phik": {
+      "cechy": 10,
+      "maks_roznica": 0.0
+    }
+  },
+  "ta_sama_procedura_po_przygotowaniu": {
+    "wybrane": [
+      "CRP",
+      "MONO",
+      "%MONO"
+    ],
+    "remis_na_granicy": [
+      "%MONO",
+      "HCT",
+      "MPV",
+      "patient_age"
+    ],
+    "glosy_na_granicy": 3
+  },
+  "wlasnosci_trzech_cech": {
+    "procentMONO_z_100_minus_reszta_rozmazu": {
+      "korelacja": 0.9995,
+      "mediana_bezwzgl_roznicy_pp": 0.0
+    },
+    "MONO_z_procentMONO_razy_WBC": {
+      "korelacja": 0.8809,
+      "mediana_bledu_wzglednego": 0.004
+    },
+    "CRP": {
+      "braki_kor": 0.1862,
+      "braki_neuro": 0.4765,
+      "mediana_kor": 10.7,
+      "mediana_neuro": 12.09,
+      "p75_kor": 53.54,
+      "p75_neuro": 55.73,
+      "spearman_z_etykieta": 0.0083
+    }
+  }
+}

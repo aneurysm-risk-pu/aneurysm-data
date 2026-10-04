@@ -27,8 +27,8 @@ Co zmienia wzgledem wersji z 11.06.2026 (pierwotny `aneurysm_sgkf_mice_pipeline.
   4. (04.10.2026) Podzial czyta WYLACZNIE plik przygotowany w czesci A
      (3-sgkf-split/przygotowanie/przygotuj_dane.py ->
      data/processed/aneurysm_sgkf_input.csv): bez rekordow KOR 63 pacjentow
-     obecnych tez w NEURO i bez wartosci niemozliwych. Podzial jest wspolny dla
-     wariantow 38 i 35 cech — roznia sie tylko kolumnami, nie pacjentami.
+     obecnych tez w NEURO i bez wartosci niemozliwych. Zestaw cech: 38 (jeden
+     wariant; wariant 35 tylko w jednorazowej analizie porownawczej).
      Meta przechowuje odcisk tego pliku; kazda zmiana przygotowania danych
      zmienia plik, a wiec uniewaznia zapisany podzial.
 
@@ -62,15 +62,15 @@ WYNIKI = Path(__file__).resolve().parent / "results"
 PODSUMOWANIE_PRZYGOTOWANIA = BASE_DIR / "3-sgkf-split" / "przygotowanie" / "results" / "podsumowanie.json"
 
 # Wejscie: wynik czesci A (przygotowanie danych), 38 cech, dane PRZED imputacja.
-# Wariant 35 cech to te same dane bez CRP, MONO, %MONO.
+# Wariant 35 cech (bez CRP, MONO, %MONO) sluzy wylacznie analizie porownawczej
+# (porownanie_cech.py); decyzja o 38 cechach: przygotowanie/analiza_selekcji_cech.py.
 WEJSCIE = BASE_DIR / "data" / "processed" / "aneurysm_sgkf_input.csv"
 CECHY_POZA_35 = ["CRP", "MONO", "%MONO"]
 
 KOL_PACJENT = "patient_id"
 KOL_ETYKIETA = "label"
 KOL_DATA = "examination_date"
-KOL_MIESZANY = "pacjent_mieszany"   # metadana z czesci A: pacjent byl w obu kohortach
-META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label", KOL_MIESZANY]
+META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label"]
 
 # Granice klas liczby rekordow: 1 | 2 | 3-4 | 5+
 GRANICE_N_REK = [0, 1, 2, 4, np.inf]
@@ -142,14 +142,8 @@ def tabela_pacjentow(df: pd.DataFrame, cfg: KonfiguracjaPodzialu) -> pd.DataFram
     od, do = wspolne_okno_dat(df)
     w_oknie = df[KOL_DATA].between(od, do)
     g = df.groupby(KOL_PACJENT)
-    # Po przygotowaniu pacjent mieszany ma juz tylko rekordy NEURO; kolumna
-    # `pacjent_mieszany` mowi, ze w danych zrodlowych byl takze w KOR.
-    mieszany = g[KOL_ETYKIETA].nunique().gt(1)
-    if KOL_MIESZANY in df.columns:
-        mieszany = mieszany | g[KOL_MIESZANY].max().astype(bool)
     pac = pd.DataFrame({
         "label": g[KOL_ETYKIETA].max().astype(int),
-        "mieszany": mieszany,
         "n_rek": g.size(),
         "w_oknie": w_oknie.groupby(df[KOL_PACJENT]).mean().ge(0.5),
         "rok_mediana": g[KOL_DATA].median().dt.year,
@@ -252,7 +246,6 @@ def diagnostyka(df: pd.DataFrame, pac: pd.DataFrame, przydzial: pd.Series) -> pd
             "poz_5plus_rek": poz["klasa_n_rek"].eq("5+").mean(),
             "poz_rok_mediana": poz["rok_mediana"].median(),
             "u_1_rek": s.loc[s["label"] == 0, "klasa_n_rek"].eq("1").mean(),
-            "mieszani": int(s["mieszany"].sum()),
         })
     return pd.DataFrame(wiersze)
 
@@ -266,7 +259,6 @@ def rozstepy(diag: pd.DataFrame) -> dict:
         "rekordy_wzgl_proc": 100 * r("rekordy") / diag["rekordy"].mean(),
         "poz_w_oknie_pp": 100 * r("poz_w_oknie"),
         "poz_5plus_rek_pp": 100 * r("poz_5plus_rek"),
-        "mieszani_min_max": [int(diag["mieszani"].min()), int(diag["mieszani"].max())],
     }
 
 
@@ -309,7 +301,7 @@ def porownaj_strategie(df: pd.DataFrame, cfg: KonfiguracjaPodzialu,
     wiersze = []
     for nazwa, budowniczowie in strategie.items():
         wyniki = [rozstepy(diagnostyka(df, pac, b())) for b in budowniczowie]
-        najgorszy = {k: max(w[k] for w in wyniki) for k in wyniki[0] if k != "mieszani_min_max"}
+        najgorszy = {k: max(w[k] for w in wyniki) for k in wyniki[0]}
         wiersze.append({"strategia": nazwa, "przebiegi": len(wyniki), **najgorszy})
     return pd.DataFrame(wiersze)
 
@@ -331,9 +323,9 @@ def odcisk_pliku(sciezka: Path) -> str:
 def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
                    cfg: KonfiguracjaPodzialu, katalog: Path = WYNIKI) -> None:
     katalog.mkdir(parents=True, exist_ok=True)
-    tabela = pac[[KOL_PACJENT, "label", "mieszany", "warstwa"]].merge(
+    tabela = pac[[KOL_PACJENT, "label", "warstwa"]].merge(
         przydzial.reset_index(), on=KOL_PACJENT)
-    tabela[[KOL_PACJENT, "fold", "label", "mieszany", "warstwa"]].to_csv(
+    tabela[[KOL_PACJENT, "fold", "label", "warstwa"]].to_csv(
         katalog / "pacjent_fold.csv", index=False)
     diag.to_csv(katalog / "podzial_diagnostyka.csv", index=False)
 
@@ -405,7 +397,7 @@ def main(argv=None) -> None:
     df = wczytaj_rekordy(cfg)
     pac = tabela_pacjentow(df, cfg)
     print(f"    {len(df):,} rekordow, {len(pac):,} pacjentow, "
-          f"{int(pac['label'].sum()):,} pozytywnych, {int(pac['mieszany'].sum())} mieszanych")
+          f"{int(pac['label'].sum()):,} pozytywnych")
     print(f"    warstw stratyfikacji: {pac['warstwa'].nunique()} "
           f"(najmniejsza: {pac['warstwa'].value_counts().min()} pacjentow)")
 

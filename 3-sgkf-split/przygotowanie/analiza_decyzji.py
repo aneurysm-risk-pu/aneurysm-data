@@ -36,13 +36,13 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from przygotuj_dane import (BASE_DIR, KOL_ETYKIETA, KOL_MIESZANY, KOL_PACJENT,  # noqa: E402
+from przygotuj_dane import (BASE_DIR, KOL_ETYKIETA, KOL_PACJENT,  # noqa: E402
                             WYNIKI, ZRODLO, pacjenci_mieszani, przygotuj)
 
 NOTEBOOK_ETAP1 = BASE_DIR / "1-data-preparation" / "scripts-lf" / "aneurysm_data_analysis (1).ipynb"
 KOL_DATA = "examination_date"
-META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label", KOL_MIESZANY]
-CECHY_POZA_35 = ["CRP", "MONO", "%MONO"]   # różnica między wariantem 38 i 35 cech
+META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label"]
+CECHY_POZA_35 = ["CRP", "MONO", "%MONO"]   # usunięte w etapie 1; od 04.10.2026 zostają (analiza_selekcji_cech.py)
 
 
 def kolumny_cech(df: pd.DataFrame, zestaw: str = "38") -> list:

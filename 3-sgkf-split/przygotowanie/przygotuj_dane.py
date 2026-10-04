@@ -17,8 +17,8 @@ liczby: analiza_decyzji.py):
 
   1. Pacjenci obecni w obu kohortach (63 osoby, 264 rekordy). Pacjent nie może
      być jednocześnie pozytywny i nieoznaczony. Zostają jako pozytywni, a ich
-     rekordy KOR są usuwane (145 rekordów). Kolumna `pacjent_mieszany` (0/1)
-     zachowuje informację, kto był w obu kohortach — to metadana, nie cecha.
+     rekordy KOR są usuwane (145 rekordów). Kto to był, zapisuje spis
+     results/usuniete_rekordy.csv — dane wynikowe nie mają dodatkowej kolumny.
 
   2. Wartości niemożliwe zamieniane na brak danych (MICE uzupełnia je później
      wewnątrz foldu z reszty profilu). Usuwamy tylko wartości, które nie mogą
@@ -54,7 +54,6 @@ WYNIKI = Path(__file__).resolve().parent / "results"
 
 KOL_PACJENT = "patient_id"
 KOL_ETYKIETA = "label"
-KOL_MIESZANY = "pacjent_mieszany"
 
 # (cecha, opis reguły, maska na DataFrame)
 REGULY_WARTOSCI = [
@@ -76,18 +75,16 @@ def pacjenci_mieszani(df: pd.DataFrame) -> set:
 
 
 def usun_rekordy_kor_mieszanych(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Usuwa rekordy KOR pacjentów obecnych też w NEURO i oznacza tych pacjentów.
+    """Usuwa rekordy KOR pacjentów obecnych też w NEURO.
 
-    Zwraca (dane z kolumną `pacjent_mieszany`, spis usuniętych rekordów).
+    Zwraca (dane, spis usuniętych rekordów — z niego wiadomo, którzy to pacjenci).
     """
     mieszani = pacjenci_mieszani(df)
     do_usuniecia = df[KOL_PACJENT].isin(mieszani) & (df[KOL_ETYKIETA] == 0)
     kolumny = [c for c in (KOL_PACJENT, "custom_id", "examination_date", KOL_ETYKIETA) if c in df.columns]
     spis = df.loc[do_usuniecia, kolumny].copy()
     spis["powod"] = "rekord KOR pacjenta obecnego także w NEURO"
-    d = df[~do_usuniecia].copy()
-    d[KOL_MIESZANY] = d[KOL_PACJENT].isin(mieszani).astype(int)
-    return d, spis
+    return df[~do_usuniecia].copy(), spis
 
 
 def usun_wartosci_niemozliwe(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -130,7 +127,7 @@ def podsumowanie(zrodlo: pd.DataFrame, wynik: pd.DataFrame,
         "rekordy_przed": int(len(zrodlo)), "rekordy_po": int(len(wynik)),
         "pacjenci_przed": int(zrodlo[KOL_PACJENT].nunique()), "pacjenci_po": int(wynik[KOL_PACJENT].nunique()),
         "usuniete_rekordy_kor_mieszanych": int(len(rekordy)),
-        "pacjenci_mieszani": int(wynik.loc[wynik[KOL_MIESZANY] == 1, KOL_PACJENT].nunique()),
+        "pacjenci_mieszani": int(rekordy[KOL_PACJENT].nunique()),
         "wartosci_na_brak": reguly,
         "wartosci_na_brak_lacznie": int(len(wartosci)),
     }

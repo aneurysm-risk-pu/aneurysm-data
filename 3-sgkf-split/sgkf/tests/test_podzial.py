@@ -19,7 +19,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from podzial import (KOL_MIESZANY, KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
+from podzial import (KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
                      diagnostyka, indeksy_foldow, kolumny_cech, podzial_wewnetrzny,
                      rozstepy, tabela_pacjentow, wczytaj_podzial, zbuduj_podzial)
 
@@ -82,17 +82,11 @@ def test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko():
     assert sorted(testowe) == list(range(len(df))), "rekord pominiety albo powtorzony w testach"
 
 
-def test_flaga_mieszanego_pacjenta_z_kolumny_przygotowania():
-    df = dane_testowe(n_mieszanych=0)
-    df[KOL_MIESZANY] = df[KOL_PACJENT].isin([1, 2]).astype(int)
-    pac = tabela_pacjentow(df, _cfg()).set_index(KOL_PACJENT)
-    assert pac.loc[[1, 2], "mieszany"].all() and not pac.drop([1, 2])["mieszany"].any()
-
-
 def test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami():
     df = pd.DataFrame(columns=["patient_id", "custom_id", "examination_date", "label",
-                               KOL_MIESZANY, "HGB", "CRP", "MONO", "%MONO", "K"])
-    assert KOL_MIESZANY not in kolumny_cech(df, "38"), "metadana nie moze byc cecha"
+                               "HGB", "CRP", "MONO", "%MONO", "K"])
+    assert not {"patient_id", "custom_id", "examination_date", "label"} & set(kolumny_cech(df, "38")), \
+        "kolumna meta nie moze byc cecha"
     assert set(kolumny_cech(df, "38")) - set(kolumny_cech(df, "35")) == {"CRP", "MONO", "%MONO"}
 
 

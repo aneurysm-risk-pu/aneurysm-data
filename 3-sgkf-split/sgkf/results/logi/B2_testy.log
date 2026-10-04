@@ -1,6 +1,5 @@
   OK   test_kazdy_pacjent_dokladnie_w_jednym_foldzie
   OK   test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko
-  OK   test_flaga_mieszanego_pacjenta_z_kolumny_przygotowania
   OK   test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami
   OK   test_podzial_nie_zalezy_od_kolejnosci_wierszy
   OK   test_ziarno_zmienia_podzial_a_to_samo_ziarno_go_powtarza
@@ -10,4 +9,4 @@
   OK   test_zapisany_podzial_jest_zgodny_z_danymi
   OK   test_zmiana_danych_uniewaznia_podzial
 
-11/11 testow przeszlo
+10/10 testow przeszlo
