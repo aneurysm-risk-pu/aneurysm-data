@@ -2,7 +2,7 @@
 etap0_sgkf_stabilnosc.py
 ========================
 
-Punkt 0.6 etapu 0 (4-pu-setup/USTALENIA_DANYCH.md, problem 7) — siatka stabilnosci podzialu.
+Punkt 0.6 etapu 0 (1026_REALIZACJA_DO_SGKF.md, sekcja 5) — siatka stabilnosci podzialu.
 
 Wersja historyczna z 18.09.2026, przeniesiona z brancha etap0-sgkf-stabilnosc-lk.
 Jej wnioski rozwija podzial.py --porownanie (RAPORT_SGKF_MICE.md, sekcja 6).
@@ -21,7 +21,7 @@ liczy sie dla obu opcji i decyzja moze zapasc na liczbach.
 Nic nie modyfikuje i nic nie zapisuje poza tabela wynikow w results/.
 
 Uruchomienie:
-    python 3-sgkf-split/etap0_sgkf_stabilnosc.py
+    python 3-sgkf-split/sgkf/etap0_sgkf_stabilnosc.py
 """
 
 from pathlib import Path
@@ -31,9 +31,9 @@ import pandas as pd
 from sklearn.metrics import adjusted_rand_score
 from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold
 
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
 INPUT_CSV = BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv"
-OUTPUT_DIR = Path(__file__).parent / "results"
+OUTPUT_DIR = Path(__file__).resolve().parent / "results"
 
 TARGET_COL = "label"
 GROUP_COL = "patient_id"

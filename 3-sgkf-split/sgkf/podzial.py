@@ -2,7 +2,7 @@
 podzial.py
 ==========
 
-Zamrozony podzial pacjentow na foldy — wersja 2 etapu SGKF.
+CZESC B etapu 3 — zamrozony podzial pacjentow na foldy (wersja 2 SGKF).
 
 Co zmienia wzgledem wersji z 11.06.2026 (pierwotny `aneurysm_sgkf_mice_pipeline.py`):
 
@@ -15,7 +15,7 @@ Co zmienia wzgledem wersji z 11.06.2026 (pierwotny `aneurysm_sgkf_mice_pipeline.
      stratyfikujaca. Sama etykieta zostawiala miedzy foldami do 5 pp rozjazdu
      w udziale NEURO z okna czasowego KOR i do 8 pp w udziale pacjentow z 5+
      rekordami — a oba czynniki sa znanymi zrodlami falszywego sygnalu
-     (ETAP0_USTALENIA.md, punkty 0.2 i 0.3).
+     (1026_REALIZACJA_DO_SGKF.md, sekcja 6).
 
   3. Tasowanie naprawde dziala (shuffle=True, ziarno w konfiguracji),
      a przydzial pacjent -> fold jest zapisany na dysk razem z odciskiem
@@ -24,13 +24,21 @@ Co zmienia wzgledem wersji z 11.06.2026 (pierwotny `aneurysm_sgkf_mice_pipeline.
      niego wplywu. Dodatkowo SGKF z shuffle=True daje rozne podzialy w
      sklearn 1.6 i 1.8 — StratifiedKFold na pacjentach daje identyczny.
 
+  4. (04.10.2026) Podzial czyta WYLACZNIE plik przygotowany w czesci A
+     (3-sgkf-split/przygotowanie/przygotuj_dane.py ->
+     data/processed/aneurysm_sgkf_input.csv): bez rekordow KOR 63 pacjentow
+     obecnych tez w NEURO i bez wartosci niemozliwych. Podzial jest wspolny dla
+     wariantow 38 i 35 cech — roznia sie tylko kolumnami, nie pacjentami.
+     Meta przechowuje odcisk tego pliku; kazda zmiana przygotowania danych
+     zmienia plik, a wiec uniewaznia zapisany podzial.
+
 Od tej pory zrodlem prawdy jest plik `results/pacjent_fold.csv`, a nie
 przepis na podzial. Kazdy kolejny etap czyta go przez `wczytaj_podzial()`.
 
 Uruchomienie:
-    python 3-sgkf-split/podzial.py               # buduje, sprawdza i zapisuje podzial
-    python 3-sgkf-split/podzial.py --porownanie  # dodatkowo porownuje strategie na 5 ziarnach
-    python 3-sgkf-split/podzial.py --sprawdz     # weryfikuje zapisany podzial wzgledem danych
+    python 3-sgkf-split/sgkf/podzial.py               # buduje, sprawdza i zapisuje podzial
+    python 3-sgkf-split/sgkf/podzial.py --porownanie  # dodatkowo porownuje strategie na 5 ziarnach
+    python 3-sgkf-split/sgkf/podzial.py --sprawdz     # weryfikuje zapisany podzial wzgledem danych
 """
 
 from __future__ import annotations
@@ -42,27 +50,27 @@ import platform
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Iterator, Literal, Optional
+from typing import Iterator, Optional
 
 import numpy as np
 import pandas as pd
 import sklearn
 from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold
 
-BASE_DIR = Path(__file__).parent.parent
-WYNIKI = Path(__file__).parent / "results"
+BASE_DIR = Path(__file__).resolve().parents[2]
+WYNIKI = Path(__file__).resolve().parent / "results"
+PODSUMOWANIE_PRZYGOTOWANIA = BASE_DIR / "3-sgkf-split" / "przygotowanie" / "results" / "podsumowanie.json"
 
-# Dwa warianty zestawu cech roznia sie wylacznie kolumnami CRP, MONO, %MONO.
-# Wartosci pozostalych kolumn sa identyczne (sprawdzone w etapie 0, punkt 0.4).
-DANE = {
-    "38": BASE_DIR / "data" / "imputation-inputs" / "aneurysm_concatted.csv",
-    "35": BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv",
-}
+# Wejscie: wynik czesci A (przygotowanie danych), 38 cech, dane PRZED imputacja.
+# Wariant 35 cech to te same dane bez CRP, MONO, %MONO.
+WEJSCIE = BASE_DIR / "data" / "processed" / "aneurysm_sgkf_input.csv"
+CECHY_POZA_35 = ["CRP", "MONO", "%MONO"]
 
 KOL_PACJENT = "patient_id"
 KOL_ETYKIETA = "label"
 KOL_DATA = "examination_date"
-META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label"]
+KOL_MIESZANY = "pacjent_mieszany"   # metadana z czesci A: pacjent byl w obu kohortach
+META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label", KOL_MIESZANY]
 
 # Granice klas liczby rekordow: 1 | 2 | 3-4 | 5+
 GRANICE_N_REK = [0, 1, 2, 4, np.inf]
@@ -73,13 +81,6 @@ ETYKIETY_N_REK = ["1", "2", "3-4", "5+"]
 class KonfiguracjaPodzialu:
     """Komplet decyzji podzialu. Zapisywany razem z przydzialem."""
 
-    # 0.4 — zestaw cech; na sam podzial nie wplywa, ale wiaze przydzial z plikiem
-    zestaw_cech: Literal["38", "35"] = "38"
-
-    # 0.1 — pacjenci obecni w obu kohortach (63 osoby)
-    # 'pozytywni'      : etykieta pacjenta = 1, flaga `mieszany` zostaje w tabeli
-    # 'bez_mieszanych' : pacjenci mieszani wypadaja z podzialu
-    mieszani: Literal["pozytywni", "bez_mieszanych"] = "pozytywni"
 
     # 0.6 — konfiguracja podzialu
     n_splits: int = 5
@@ -96,7 +97,7 @@ class KonfiguracjaPodzialu:
 
     @property
     def sciezka_danych(self) -> Path:
-        return DANE[self.zestaw_cech]
+        return WEJSCIE
 
 
 DOMYSLNA = KonfiguracjaPodzialu()
@@ -106,15 +107,21 @@ DOMYSLNA = KonfiguracjaPodzialu()
 # Dane i tabela pacjentow
 # ---------------------------------------------------------------------------
 
-def wczytaj_rekordy(cfg: KonfiguracjaPodzialu) -> pd.DataFrame:
-    """Dane PRZED imputacja — imputacja dzieje sie wewnatrz foldu."""
+def wczytaj_rekordy(cfg: KonfiguracjaPodzialu = None) -> pd.DataFrame:
+    """Dane przygotowane w czesci A, PRZED imputacja (imputacja dzieje sie w foldzie)."""
+    cfg = cfg or DOMYSLNA
+    if not cfg.sciezka_danych.exists():
+        raise FileNotFoundError(f"brak {cfg.sciezka_danych.relative_to(BASE_DIR)} — uruchom najpierw "
+                                "3-sgkf-split/przygotowanie/przygotuj_dane.py")
     df = pd.read_csv(cfg.sciezka_danych)
     df[KOL_DATA] = pd.to_datetime(df[KOL_DATA])
     return df
 
 
-def kolumny_cech(df: pd.DataFrame) -> list[str]:
-    return [c for c in df.columns if c not in META_KOLUMNY]
+def kolumny_cech(df: pd.DataFrame, zestaw: str = "38") -> list[str]:
+    """Cechy wariantu 38 albo 35 (bez CRP, MONO, %MONO)."""
+    pomin = set(META_KOLUMNY) | (set(CECHY_POZA_35) if zestaw == "35" else set())
+    return [c for c in df.columns if c not in pomin]
 
 
 def wspolne_okno_dat(df: pd.DataFrame) -> tuple[pd.Timestamp, pd.Timestamp]:
@@ -128,24 +135,27 @@ def tabela_pacjentow(df: pd.DataFrame, cfg: KonfiguracjaPodzialu) -> pd.DataFram
     """Jeden wiersz na pacjenta: etykieta, flagi kontrolne i warstwa stratyfikacji.
 
     `w_oknie` = co najmniej polowa rekordow pacjenta lezy we wspolnym oknie dat
-    kohort. Dla KOR to prawie zawsze prawda; dla NEURO odroznia ~15% pacjentow
-    z lat 2019–2021 od reszty, ktora pochodzi z innej epoki.
+    kohort. Dla KOR to prawie zawsze prawda; dla NEURO odroznia ok. 9% pacjentow
+    z lat 2019–2021 od reszty, ktora pochodzi z innej epoki
+    (results/podzial_diagnostyka.csv, kolumna poz_w_oknie).
     """
     od, do = wspolne_okno_dat(df)
     w_oknie = df[KOL_DATA].between(od, do)
     g = df.groupby(KOL_PACJENT)
+    # Po przygotowaniu pacjent mieszany ma juz tylko rekordy NEURO; kolumna
+    # `pacjent_mieszany` mowi, ze w danych zrodlowych byl takze w KOR.
+    mieszany = g[KOL_ETYKIETA].nunique().gt(1)
+    if KOL_MIESZANY in df.columns:
+        mieszany = mieszany | g[KOL_MIESZANY].max().astype(bool)
     pac = pd.DataFrame({
         "label": g[KOL_ETYKIETA].max().astype(int),
-        "mieszany": g[KOL_ETYKIETA].nunique().gt(1),
+        "mieszany": mieszany,
         "n_rek": g.size(),
         "w_oknie": w_oknie.groupby(df[KOL_PACJENT]).mean().ge(0.5),
         "rok_mediana": g[KOL_DATA].median().dt.year,
     }).reset_index()
     pac["klasa_n_rek"] = pd.cut(pac["n_rek"], GRANICE_N_REK,
                                 labels=ETYKIETY_N_REK).astype(str)
-
-    if cfg.mieszani == "bez_mieszanych":
-        pac = pac[~pac["mieszany"]].copy()
 
     pac["warstwa"] = _warstwy(pac, cfg)
     return pac.sort_values(KOL_PACJENT).reset_index(drop=True)
@@ -209,8 +219,8 @@ def indeksy_foldow(df: pd.DataFrame, przydzial: pd.Series
                    ) -> Iterator[tuple[int, np.ndarray, np.ndarray]]:
     """Przeklada przydzial pacjentow na pozycje rekordow: (fold, train_idx, test_idx).
 
-    Rekordy pacjentow spoza przydzialu (np. mieszanych przy 'bez_mieszanych')
-    nie trafiaja ani do treningu, ani do testu.
+    Rekordy pacjentow spoza przydzialu (np. przy podprobce) nie trafiaja
+    ani do treningu, ani do testu.
     """
     fold_rek = df[KOL_PACJENT].map(przydzial)
     for f in sorted(przydzial.unique()):
@@ -331,6 +341,8 @@ def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
         "konfiguracja": {**asdict(cfg), "warstwy": list(cfg.warstwy)},
         "plik_danych": str(cfg.sciezka_danych.relative_to(BASE_DIR)).replace("\\", "/"),
         "odcisk_danych_sha256": odcisk_pliku(cfg.sciezka_danych),
+        "przygotowanie_danych": (json.loads(PODSUMOWANIE_PRZYGOTOWANIA.read_text(encoding="utf-8"))
+                                 if PODSUMOWANIE_PRZYGOTOWANIA.exists() else {}),
         "pacjenci": int(len(pac)),
         "pozytywni": int(pac["label"].sum()),
         "rozstepy": rozstepy(diag),
@@ -381,10 +393,11 @@ def main(argv=None) -> None:
         przydzial, meta = wczytaj_podzial()
         df = wczytaj_rekordy(KonfiguracjaPodzialu(**{**meta["konfiguracja"],
                                                     "warstwy": tuple(meta["konfiguracja"]["warstwy"])}))
-        brak = set(przydzial.index) - set(df[KOL_PACJENT])
-        assert not brak, f"{len(brak)} pacjentow z przydzialu nie ma w danych"
+        brak = set(przydzial.index) ^ set(df[KOL_PACJENT])
+        assert not brak, f"{len(brak)} pacjentow nie zgadza sie miedzy przydzialem a danymi"
         print(f"Podzial zgodny z danymi: {len(przydzial):,} pacjentow, "
-              f"odcisk {meta['odcisk_danych_sha256']}, utworzony {meta['utworzono']} "
+              f"odcisk danych {meta['odcisk_danych_sha256']}, "
+              f"utworzony {meta['utworzono']} "
               f"(sklearn {meta['wersje']['sklearn']})")
         return
 

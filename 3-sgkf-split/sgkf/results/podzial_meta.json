@@ -1,7 +1,5 @@
 {
   "konfiguracja": {
-    "zestaw_cech": "38",
-    "mieszani": "pozytywni",
     "n_splits": 5,
     "shuffle": true,
     "seed": 42,
@@ -12,19 +10,56 @@
     ],
     "min_warstwa": 20
   },
-  "plik_danych": "data/imputation-inputs/aneurysm_concatted.csv",
-  "odcisk_danych_sha256": "e2ec333b83d9ff15",
+  "plik_danych": "data/processed/aneurysm_sgkf_input.csv",
+  "odcisk_danych_sha256": "4179b1596019915b",
+  "przygotowanie_danych": {
+    "plik_zrodlowy": "data/imputation-inputs/aneurysm_concatted.csv",
+    "plik_wynikowy": "data/processed/aneurysm_sgkf_input.csv",
+    "rekordy_przed": 78197,
+    "rekordy_po": 78052,
+    "pacjenci_przed": 40924,
+    "pacjenci_po": 40924,
+    "usuniete_rekordy_kor_mieszanych": 145,
+    "pacjenci_mieszani": 63,
+    "wartosci_na_brak": {
+      "KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)": {
+        "wartosci": 210,
+        "pacjenci": 197,
+        "kor": 195,
+        "neuro": 15
+      },
+      "KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)": {
+        "wartosci": 516,
+        "pacjenci": 471,
+        "kor": 478,
+        "neuro": 38
+      },
+      "K > 15 mmol/l (niezgodne z życiem)": {
+        "wartosci": 25,
+        "pacjenci": 24,
+        "kor": 25,
+        "neuro": 0
+      },
+      "Na < 80 mmol/l (niezgodne z życiem)": {
+        "wartosci": 1,
+        "pacjenci": 1,
+        "kor": 0,
+        "neuro": 1
+      }
+    },
+    "wartosci_na_brak_lacznie": 752
+  },
   "pacjenci": 40924,
   "pozytywni": 1823,
   "rozstepy": {
     "udzial_poz_pacjenci_pp": 0.012217470983506146,
-    "udzial_poz_rekordy_pp": 0.47746588810815005,
-    "rekordy_wzgl_proc": 0.9527219714311291,
-    "poz_w_oknie_pp": 0.794821616739426,
-    "poz_5plus_rek_pp": 0.48998946259220244,
+    "udzial_poz_rekordy_pp": 1.115084044736761,
+    "rekordy_wzgl_proc": 1.1658894070619588,
+    "poz_w_oknie_pp": 0.5479452054794526,
+    "poz_5plus_rek_pp": 0.21752220382357523,
     "mieszani_min_max": [
-      8,
-      15
+      7,
+      17
     ]
   },
   "wersje": {
@@ -33,5 +68,5 @@
     "pandas": "2.3.3",
     "numpy": "2.0.2"
   },
-  "utworzono": "2026-10-04T13:44:52"
+  "utworzono": "2026-10-04T15:18:44"
 }

@@ -11,3 +11,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Zaimputowane foldy (duze, odtwarzalne z kodu)
+3-sgkf-split/sgkf/results/foldy_imputowane*/

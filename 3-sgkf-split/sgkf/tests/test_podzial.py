@@ -1,14 +1,12 @@
 """
-Testy zamrozonego podzialu na foldy (3-sgkf-split/podzial.py).
+Testy czesci B etapu 3 — zamrozonego podzialu na foldy (sgkf/podzial.py).
 
 Wlasnosci sprawdzamy na danych syntetycznych, gdzie znamy prawidlowa odpowiedz.
 Ostatni test korzysta z zapisanego artefaktu i prawdziwych danych — jest
 pomijany, jesli podzial nie zostal jeszcze zbudowany.
 
 Uruchomienie:
-    python -m pytest 3-sgkf-split/tests/test_podzial.py -q
-    albo
-    python 3-sgkf-split/tests/test_podzial.py
+    python 3-sgkf-split/sgkf/tests/test_podzial.py
 """
 
 import sys
@@ -21,9 +19,9 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from podzial import (KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
-                     diagnostyka, indeksy_foldow, podzial_wewnetrzny, rozstepy,
-                     tabela_pacjentow, wczytaj_podzial, zbuduj_podzial)
+from podzial import (KOL_MIESZANY, KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
+                     diagnostyka, indeksy_foldow, kolumny_cech, podzial_wewnetrzny,
+                     rozstepy, tabela_pacjentow, wczytaj_podzial, zbuduj_podzial)
 
 
 # ---------------------------------------------------------------------------
@@ -84,19 +82,18 @@ def test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko():
     assert sorted(testowe) == list(range(len(df))), "rekord pominiety albo powtorzony w testach"
 
 
-def test_mieszani_maja_etykiete_pozytywna_albo_wypadaja():
-    df = dane_testowe(n_mieszanych=10)
-    pac = tabela_pacjentow(df, _cfg(mieszani="pozytywni"))
-    assert pac["mieszany"].sum() == 10
-    assert (pac.loc[pac["mieszany"], "label"] == 1).all()
+def test_flaga_mieszanego_pacjenta_z_kolumny_przygotowania():
+    df = dane_testowe(n_mieszanych=0)
+    df[KOL_MIESZANY] = df[KOL_PACJENT].isin([1, 2]).astype(int)
+    pac = tabela_pacjentow(df, _cfg()).set_index(KOL_PACJENT)
+    assert pac.loc[[1, 2], "mieszany"].all() and not pac.drop([1, 2])["mieszany"].any()
 
-    pac_bez = tabela_pacjentow(df, _cfg(mieszani="bez_mieszanych"))
-    assert not pac_bez["mieszany"].any()
-    przydzial = zbuduj_podzial(pac_bez, _cfg(mieszani="bez_mieszanych"))
-    rekordy = sum(len(te) for _, _, te in indeksy_foldow(df, przydzial))
-    mieszani = set(pac.loc[pac["mieszany"], KOL_PACJENT])
-    assert rekordy == (~df[KOL_PACJENT].isin(mieszani)).sum(), \
-        "rekordy wykluczonych pacjentow trafily do foldow"
+
+def test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami():
+    df = pd.DataFrame(columns=["patient_id", "custom_id", "examination_date", "label",
+                               KOL_MIESZANY, "HGB", "CRP", "MONO", "%MONO", "K"])
+    assert KOL_MIESZANY not in kolumny_cech(df, "38"), "metadana nie moze byc cecha"
+    assert set(kolumny_cech(df, "38")) - set(kolumny_cech(df, "35")) == {"CRP", "MONO", "%MONO"}
 
 
 # ---------------------------------------------------------------------------
