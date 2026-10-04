@@ -12,6 +12,7 @@ przygotowanie/results/analiza_decyzji.json.
 
   A. dane przed i po czyszczeniu
   B. rozjazd czasowy kohort                        (decyzja: ograniczenie, modelujemy na całości)
+  B2. chronologia NEURO — wzorzec hospitalizacji   (założenie robocze z 20.09.2026)
   C. 63 pacjentów obecnych w obu kohortach         (decyzja: pozytywni, rekordy KOR usunięte)
   D. KREA a eGFR — błąd jednostek                  (decyzja: KREA > 50 albo sprzeczne z eGFR -> brak)
   E. wartości niezgodne z życiem i skrajne-możliwe (decyzja: K > 15, Na < 80 -> brak; reszta zostaje)
@@ -87,7 +88,16 @@ def b_rozjazd_czasowy(df: pd.DataFrame) -> dict:
     tabela = {k: {"kor": int(lata.loc[(lata.index >= a) & (lata.index <= b), 0].sum()),
                   "neuro": int(lata.loc[(lata.index >= a) & (lata.index <= b), 1].sum())}
               for k, (a, b) in przedzialy.items()}
+    # mediany cech: KOR, NEURO w oknie dat KOR, NEURO poza oknem
+    neuro_poza = neuro[~neuro[KOL_DATA].between(od, do)]
+    kor_okno = kor[kor[KOL_DATA].between(od, do)]
+    mediany = {}
+    for c in ["WBC", "NEUT", "GLU", "Na", "K", "RDW", "MCV", "KREA"]:
+        mk, mo, mp = kor_okno[c].median(), neuro_okno[c].median(), neuro_poza[c].median()
+        mediany[c] = {"kor": _r(mk, 2), "neuro_w_oknie": _r(mo, 2), "neuro_poza_oknem": _r(mp, 2),
+                      "roznica_okresow_neuro": _r(abs(mo - mp), 2), "roznica_kohort_w_oknie": _r(abs(mk - mo), 2)}
     return {
+        "mediany_cech": mediany,
         "lata": tabela,
         "kor_udzial_2020_2021": _r(kor["rok"].isin([2020, 2021]).mean()),
         "neuro_zakres_lat": [int(neuro["rok"].min()), int(neuro["rok"].max())],
@@ -96,6 +106,17 @@ def b_rozjazd_czasowy(df: pd.DataFrame) -> dict:
         "neuro_pacjenci_w_oknie": int(neuro_okno[KOL_PACJENT].nunique()),
         "neuro_pacjenci": int(neuro[KOL_PACJENT].nunique()),
     }
+
+
+def b2_chronologia_neuro(df: pd.DataFrame) -> dict:
+    """Rozpiętość badań pacjentów NEURO z >1 rekordem — wzorzec pojedynczej hospitalizacji."""
+    neuro = df[df[KOL_ETYKIETA] == 1]
+    g = neuro.groupby(KOL_PACJENT)[KOL_DATA]
+    wielo = g.size() > 1
+    rozp = (g.max() - g.min()).dt.days[wielo]
+    return {"pacjenci_neuro": int(len(wielo)), "z_wiecej_niz_1_rekordem": int(wielo.sum()),
+            "rozpietosc_dni_mediana": int(rozp.median()),
+            "udzial_w_30_dniach": _r((rozp <= 30).mean()), "udzial_w_90_dniach": _r((rozp <= 90).mean())}
 
 
 def c_mieszani(zrodlo: pd.DataFrame) -> dict:
@@ -277,6 +298,7 @@ def main() -> None:
     wyniki = {
         "A_dane": a_dane(zrodlo, czyste),
         "B_rozjazd_czasowy": b_rozjazd_czasowy(czyste),
+        "B2_chronologia_neuro": b2_chronologia_neuro(czyste),
         "C_pacjenci_mieszani": c_mieszani(zrodlo),
         "D_krea_egfr": d_krea(zrodlo),
         "E_wartosci_graniczne": e_wartosci_graniczne(zrodlo, czyste),

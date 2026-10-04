@@ -25,6 +25,64 @@
   B_rozjazd_czasowy
 ==============================================================================
 {
+  "mediany_cech": {
+    "WBC": {
+      "kor": 8.78,
+      "neuro_w_oknie": 7.25,
+      "neuro_poza_oknem": 8.48,
+      "roznica_okresow_neuro": 1.23,
+      "roznica_kohort_w_oknie": 1.53
+    },
+    "NEUT": {
+      "kor": 6.06,
+      "neuro_w_oknie": 4.46,
+      "neuro_poza_oknem": 5.71,
+      "roznica_okresow_neuro": 1.25,
+      "roznica_kohort_w_oknie": 1.6
+    },
+    "GLU": {
+      "kor": 107.0,
+      "neuro_w_oknie": 99.0,
+      "neuro_poza_oknem": 104.0,
+      "roznica_okresow_neuro": 5.0,
+      "roznica_kohort_w_oknie": 8.0
+    },
+    "Na": {
+      "kor": 139.67,
+      "neuro_w_oknie": 141.0,
+      "neuro_poza_oknem": 139.25,
+      "roznica_okresow_neuro": 1.75,
+      "roznica_kohort_w_oknie": 1.33
+    },
+    "K": {
+      "kor": 4.3,
+      "neuro_w_oknie": 4.3,
+      "neuro_poza_oknem": 4.1,
+      "roznica_okresow_neuro": 0.2,
+      "roznica_kohort_w_oknie": 0.0
+    },
+    "RDW": {
+      "kor": 13.6,
+      "neuro_w_oknie": 13.5,
+      "neuro_poza_oknem": 13.63,
+      "roznica_okresow_neuro": 0.13,
+      "roznica_kohort_w_oknie": 0.1
+    },
+    "MCV": {
+      "kor": 88.94,
+      "neuro_w_oknie": 90.45,
+      "neuro_poza_oknem": 90.0,
+      "roznica_okresow_neuro": 0.45,
+      "roznica_kohort_w_oknie": 1.51
+    },
+    "KREA": {
+      "kor": 0.88,
+      "neuro_w_oknie": 0.81,
+      "neuro_poza_oknem": 0.78,
+      "roznica_okresow_neuro": 0.03,
+      "roznica_kohort_w_oknie": 0.06
+    }
+  },
   "lata": {
     "do 2009": {
       "kor": 0,
@@ -64,6 +122,17 @@
   "neuro_rekordy": 6651,
   "neuro_pacjenci_w_oknie": 271,
   "neuro_pacjenci": 1823
+}
+
+==============================================================================
+  B2_chronologia_neuro
+==============================================================================
+{
+  "pacjenci_neuro": 1823,
+  "z_wiecej_niz_1_rekordem": 1215,
+  "rozpietosc_dni_mediana": 35,
+  "udzial_w_30_dniach": 0.4889,
+  "udzial_w_90_dniach": 0.5819
 }
 
 ==============================================================================
