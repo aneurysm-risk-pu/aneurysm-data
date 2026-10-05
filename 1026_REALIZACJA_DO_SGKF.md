@@ -223,7 +223,7 @@ Liwia zaimplementowała `StratifiedGroupKFold` (5 foldów) w notebooku. Grupowan
 | Na < 80 mmol/l → brak | 1 wartość | niezgodne z życiem |
 | skrajne, ale możliwe wartości **zostają** | K 9–15 (61), Na 80–100 (7), WBC > 200 (7), KREA > 10 przy eGFR < 30 (252) | możliwe w ciężkich stanach (hiperkaliemia, hiponatremia, białaczka, niewydolność nerek) |
 | rozjazd czasowy kohort, asymetria braków | **bez korekty** | dane są, jakie są; opisane jako ograniczenia |
-| zestaw cech: **38, jeden wariant** | CRP, MONO, %MONO wracają | selekcja z etapu 1 była wadliwa metodycznie (sekcja 6.4) |
+| zestaw cech: **38, jeden wariant** | CRP, MONO, %MONO wracają | selekcja z etapu 1 była wadliwa metodycznie, choć jej realny wpływ na wyniki był znikomy (sekcja 6.4) |
 
 Wynik: **78 052 rekordy, 40 924 pacjentów** (bez zmian), **752 wartości zamienione na brak**, które MICE uzupełnia w foldzie. Każda zmiana jest wypisana w `3-sgkf-split/przygotowanie/results/usuniete_rekordy.csv` i `usuniete_wartosci.csv`. Reguła dla KREA opiera się na danych: do KREA ≈ 10 mg/dl mediana eGFR spada zgodnie z fizjologią (przy 5–10 mg/dl wynosi 8). Powyżej 10 wraca do wartości prawidłowej (60 przy 20–50 mg/dl), czego nie da się wyjaśnić inaczej niż błędem jednostki lub wpisu (`RAPORT_SGKF_MICE.md`, sekcja 2.2).
 
@@ -275,7 +275,7 @@ Przy losowych brakach MICE w produkcji działa co najmniej tak dobrze jak w benc
 - **test kontrolowany** (maska 10% na wspólnych 35 cechach): RMSE 0,0846 dla 38 cech wobec 0,0859 dla 35,
 - **prawdziwe foldy**: wartości uzupełnione różnią się średnio o 0,11 odchylenia standardowego, a tylko 2,8% komórek o więcej niż 0,5 SD.
 
-Wybór ma mały wpływ, a 38 jest nieznacznie lepsze. Razem z oceną samej selekcji (sekcja 6.4) przesądziło to o jednym zestawie 38 cech.
+Wybór nie ma istotnego wpływu na imputację. Drobna przewaga 38 w teście kontrolowanym wynika częściowo z jego konstrukcji, bo dodatkowe kolumny nigdy nie są w nim maskowane. O jednym zestawie 38 cech przesądziła więc ocena samej selekcji (sekcja 6.4), a nie jakość imputacji.
 
 Szczegóły, tabele per fold i odciski wyników: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 4.
 
@@ -353,19 +353,34 @@ Spośród 1 823 pacjentów NEURO 1 215 ma więcej niż jeden rekord. U nich medi
 
 63 pacjentów, 264 rekordy (145 KOR + 119 NEURO). U 55 rekordy KOR poprzedzają NEURO (mediana odstępu 546 dni), u 6 jest odwrotnie, a u 2 rekordy się przeplatają. Kolejność źródeł nie dowodzi kolejności zdarzeń medycznych, bo daty rozpoznania nie ma. **Rozwiązanie:** sekcja 5.3.
 
-### 6.4 Selekcja cech
+### 6.4 Selekcja cech: dlaczego wracamy z 35 do 38
 
-W czerwcu usunięto CRP, MONO i %MONO jako cechy „najsłabiej związane z etykietą”. Skrypt `3-sgkf-split/przygotowanie/analiza_selekcji_cech.py` odtworzył tę procedurę na danych źródłowych z wynikiem identycznym z notebookiem. Procedura:
+**Stan w czerwcu.** Raport przejściowy pracował na 35 cechach: w etapie 1 usunięto CRP, MONO i %MONO jako „najsłabiej związane z etykietą”. Już wtedy dokument `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` zastrzegał, że selekcję wykonano z użyciem etykiety na całym zbiorze, więc przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. 04.10.2026 sprawdziliśmy to dokładnie.
+
+**Co zrobiono w czerwcu.** Skrypt `3-sgkf-split/przygotowanie/analiza_selekcji_cech.py` odtworzył procedurę z notebooka z wynikiem identycznym co do cyfry:
 - dla czterech miar (Pearson, Spearman, Kendall, Phi-K) wybrano po 10 cech najsłabiej skorelowanych z etykietą,
-- zliczono, ile razy każda cecha znalazła się na tych listach, i usunięto trzy najczęstsze.
+- usunięto trzy cechy, które najczęściej trafiały na te listy.
 
-Ocena:
-- **Wyciek.** Etykieta użyta na całym zbiorze, czyli także na pacjentach, którzy trafiają później do testu.
-- **Złe kryterium w PU.** Etykieta rozróżnia kohorty, a nie chorobę, więc kryterium usuwa cechy, które *nie* odróżniają kohort, a zostawia te, które je odróżniają (także przez epokę i sposób pozyskania danych).
+**Dlaczego tej selekcji nie utrzymujemy:**
+- **Złe kryterium w PU.** Etykieta oznacza kohortę, a nie chorobę. Kryterium „słaba korelacja z etykietą” usuwa cechy, które *nie* odróżniają kohort, a zostawia te, które je odróżniają, także przez epokę i sposób pozyskania danych. To odwrotność tego, czego potrzebujemy.
 - **Przypadkowa granica.** Trzecie miejsce to remis czterech cech (%MONO, HCT, MPV, wiek pacjenta) po 3 „głosy”, rozstrzygnięty sortowaniem alfabetycznym. Ta sama metoda mogła usunąć wiek pacjenta.
-- **Niezależnie od etykiety** da się obronić tylko usunięcie MONO i %MONO, bo są redundantne: %MONO = 100 − reszta rozmazu (korelacja 0,9995), a MONO ≈ %MONO × WBC / 100. CRP nie jest redundantne i nie odróżnia kohort (mediana 10,7 mg/l w KOR i 12,1 w NEURO).
+- **Etykieta użyta na całym zbiorze**, także na pacjentach, którzy później trafiają do testu. Uczciwie trzeba dodać, że realny wpływ tego wycieku na wyniki był znikomy: usunięte cechy miały korelację z etykietą |ρ| ≤ 0,02. **Zmiana porządkuje metodę, a nie naprawia błąd w czerwcowych wynikach.**
 
-Jednorazowe porównanie imputacji na 38 i 35 cechach wykazało mały wpływ wyboru, przy nieznacznej przewadze 38 (sekcja 5.5). **Decyzja (04.10.2026): selekcja cofnięta, jeden zestaw 38 cech.** Benchmark imputacji z etapu 2 był liczony na 38 cechach, więc nie trzeba go powtarzać. Ewentualny wybór cech przechodzi do modelowania, wewnątrz walidacji krzyżowej.
+**Co mówią same cechy, niezależnie od etykiety:**
+- MONO i %MONO są redundantne: %MONO = 100 − reszta rozmazu (korelacja 0,9995), a MONO ≈ %MONO × WBC / 100. Ich usunięcie dałoby się obronić, ale innym argumentem niż ten, którego użyto.
+- CRP nie jest redundantne i nie odróżnia kohort (mediana 10,7 mg/l w KOR i 12,1 w NEURO). Brakuje go jednak w 48% rekordów NEURO, a jego uzupełnienia są zawyżone (sekcja 5.6).
+- Imputacja: **brak istotnej różnicy** między 38 a 35 cechami (sekcja 5.5). Drobna przewaga 38 w teście kontrolowanym wynika częściowo z jego konstrukcji.
+
+**Decyzja (04.10.2026): jeden zestaw 38 cech.** Powody:
+1. Nie wybieramy cech z użyciem etykiety przed walidacją krzyżową.
+2. Benchmark imputacji z etapu 2 był liczony na 38 cechach, więc parametry MICE pasują bez ponownego benchmarku.
+3. Wybór nie zmienia istotnie jakości imputacji.
+
+Ewentualny wybór cech przechodzi do modelowania, wewnątrz walidacji krzyżowej.
+
+**Konsekwencje dla modelowania:**
+- Procenty rozmazu (%NEUT, %LYMPH, %EO, %BAZO, %MONO) sumują się do 100%, więc w modelach liniowych są dokładnie współliniowe. Trzeba regularyzacji albo pominięcia jednego procentu. Modelom drzewiastym to nie przeszkadza.
+- Wpływ CRP sprawdzamy w analizie wrażliwości na cechach o niskim odsetku braków (`4-pu-setup/PLAN_MODELOWANIA.md`).
 
 ### 6.5 Wartości niemożliwe i jednostki KREA
 

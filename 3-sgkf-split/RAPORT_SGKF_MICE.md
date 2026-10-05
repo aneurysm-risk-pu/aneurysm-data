@@ -21,7 +21,7 @@
 | zaimputowane foldy | lokalnie, poza gitem (46 MB), odtwarzalne jednym poleceniem; dwa przebiegi dały identyczne odciski | `sgkf/results/foldy_imputowane_38/` |
 | jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami uzupełnienia ≈ średnia | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
 | analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
-| porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | mały wpływ na imputację, 38 nieznacznie lepsze | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
+| porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | brak istotnego wpływu na imputację | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
 | testy | 6/6 (część A), 10/10 (część B) | `przygotowanie/tests/`, `sgkf/tests/` |
 
 **Jak użyć wyniku w kolejnym etapie:**
@@ -160,7 +160,7 @@ W etapie 1 (notebook `1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb`, 
 | HCT, MPV, `patient_age` | po 3 |
 
 **Dlaczego tej selekcji nie utrzymujemy:**
-1. **Użyto etykiety na całym zbiorze**, czyli także na pacjentach, którzy później trafiają do testu. To formalny wyciek: decyzja o cechach „widziała” wynik oceny.
+1. **Użyto etykiety na całym zbiorze**, czyli także na pacjentach, którzy później trafiają do testu. To formalny wyciek: decyzja o cechach „widziała” wynik oceny. Realny wpływ na wyniki był jednak znikomy, bo usunięte cechy miały korelację z etykietą |ρ| ≤ 0,02. Zmiana porządkuje metodę, a nie naprawia błąd w czerwcowych wynikach.
 2. **W PU etykieta oznacza kohortę, nie chorobę.** Kryterium „słaba korelacja z etykietą” usuwa cechy, które nie odróżniają KOR od NEURO, a zostawia te, które odróżniają, łącznie z różnicami epoki i sposobu pozyskania danych. To odwrotność tego, czego potrzebujemy.
 3. **Korelacja jednowymiarowa nie mierzy przydatności cechy** w modelu wielowymiarowym.
 4. **Wybór na granicy był przypadkowy.** Trzecie miejsce to remis czterech cech po 3 głosy, rozstrzygnięty sortowaniem alfabetycznym („%” jest przed literami). Ta sama procedura z inną kolejnością usunęłaby HCT, MPV albo wiek pacjenta.
@@ -172,9 +172,11 @@ W etapie 1 (notebook `1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb`, 
 
 **Decyzja (04.10.2026): jeden zestaw, 38 cech.** Selekcja z etapu 1 jest cofnięta, a ewentualny wybór cech przechodzi do modelowania, gdzie może odbywać się wewnątrz walidacji krzyżowej. Za takim wyborem przemawiają też dwie rzeczy praktyczne:
 - benchmark imputacji z etapu 2 był liczony na 38 cechach, więc parametry MICE pasują do tego zestawu bez ponownego benchmarku,
-- jednorazowe porównanie wykazało, że imputacja na 38 cechach jest nieznacznie lepsza (sekcja 4.5).
+- jednorazowe porównanie nie wykazało istotnej różnicy w jakości imputacji (sekcja 4.5).
 
-Redundancja MONO i %MONO zostaje: imputacji pomaga (suma rozmazu pozwala odtworzyć brakujące procenty), a z kolinearnością radzą sobie modele drzewiaste i regresja z regularyzacją.
+Dokument czerwcowy (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`) już wtedy zastrzegał, że przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. Ta decyzja domyka to zastrzeżenie.
+
+Redundancja MONO i %MONO zostaje. Procenty rozmazu sumują się do 100%, więc w modelach liniowych są dokładnie współliniowe. W modelowaniu trzeba to obsłużyć regularyzacją albo pominięciem jednego procentu; modelom drzewiastym to nie przeszkadza. CRP ma 48% braków w NEURO i zawyżone uzupełnienia (sekcja 5.1), więc jego wpływ sprawdzi analiza wrażliwości na cechach o niskim odsetku braków.
 
 ---
 
@@ -368,7 +370,7 @@ Najbardziej zyskują %NEUT (RMSE 0,020 wobec 0,032), %LYMPH (0,020 wobec 0,029),
 
 Wartości obserwowane są w obu wariantach identyczne; różnią się tylko uzupełnienia.
 
-**Wniosek.** Wybór 38 czy 35 cech ma **mały wpływ na imputację**, a wariant 38 jest nieznacznie lepszy. Razem z oceną samej selekcji (sekcja 2.6) przesądza to o **jednym zestawie: 38 cech**.
+**Wniosek.** Wybór 38 czy 35 cech **nie ma istotnego wpływu na imputację**. Drobna przewaga 38 w teście kontrolowanym wynika częściowo z jego konstrukcji. O **jednym zestawie 38 cech** przesądza więc ocena samej selekcji (sekcja 2.6), a nie jakość imputacji.
 
 ---
 

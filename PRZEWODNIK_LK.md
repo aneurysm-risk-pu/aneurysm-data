@@ -203,7 +203,7 @@ Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sa
 | zapisany przydział | powtarzalność między komputerami i wersjami | przepis + seed: zależny od sklearn |
 | MICE w foldzie | brak wycieku przez preprocessing | imputacja globalna: wyciek |
 | MICE (ExtraTrees) zamiast MissForest | wygrywa na NEURO, szybszy, jeden imputer dla obu | MissForest lepszy tylko na KOR |
-| jeden zestaw 38 cech, selekcja z etapu 1 cofnięta | selekcja po `label` na całym zbiorze to wyciek, w PU etykieta to kohorta, a granica wyboru była remisem rozstrzygniętym alfabetycznie | 35 cech: imputacja nieznacznie gorsza, a uzasadnienie niezależne od etykiety istnieje tylko dla MONO/%MONO (redundancja) |
+| jeden zestaw 38 cech, selekcja z etapu 1 cofnięta | w PU etykieta to kohorta, więc kryterium działa w złą stronę; granica wyboru była remisem rozstrzygniętym alfabetycznie; zgodność z benchmarkiem imputacji. Wyciek był formalny, realny wpływ znikomy (\|ρ\| ≤ 0,02) | 35 cech: bez istotnej różnicy w imputacji, ale uzasadnienie niezależne od etykiety istnieje tylko dla MONO/%MONO (redundancja) |
 | mediana jako agregacja do pacjenta | najmniej koreluje z liczbą badań | maksimum przenosi liczbę badań do 17 cech; „ostatni” znaczy co innego w każdej kohorcie |
 | mieszani: pozytywni, rekordy KOR usunięte | rozpoznanie jest faktem; rekordy KOR mogą być sprzed choroby | zostawić KOR z etykietą 1: uczy „profilu chorego” na rutynowych wynikach; wykluczyć: −63 z 1 823 pozytywnych |
 | KREA: > 50 albo > 10 przy eGFR ≥ 30 → brak | sprzeczność z eGFR (liczonym z kreatyniny) | próg „> 20”: wyrzuca wiarygodne niewydolności; przeliczanie ÷ 88,4: zgadywanie jednostki |
@@ -313,11 +313,12 @@ Materiał dla prowadzącego: `1026_SPOTKANIE_PROWADZACY.md`. Poniżej pytania, k
 
 | Pytanie | Odpowiedź w jednym, dwóch zdaniach | Gdzie dowód |
 |---|---|---|
+| A co z kolinearnością MONO/%MONO? | Procenty rozmazu sumują się do 100%: w modelach liniowych regularyzacja albo pominięcie jednego procentu; drzewom to nie przeszkadza. | 2.6 |
 | Czemu nie zwykły StratifiedGroupKFold? | Dzielimy tabelę pacjentów `StratifiedKFold`, co jest równoważne grupowaniu, a pozwala stratyfikować po kilku zmiennych naraz i nie zależy od wersji sklearn (SGKF z tasowaniem daje inne foldy w 1.6 i 1.8). | `RAPORT_SGKF_MICE.md` 3.2–3.3 |
 | Czy imputacja nie przecieka? | Scaler i MICE są dopasowywane tylko na treningu foldu, a test jest jedynie transformowany. Etykieta nie jest cechą imputera. | 4.1, testy |
 | Skąd wiecie, że reguła KREA jest dobra? | eGFR liczy się z kreatyniny. Powyżej KREA 10 mg/dl mediana eGFR wraca do normy, czyli te dwa pomiary sobie przeczą. Wiarygodne skrajne przypadki (eGFR < 30) zostają. | 2.2, `analiza_decyzji.json` D |
 | Dlaczego nie usuwacie wartości odstających szerzej? | Usuwamy tylko wartości niemożliwe do przeżycia albo sprzeczne z innym pomiarem; skrajne, ale możliwe stany zostają (K 9–15, WBC > 200). | 2.1 |
-| Czemu 38 cech, skoro w czerwcu było 35? | Czerwcowa selekcja użyła etykiety na całym zbiorze, w PU etykieta to kohorta, a granicę rozstrzygnął remis alfabetyczny. Imputacja na 38 jest nieznacznie lepsza. | 2.6, 4.5 |
+| Czemu 38 cech, skoro w czerwcu było 35? | Już w czerwcu zastrzegliśmy, że selekcję trzeba cofnąć albo przenieść do CV. W PU etykieta to kohorta, więc kryterium działa w złą stronę, a granicę rozstrzygnął remis alfabetyczny. Wpływ na wyniki był znikomy (\|ρ\| ≤ 0,02), więc to porządkowanie metody, nie naprawa błędu. | 2.6, 4.5 |
 | Jak dobra jest imputacja? | Przy losowych brakach jak w benchmarku (0,61–0,65 błędu średniej, obie kohorty). Przy brakach całymi panelami prawie równa średniej. | 4.3 |
 | Czy to znaczy, że model jest dobry, skoro AUC 0,93? | Nie. To rozdzielność kohort, a sam wzorzec braków daje 0,82, a epoka 0,83. Miarą sukcesu będzie odzyskiwanie ukrytych chorych, a nie AUC P-vs-U. | 5.2, plan 3.4 |
 | Co z rozjazdem czasowym? | Zostaje bez korekty, jako ograniczenie, ale epoka jest wyraźnie widoczna w danych, więc proponujemy analizę wrażliwości we wspólnym oknie dat. | 5.2, 1026 6.1 |
