@@ -322,6 +322,8 @@ Koleżanka dostarczyła `aneurysm_concatted_cleaned.csv` — zbiór po usunięci
 | Wyjście | `results/aneurysm_imputed_cleaned.csv` |
 
 > **Ten plik jest właściwym wejściem do pipeline PU learning** — zawiera finalny zestaw 35 cech po analizie korelacji.
+>
+> **Nieaktualne (stan z 10.06.2026).** Plik jest imputowany globalnie, przed podziałem, więc służy wyłącznie do walidacji metody i **nie może** być wejściem do modeli. Selekcję 35 cech cofnięto 04.10.2026. Wejście do modelowania: `data/processed/aneurysm_sgkf_input.csv` (38 cech, imputacja wewnątrz foldów), zob. `1026_REALIZACJA_DO_SGKF.md`, sekcje 4.3 i 6.4.
 
 ---
 

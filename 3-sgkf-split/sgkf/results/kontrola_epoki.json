@@ -1,0 +1,55 @@
+{
+  "opis": "Kontrola testu B4: czy epokę w NEURO widać w wartościach, czy we wzorcu braków",
+  "okno": [
+    "2019-12-29",
+    "2021-12-26"
+  ],
+  "odcisk_danych": "5b822c09ebc03011",
+  "testy": {
+    "38 cech, braki jako NaN (bez imputacji)": {
+      "auc_srednia": 0.841,
+      "auc_min_max": [
+        0.824,
+        0.855
+      ],
+      "rekordy": 6651,
+      "rekordy_w_oknie": 680
+    },
+    "tylko wzorzec braków (0/1)": {
+      "auc_srednia": 0.756,
+      "auc_min_max": [
+        0.73,
+        0.787
+      ],
+      "rekordy": 6651,
+      "rekordy_w_oknie": 680
+    },
+    "morfologia podstawowa, tylko zmierzone": {
+      "auc_srednia": 0.562,
+      "auc_min_max": [
+        0.503,
+        0.648
+      ],
+      "rekordy": 5810,
+      "rekordy_w_oknie": 572
+    },
+    "morfologia + rozmaz, tylko zmierzone": {
+      "auc_srednia": 0.656,
+      "auc_min_max": [
+        0.612,
+        0.719
+      ],
+      "rekordy": 5791,
+      "rekordy_w_oknie": 571
+    },
+    "morfologia + Na, K, KREA, tylko zmierzone": {
+      "auc_srednia": 0.648,
+      "auc_min_max": [
+        0.626,
+        0.659
+      ],
+      "rekordy": 3949,
+      "rekordy_w_oknie": 409
+    }
+  }
+}

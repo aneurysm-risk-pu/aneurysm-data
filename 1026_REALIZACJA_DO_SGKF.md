@@ -174,7 +174,7 @@ Na tym samym zbiorze referencyjnym, tymi samymi maskami i tym samym kodem urucho
 
 **Stabilność:** na niezależnej masce (seed 7) ranking się nie zmienił. MICE w walidacji multi-seed: KOR 0,0865 ± 0,0007, NEURO 0,0950 ± 0,0025. Parametry dobrane na KOR pogarszają wynik NEURO o 0,00001 RMSE i są przy tym około 7 razy szybsze.
 
-**Decyzja:** `IterativeImputer` z ExtraTrees (nazywany w projekcie MICE), wspólne parametry dla obu kohort: `max_iter = 7, n_estimators = 78, max_depth = 10`.
+**Decyzja:** `IterativeImputer` z ExtraTrees (nazywany w projekcie MICE), wspólne parametry dla obu kohort: `max_iter = 7, n_estimators = 78, max_depth = 10`. Tabela wyżej pochodzi z przebiegu 3, w którym porównano wszystkie trzy metody; z parametrami finalnymi (przebieg 4) MICE ma RMSE 0,0861 na KOR i 0,0984 na NEURO.
 
 **Dlaczego nie MissForest, skoro wygrywa na KOR:** żadna metoda nie wygrała na obu zbiorach. MICE wygrywa na mniejszym i trudniejszym NEURO, jest szybsze, a jeden spójny imputer dla obu kohort jest wymagany, bo imputacja odbywa się na połączonym zbiorze wewnątrz foldu.
 
@@ -232,7 +232,7 @@ Wynik: **78 052 rekordy, 40 924 pacjentów** (bez zmian), **752 wartości zamien
 - podział na tabeli pacjentów (`StratifiedKFold`, 5 foldów, `shuffle=True`, seed 42); warunek grupowania jest spełniony z konstrukcji,
 - 12 warstw stratyfikacji: etykieta × okno czasowe KOR × klasa liczby rekordów (1 / 2 / 3–4 / 5+),
 - **przydział zapisany** w `3-sgkf-split/sgkf/results/pacjent_fold.csv` z odciskiem pliku wejściowego; każda zmiana danych unieważnia podział,
-- 17 testów automatycznych (6 dla części A, 11 dla części B), wszystkie przechodzą.
+- 16 testów automatycznych (6 dla części A, 10 dla części B), wszystkie przechodzą.
 
 Porównanie strategii (najgorszy przypadek z 5 ziaren):
 
@@ -476,5 +476,5 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | materiał do raportu przejściowego z 12.06 (historyczny) |
 | `2-imputation/RAPORT_IMPUTACJA.md` | pełny benchmark imputacji |
 | `3-sgkf-split/RAPORT_SGKF_MICE.md` | etap 3: decyzje i przygotowanie danych, podział, imputacja w foldach, ocena imputacji, diagnostyka wyników, przegląd merytoryczny |
-| `1026_SPOTKANIE_PROWADZACY.md` | materiał na spotkanie: decyzje do potwierdzenia, najważniejsze wyniki, pytania |
+| `1026_SPOTKANIE_PROWADZACY.md` | podsumowanie prac (czerwiec i wrzesień–październik) i materiał na spotkanie: decyzje do potwierdzenia, pytania, propozycja dalszych prac |
 | `4-pu-setup/PLAN_MODELOWANIA.md` | propozycja planu modelowania PU, założenia i ograniczenia wejściowe |

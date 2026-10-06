@@ -37,7 +37,7 @@ Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CR
 | 4. Plan modelowania PU | `4-pu-setup/PLAN_MODELOWANIA.md` |
 | Materiał do raportu przejściowego (06.2026, historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
 | **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `1026_REALIZACJA_DO_SGKF.md` |
-| Materiał na spotkanie z prowadzącym (10.2026) | `1026_SPOTKANIE_PROWADZACY.md` |
+| **Podsumowanie prac i materiał na spotkanie z prowadzącym** (10.2026): obie fazy prac, decyzje, pytania, co dalej | `1026_SPOTKANIE_PROWADZACY.md` |
 | Archiwum sprintów i raportów cząstkowych | `docs/` |
 
 ## Środowisko

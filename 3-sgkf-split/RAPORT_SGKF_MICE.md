@@ -403,6 +403,18 @@ Wnioski:
 3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości.
 4. **Epokę widać w wynikach samych chorych (AUC 0,83).** Rozjazd czasowy nie jest więc problemem teoretycznym: wyniki laboratoryjne niosą wyraźny ślad okresu, z którego pochodzą. Decyzja „bez korekty” (sekcja 2.1) wymaga w modelowaniu przynajmniej analizy wrażliwości we wspólnym oknie dat.
 
+**Kontrola testu B4 (06.10.2026, `sgkf/kontrola_epoki.py`, wynik `sgkf/results/kontrola_epoki.json`).** B4 liczono na cechach po imputacji, więc nie rozstrzygał, czy epoka siedzi w wartościach, czy w tym, które badania zlecano. Ten sam test na danych przed imputacją, na tych samych foldach:
+
+| NEURO z okna dat vs NEURO z innych lat | AUC (rekordy) |
+|---|---:|
+| 38 cech, braki jako NaN | 0,841 |
+| tylko wzorzec braków | **0,756** |
+| morfologia + rozmaz, tylko wartości zmierzone | 0,656 |
+| morfologia + Na, K, KREA, tylko wartości zmierzone | 0,648 |
+| morfologia podstawowa (9 parametrów), tylko wartości zmierzone | **0,562** |
+
+Sygnał epoki pochodzi więc głównie z tego, **które badania zlecano** w danym okresie. W samych zmierzonych wartościach jest umiarkowany. Wniosek dla modelowania się nie zmienia, ale przesuwa akcent: kluczowa analiza wrażliwości to model na wartościach zmierzonych z paneli o niskim odsetku braków, obok analizy we wspólnym oknie dat. Zastrzeżenie: w oknie jest około 570 rekordów NEURO z kompletną morfologią, stąd rozrzut między foldami (0,50–0,72). Liczone w sklearn 1.9.1.
+
 ### 5.3 Profil kohort względem zakresów referencyjnych
 
 Odsetek rekordów poza typowym zakresem referencyjnym dla dorosłych, wśród wartości zmierzonych:
@@ -475,6 +487,7 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 │   ├── ocena_imputacji.py            jakość imputacji protokołem z etapu 2 (w foldach)
 │   ├── analiza_wynikow.py            diagnostyka: uzupełnienia, skróty, profil kohort
 │   ├── porownanie_cech.py            jednorazowe porównanie 38 / 35 (podkładka pod decyzję)
+│   ├── kontrola_epoki.py             kontrola testu B4 na danych przed imputacją (06.10.2026)
 │   ├── etap0_sgkf_stabilnosc.py      siatka stabilności z 09.2026
 │   ├── tests/test_podzial.py         10 testów
 │   └── results/                      pacjent_fold.csv, podzial_meta.json, podzial_diagnostyka.csv,
