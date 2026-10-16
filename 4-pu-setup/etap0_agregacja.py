@@ -5,7 +5,7 @@ etap0_agregacja.py
 Punkt 0.3 — regula agregacji (4-pu-setup/PLAN_MODELOWANIA.md, sekcja 3.0) — wybor reguly agregacji rekordow
 do pacjenta.
 
-41,3% pacjentow ma wiecej niz jeden rekord, wiec regula decyduje o tym, jaki
+41,2% pacjentow ma wiecej niz jeden rekord, wiec regula decyduje o tym, jaki
 profil trafia do modelu. Skrypt sprawdza cztery kandydatury (srednia, mediana,
 maksimum, ostatni pomiar) pod katem czterech ryzyk:
 
@@ -31,7 +31,9 @@ from scipy.stats import spearmanr
 from sklearn.metrics import roc_auc_score
 
 BASE_DIR = Path(__file__).parent.parent
-INPUT_CSV = BASE_DIR / "data" / "processed" / "aneurysm_concatted_cleaned.csv"
+# Od 16.10.2026 obecne wejscie etapu 3 (38 cech, po czesci A). Pierwsza wersja
+# (09.2026) liczyla na historycznym pliku 35 cech aneurysm_concatted_cleaned.csv.
+INPUT_CSV = BASE_DIR / "data" / "processed" / "aneurysm_sgkf_input.csv"
 OUTPUT_DIR = Path(__file__).parent / "results"
 
 TARGET_COL = "label"

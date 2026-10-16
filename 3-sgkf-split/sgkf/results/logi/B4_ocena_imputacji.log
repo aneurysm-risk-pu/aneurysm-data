@@ -18,8 +18,12 @@ Odniesienie (etap 2, MICE z parametrami produkcyjnymi): {'kor': {'rmse': 0.0861,
 
 === Średnio po 5 foldach (RMSE, skala [0,1])
   etap2   KOR   0.0829 ± 0.0019  (względem średniej 0.61) | etap 2: 0.0861
+                bez wieku i płci: RMSE 0.0434, względem średniej 0.41; udział demografii w błędzie 74%; rozrzut uzupełnień względem prawdy 0.88
   etap2   NEURO 0.0801 ± 0.0078  (względem średniej 0.65) | etap 2: 0.0984
+                bez wieku i płci: RMSE 0.0411, względem średniej 0.45; udział demografii w błędzie 75%; rozrzut uzupełnień względem prawdy 0.86
   wzorce  KOR   0.1080 ± 0.0014  (względem średniej 0.98)
+                bez wieku i płci: RMSE 0.1080, względem średniej 0.98; udział demografii w błędzie 0%; rozrzut uzupełnień względem prawdy 0.33
   wzorce  NEURO 0.0792 ± 0.0058  (względem średniej 0.89)
+                bez wieku i płci: RMSE 0.0792, względem średniej 0.89; udział demografii w błędzie 0%; rozrzut uzupełnień względem prawdy 0.53
 
 Zapisano -> 3-sgkf-split/sgkf/results/ocena_imputacji.json

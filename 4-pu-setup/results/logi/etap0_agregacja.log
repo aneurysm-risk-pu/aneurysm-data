@@ -1,0 +1,63 @@
+Wczytywanie aneurysm_sgkf_input.csv ...
+  78,052 rekordow, 40,924 pacjentow, 38 cech
+
+==============================================================================
+  Ile rekordow ma pacjent — w rozbiciu na klasy
+==============================================================================
+
+                 pacjentow  mediana  srednia  maks  pow_1_rekord
+KOR (label=0)        39101     1.00     1.83    11          0.40
+NEURO (label=1)       1823     2.00     3.65    38          0.67
+
+Jesli klasy roznia sie liczba badan, regula wrazliwa na te liczbe
+(maksimum, w mniejszym stopniu srednia) tworzy sygnal z samej czestosci.
+
+==============================================================================
+  1. Czy reguly daja rozne profile (pacjenci z >1 rekordem)
+==============================================================================
+
+Korelacja Spearmana miedzy regulami, mediana po cechach:
+
+  para regul                    mediana rho    min rho
+  srednia vs mediana                  0.984      0.832
+  srednia vs maksimum                 0.940      0.790
+  srednia vs ostatni                  0.879      0.738
+  mediana vs maksimum                 0.895      0.777
+  mediana vs ostatni                  0.871      0.713
+  maksimum vs ostatni                 0.806      0.673
+
+==============================================================================
+  2. Czy regula przemyca liczbe badan (tylko pacjenci KOR)
+==============================================================================
+
+Korelacja Spearmana miedzy liczba rekordow a wartoscia cechy.
+Liczona wewnatrz KOR, wiec nie miesza sie z efektem choroby.
+
+  regula        mediana |rho|   maks |rho|   cech |rho|>0.2
+  srednia               0.124        0.284                7
+  mediana               0.079        0.257                2
+  maksimum              0.204        0.379               19
+  ostatni               0.086        0.296                1
+
+==============================================================================
+  3. Czy regula zmienia pozorna sile sygnalu
+==============================================================================
+
+AUC pojedynczej cechy wzgledem etykiety pacjentowej (wszyscy pacjenci).
+Odchylenie od 0.5 to sila zwiazku; interesuje nas roznica miedzy regulami.
+
+  srednia      mediana |AUC-0.5| 0.0429 | maks 0.1332 | cech powyzej 0.10: 5
+  mediana      mediana |AUC-0.5| 0.0415 | maks 0.1335 | cech powyzej 0.10: 6
+  maksimum     mediana |AUC-0.5| 0.0503 | maks 0.1485 | cech powyzej 0.10: 4
+  ostatni      mediana |AUC-0.5| 0.0522 | maks 0.1124 | cech powyzej 0.10: 2
+
+==============================================================================
+  4. Czy regula wciaga wartosci nierealne fizjologicznie
+==============================================================================
+
+  WBC    pacjentow poza zakresem [0.1, 200.0]:  srednia 1 | mediana 1 | maksimum 7 | ostatni 2
+  Na     pacjentow poza zakresem [100.0, 180.0]:  srednia 1 | mediana 1 | maksimum 1 | ostatni 2
+  K      pacjentow poza zakresem [1.5, 9.0]:  srednia 9 | mediana 10 | maksimum 57 | ostatni 23
+  KREA   pacjentow poza zakresem [0.1, 2000.0]:  srednia 0 | mediana 0 | maksimum 0 | ostatni 0
+
+Tabele -> 4-pu-setup/results

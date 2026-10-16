@@ -140,7 +140,7 @@ def c_mieszani(zrodlo: pd.DataFrame) -> dict:
             "odstep_kor_neuro_dni": {"mediana": int(np.median(odstep)), "min": int(min(odstep)), "max": int(max(odstep))}}
 
 
-def d_krea(zrodlo: pd.DataFrame) -> dict:
+def d_krea(zrodlo: pd.DataFrame, czyste: pd.DataFrame) -> dict:
     k, e = zrodlo["KREA"], zrodlo["eGFR-MDRD"]
     przedzialy = [(0, 1.2), (1.2, 5), (5, 10), (10, 20), (20, 50), (50, np.inf)]
     tabela = {}
@@ -156,7 +156,9 @@ def d_krea(zrodlo: pd.DataFrame) -> dict:
     r_jednostka = k > 50
     r_sprzecznosc = (k > 10) & (k <= 50) & (e >= 30)
     usuniete = r_jednostka | r_sprzecznosc
-    zostaja_ponad_10 = (k > 10) & ~usuniete
+    # "zostaja" liczone na danych po przygotowaniu, czyli bez rekordow KOR pacjentow mieszanych
+    kc, ec = czyste["KREA"], czyste["eGFR-MDRD"]
+    zostaja_ponad_10 = kc > 10
     przeliczone = k[r_sprzecznosc & (e >= 60)] / 88.4
     return {
         "wartosci_krea": int(k.notna().sum()),
@@ -168,8 +170,8 @@ def d_krea(zrodlo: pd.DataFrame) -> dict:
         "usuniete_pacjenci": int(zrodlo.loc[usuniete, KOL_PACJENT].nunique()),
         "usuniete_neuro": int((usuniete & (zrodlo[KOL_ETYKIETA] == 1)).sum()),
         "zostaja_krea_ponad_10": int(zostaja_ponad_10.sum()),
-        "zostaja_krea_ponad_10_egfr_ponizej_30": int((zostaja_ponad_10 & (e < 30)).sum()),
-        "zostaja_krea_ponad_10_brak_egfr": int((zostaja_ponad_10 & e.isna()).sum()),
+        "zostaja_krea_ponad_10_egfr_ponizej_30": int((zostaja_ponad_10 & (ec < 30)).sum()),
+        "zostaja_krea_ponad_10_brak_egfr": int((zostaja_ponad_10 & ec.isna()).sum()),
         "prosty_prog_20_usunalby": int((k > 20).sum()),
         "prosty_prog_20_usunalby_przy_egfr_ponizej_30": int(((k > 20) & (e < 30)).sum()),
         "sprzeczne_z_egfr_ge_60_po_przeliczeniu_mg_dl_mediana": _r(przeliczone.median(), 2),
@@ -177,16 +179,17 @@ def d_krea(zrodlo: pd.DataFrame) -> dict:
 
 
 def e_wartosci_graniczne(zrodlo: pd.DataFrame, czyste: pd.DataFrame) -> dict:
-    def ile(m):
-        return {"wartosci": int(m.sum()), "kor": int((m & (zrodlo[KOL_ETYKIETA] == 0)).sum()),
-                "neuro": int((m & (zrodlo[KOL_ETYKIETA] == 1)).sum())}
+    def ile(m, d=zrodlo):
+        return {"wartosci": int(m.sum()), "kor": int((m & (d[KOL_ETYKIETA] == 0)).sum()),
+                "neuro": int((m & (d[KOL_ETYKIETA] == 1)).sum())}
     feat = kolumny_cech(czyste)
     return {
         "K_ponad_15_usuniete": {**ile(zrodlo["K"] > 15), "max": _r(zrodlo["K"].max(), 2)},
-        "K_9_15_zostaja": ile((zrodlo["K"] > 9) & (zrodlo["K"] <= 15)),
+        # "zostaja" = w danych po przygotowaniu
+        "K_9_15_zostaja": ile((czyste["K"] > 9) & (czyste["K"] <= 15), czyste),
         "Na_ponizej_80_usuniete": {**ile(zrodlo["Na"] < 80), "min": _r(zrodlo["Na"].min(), 2)},
-        "Na_80_100_zostaja": ile((zrodlo["Na"] >= 80) & (zrodlo["Na"] < 100)),
-        "WBC_ponad_200_zostaja": {**ile(zrodlo["WBC"] > 200), "max": _r(zrodlo["WBC"].max(), 2)},
+        "Na_80_100_zostaja": ile((czyste["Na"] >= 80) & (czyste["Na"] < 100), czyste),
+        "WBC_ponad_200_zostaja": {**ile(czyste["WBC"] > 200, czyste), "max": _r(czyste["WBC"].max(), 2)},
         "zakresy_po_czyszczeniu": {c: [_r(czyste[c].min(), 3), _r(czyste[c].max(), 3)] for c in feat},
     }
 
@@ -300,7 +303,7 @@ def main() -> None:
         "B_rozjazd_czasowy": b_rozjazd_czasowy(czyste),
         "B2_chronologia_neuro": b2_chronologia_neuro(czyste),
         "C_pacjenci_mieszani": c_mieszani(zrodlo),
-        "D_krea_egfr": d_krea(zrodlo),
+        "D_krea_egfr": d_krea(zrodlo, czyste),
         "E_wartosci_graniczne": e_wartosci_graniczne(zrodlo, czyste),
         "F_czyszczenie_kwantylowe_etap1": f_czyszczenie_kwantylowe(),
         "G_asymetria_brakow": g_braki(czyste),

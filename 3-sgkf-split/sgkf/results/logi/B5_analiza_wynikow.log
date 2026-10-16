@@ -6,6 +6,7 @@
     B4_neuro_epoka ...
 [C] Profil kohort względem zakresów referencyjnych ...
 [D] Zgodność imputacji między foldami ...
+[E] Ślad imputacji NRBC ...
 
 === Najważniejsze liczby
   B1_neuro_vs_kor_cechy              AUC rekordy 0.906 | pacjenci 0.928
@@ -20,11 +21,12 @@
     INR        53.9%  położenie -0.47
     WPT        53.9%  położenie 1.9
   Profil KOR / NEURO (udział poza zakresem referencyjnym):
-    CRP   powyżej 5.0 mg/l     KOR 61.4%  NEURO 62.2%
-    WBC   powyżej 10.0 G/l     KOR 36.9%  NEURO 32.5%
-    NEUT  powyżej 7.0 G/l      KOR 39.5%  NEURO 33.9%
-    GLU   powyżej 99.0 mg/dl   KOR 64.0%  NEURO 57.7%
-    HGB   poniżej 12.0 g/dl    KOR 39.6%  NEURO 43.2%
-    PLT   poniżej 150.0 G/l    KOR 12.1%  NEURO 7.3%
+    CRP   powyżej 5.0 mg/l     KOR 61.4%  NEURO 62.2%  (zmierzone: KOR 81%, NEURO 52%)
+    WBC   powyżej 10.0 G/l     KOR 36.9%  NEURO 32.5%  (zmierzone: KOR 97%, NEURO 88%)
+    NEUT  powyżej 7.0 G/l      KOR 39.5%  NEURO 33.9%  (zmierzone: KOR 97%, NEURO 58%)
+    GLU   powyżej 99.0 mg/dl   KOR 64.0%  NEURO 57.7%  (zmierzone: KOR 50%, NEURO 45%)
+    HGB   poniżej 12.0 g/dl    KOR 39.6%  NEURO 43.2%  (zmierzone: KOR 97%, NEURO 88%)
+    PLT   poniżej 150.0 G/l    KOR 12.1%  NEURO 7.3%  (zmierzone: KOR 97%, NEURO 87%)
+  NRBC: uzupełnione to w 63% rekordy NEURO (wszystkie rekordy: 8.5%); AUC samego NRBC po imputacji 0.728, samego wskaźnika braku 0.726
 
 Zapisano -> 3-sgkf-split/sgkf/results/analiza_wynikow.json

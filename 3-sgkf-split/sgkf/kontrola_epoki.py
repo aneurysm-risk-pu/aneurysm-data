@@ -15,6 +15,11 @@ foldach (HistGradientBoosting, braki jako NaN):
   2. tylko wzorzec braków (0/1),
   3. wyłącznie wartości zmierzone: rekordy z kompletnym panelem, bez imputacji.
 
+Uzupełnienie z 16.10.2026: testy 2 i 3 dotyczą różnych rekordów (wszystkie
+NEURO wobec rekordów z kompletnym panelem). Dla porównania na TYCH SAMYCH
+rekordach każdy panel ma też wariant „wzorzec braków pozostałych cech” i
+„38 cech z NaN”, a na wszystkich rekordach — sama demografia (wiek, płeć).
+
 Nie jest częścią uruchom_sgkf.py; nie wymaga zaimputowanych foldów (~1 min).
 
 Uruchomienie:
@@ -29,6 +34,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import sklearn
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 
@@ -76,13 +82,19 @@ def main() -> None:
     print(f"NEURO: rekordy z okna {od.date()} – {do.date()} vs pozostałe, 5 zamrożonych foldów")
     licz("38 cech, braki jako NaN (bez imputacji)", n[feat])
     licz("tylko wzorzec braków (0/1)", n[feat].isna().astype(int))
-    for nazwa, cechy in (("morfologia podstawowa, tylko zmierzone", MORFOLOGIA),
-                         ("morfologia + rozmaz, tylko zmierzone", MORFOLOGIA + ROZMAZ),
-                         ("morfologia + Na, K, KREA, tylko zmierzone", MORFOLOGIA + ELEKTROLITY)):
-        licz(nazwa, n[cechy], n[cechy].notna().all(axis=1))
+    licz("tylko demografia (wiek, płeć)", n[["patient_age", "patient_sex"]])
+    for panel, cechy in (("morfologia podstawowa", MORFOLOGIA),
+                         ("morfologia + rozmaz", MORFOLOGIA + ROZMAZ),
+                         ("morfologia + Na, K, KREA", MORFOLOGIA + ELEKTROLITY)):
+        komplet = n[cechy].notna().all(axis=1)
+        licz(f"{panel}, tylko zmierzone", n[cechy], komplet)
+        # te same rekordy: czego nie zmierzono poza panelem / wszystko razem
+        licz(f"{panel}: wzorzec braków pozostałych cech, te same rekordy", n[feat].isna().astype(int), komplet)
+        licz(f"{panel}: 38 cech z NaN, te same rekordy", n[feat], komplet)
 
     wynik = {"opis": "Kontrola testu B4: czy epokę w NEURO widać w wartościach, czy we wzorcu braków",
              "okno": [str(od.date()), str(do.date())], "odcisk_danych": meta["odcisk_danych_sha256"],
+             "wersje": {"sklearn": sklearn.__version__, "pandas": pd.__version__},
              "testy": wyniki}
     (WYNIKI / "kontrola_epoki.json").write_text(json.dumps(wynik, indent=2, ensure_ascii=False) + "\n",
                                                 encoding="utf-8")

@@ -701,7 +701,8 @@
       "auc_pacjenci_min_max": [
         0.766,
         0.84
-      ]
+      ],
+      "uwaga": "okno wybierane po imputacji: scaler i MICE dopasowano na całym treningu foldu (wszystkie okresy), a nie tylko na rekordach z okna"
     },
     "B4_neuro_epoka": {
       "opis": "NEURO z okna dat KOR vs NEURO spoza okna (rekordy)",
@@ -718,12 +719,16 @@
       "kor": {
         "mediana": 10.7,
         "udzial_poza_zakresem": 0.614,
-        "n": 58109
+        "n": 58109,
+        "udzial_zmierzonych": 0.814,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.5
       },
       "neuro": {
         "mediana": 12.09,
         "udzial_poza_zakresem": 0.622,
-        "n": 3482
+        "n": 3482,
+        "udzial_zmierzonych": 0.524,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.326
       }
     },
     "WBC": {
@@ -731,12 +736,16 @@
       "kor": {
         "mediana": 8.78,
         "udzial_poza_zakresem": 0.369,
-        "n": 69578
+        "n": 69578,
+        "udzial_zmierzonych": 0.974,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.359
       },
       "neuro": {
         "mediana": 8.37,
         "udzial_poza_zakresem": 0.325,
-        "n": 5833
+        "n": 5833,
+        "udzial_zmierzonych": 0.877,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.285
       }
     },
     "NEUT": {
@@ -744,12 +753,16 @@
       "kor": {
         "mediana": 6.06,
         "udzial_poza_zakresem": 0.395,
-        "n": 69326
+        "n": 69326,
+        "udzial_zmierzonych": 0.971,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.383
       },
       "neuro": {
         "mediana": 5.5,
         "udzial_poza_zakresem": 0.339,
-        "n": 3839
+        "n": 3839,
+        "udzial_zmierzonych": 0.577,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.195
       }
     },
     "GLU": {
@@ -757,12 +770,16 @@
       "kor": {
         "mediana": 107.0,
         "udzial_poza_zakresem": 0.64,
-        "n": 35721
+        "n": 35721,
+        "udzial_zmierzonych": 0.5,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.32
       },
       "neuro": {
         "mediana": 104.0,
         "udzial_poza_zakresem": 0.577,
-        "n": 2979
+        "n": 2979,
+        "udzial_zmierzonych": 0.448,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.258
       }
     },
     "HGB": {
@@ -770,12 +787,16 @@
       "kor": {
         "mediana": 12.6,
         "udzial_poza_zakresem": 0.396,
-        "n": 69578
+        "n": 69578,
+        "udzial_zmierzonych": 0.974,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.386
       },
       "neuro": {
         "mediana": 12.4,
         "udzial_poza_zakresem": 0.432,
-        "n": 5833
+        "n": 5833,
+        "udzial_zmierzonych": 0.877,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.379
       }
     },
     "PLT": {
@@ -783,12 +804,16 @@
       "kor": {
         "mediana": 239.0,
         "udzial_poza_zakresem": 0.121,
-        "n": 69578
+        "n": 69578,
+        "udzial_zmierzonych": 0.974,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.118
       },
       "neuro": {
         "mediana": 241.0,
         "udzial_poza_zakresem": 0.073,
-        "n": 5810
+        "n": 5810,
+        "udzial_zmierzonych": 0.874,
+        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": 0.063
       }
     }
   },
@@ -924,6 +949,32 @@
         ],
         "rozstep": 1.034
       }
+    }
+  },
+  "E_slad_imputacji_nrbc": {
+    "zmierzone_dokladne_zera": 0.7757,
+    "uzupelnione_dokladne_zera": 0.0,
+    "uzupelnione_w_przedziale_0_0_05": 0.9952,
+    "neuro_wsrod_wszystkich_rekordow": 0.0852,
+    "neuro_wsrod_uzupelnionych": 0.6345,
+    "neuro_wsrod_zmierzonych": 0.0476,
+    "neuro_gdy_nrbc_rowne_0": 0.0499,
+    "neuro_gdy_nrbc_ponad_0": 0.1789,
+    "neuro_gdy_nrbc_w_przedziale_0_0_05": 0.193,
+    "rekordy_nrbc_w_przedziale_0_0_05": 19469,
+    "auc_tylko_nrbc_po_imputacji": {
+      "auc_rekordy_srednia": 0.728,
+      "auc_rekordy_min_max": [
+        0.72,
+        0.735
+      ]
+    },
+    "auc_tylko_wskaznik_braku_nrbc": {
+      "auc_rekordy_srednia": 0.726,
+      "auc_rekordy_min_max": [
+        0.717,
+        0.733
+      ]
     }
   },
   "odcisk_danych": "5b822c09ebc03011"

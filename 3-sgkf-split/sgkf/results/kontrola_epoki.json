@@ -5,12 +5,16 @@
     "2021-12-26"
   ],
   "odcisk_danych": "5b822c09ebc03011",
+  "wersje": {
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3"
+  },
   "testy": {
     "38 cech, braki jako NaN (bez imputacji)": {
       "auc_srednia": 0.841,
       "auc_min_max": [
-        0.824,
-        0.855
+        0.827,
+        0.852
       ],
       "rekordy": 6651,
       "rekordy_w_oknie": 680
@@ -24,29 +28,92 @@
       "rekordy": 6651,
       "rekordy_w_oknie": 680
     },
+    "tylko demografia (wiek, płeć)": {
+      "auc_srednia": 0.512,
+      "auc_min_max": [
+        0.438,
+        0.565
+      ],
+      "rekordy": 6651,
+      "rekordy_w_oknie": 680
+    },
     "morfologia podstawowa, tylko zmierzone": {
       "auc_srednia": 0.562,
       "auc_min_max": [
-        0.503,
-        0.648
+        0.492,
+        0.632
+      ],
+      "rekordy": 5810,
+      "rekordy_w_oknie": 572
+    },
+    "morfologia podstawowa: wzorzec braków pozostałych cech, te same rekordy": {
+      "auc_srednia": 0.773,
+      "auc_min_max": [
+        0.738,
+        0.801
+      ],
+      "rekordy": 5810,
+      "rekordy_w_oknie": 572
+    },
+    "morfologia podstawowa: 38 cech z NaN, te same rekordy": {
+      "auc_srednia": 0.864,
+      "auc_min_max": [
+        0.85,
+        0.884
       ],
       "rekordy": 5810,
       "rekordy_w_oknie": 572
     },
     "morfologia + rozmaz, tylko zmierzone": {
-      "auc_srednia": 0.656,
+      "auc_srednia": 0.651,
       "auc_min_max": [
-        0.612,
-        0.719
+        0.605,
+        0.704
+      ],
+      "rekordy": 5791,
+      "rekordy_w_oknie": 571
+    },
+    "morfologia + rozmaz: wzorzec braków pozostałych cech, te same rekordy": {
+      "auc_srednia": 0.772,
+      "auc_min_max": [
+        0.737,
+        0.802
+      ],
+      "rekordy": 5791,
+      "rekordy_w_oknie": 571
+    },
+    "morfologia + rozmaz: 38 cech z NaN, te same rekordy": {
+      "auc_srednia": 0.863,
+      "auc_min_max": [
+        0.849,
+        0.88
       ],
       "rekordy": 5791,
       "rekordy_w_oknie": 571
     },
     "morfologia + Na, K, KREA, tylko zmierzone": {
-      "auc_srednia": 0.648,
+      "auc_srednia": 0.651,
       "auc_min_max": [
-        0.626,
-        0.659
+        0.625,
+        0.668
+      ],
+      "rekordy": 3949,
+      "rekordy_w_oknie": 409
+    },
+    "morfologia + Na, K, KREA: wzorzec braków pozostałych cech, te same rekordy": {
+      "auc_srednia": 0.764,
+      "auc_min_max": [
+        0.716,
+        0.794
+      ],
+      "rekordy": 3949,
+      "rekordy_w_oknie": 409
+    },
+    "morfologia + Na, K, KREA: 38 cech z NaN, te same rekordy": {
+      "auc_srednia": 0.858,
+      "auc_min_max": [
+        0.835,
+        0.874
       ],
       "rekordy": 3949,
       "rekordy_w_oknie": 409

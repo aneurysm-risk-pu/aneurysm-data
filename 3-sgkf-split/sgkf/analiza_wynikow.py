@@ -20,8 +20,13 @@ mógłby się oprzeć zamiast na chorobie.
        B3  NEURO vs KOR tylko we wspólnym oknie dat     — rozdzielność bez różnicy epok
        B4  NEURO z okna dat KOR vs NEURO spoza okna     — ile epoki „siedzi” w wynikach
   C. Profil kohort względem orientacyjnych zakresów referencyjnych — czy KOR
-     wygląda na populację ogólną, czy szpitalną.
+     wygląda na populację ogólną, czy szpitalną. Odsetek poza zakresem jest
+     liczony wśród wartości ZMIERZONYCH; obok udział rekordów z wykonanym
+     badaniem i odsetek liczony względem wszystkich rekordów kohorty.
   D. Zgodność imputacji między foldami.
+  E. Ślad imputacji NRBC (16.10.2026): jak często uzupełniona wartość dotyczy
+     NEURO i czy samo NRBC po imputacji niesie informację o braku badania
+     (AUC modelu na samym NRBC wobec AUC samego wskaźnika braku NRBC).
 
 Wynik: sgkf/results/analiza_wynikow.json
 
@@ -156,6 +161,9 @@ def b_skroty(foldy: list, braki: pd.DataFrame, feat: list, okno: tuple) -> dict:
                             ("B4_neuro_epoka", b4, "NEURO z okna dat KOR vs NEURO spoza okna (rekordy)")):
         print(f"    {nazwa} ...", flush=True)
         wyn[nazwa] = {"opis": opis, **_auc_po_foldach(foldy, fn)}
+    wyn["B3_neuro_vs_kor_wspolne_okno"]["uwaga"] = (
+        "okno wybierane po imputacji: scaler i MICE dopasowano na całym treningu foldu (wszystkie okresy), "
+        "a nie tylko na rekordach z okna")
     return wyn
 
 
@@ -168,9 +176,12 @@ def c_profil(df: pd.DataFrame) -> dict:
     for c, (kier, prog, jedn) in ZAKRESY.items():
         w = {}
         for k, nazwa in ((0, "kor"), (1, "neuro")):
-            v = df.loc[df[KOL_ETYKIETA] == k, c].dropna()
+            wszystkie = df.loc[df[KOL_ETYKIETA] == k, c]
+            v = wszystkie.dropna()
             poza = (v > prog) if kier == "powyżej" else (v < prog)
-            w[nazwa] = {"mediana": _r(v.median(), 2), "udzial_poza_zakresem": _r(poza.mean(), 3), "n": int(len(v))}
+            w[nazwa] = {"mediana": _r(v.median(), 2), "udzial_poza_zakresem": _r(poza.mean(), 3), "n": int(len(v)),
+                        "udzial_zmierzonych": _r(len(v) / len(wszystkie), 3),
+                        "udzial_poza_zakresem_wsrod_wszystkich_rekordow": _r(poza.sum() / len(wszystkie), 3)}
         wyn[c] = {"granica": f"{kier} {prog} {jedn}", **w}
     return wyn
 
@@ -195,6 +206,46 @@ def d_zgodnosc(foldy: list, braki: pd.DataFrame, cechy: list) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# E. Ślad imputacji NRBC
+# ---------------------------------------------------------------------------
+
+def e_slad_nrbc(foldy: list, test_wszystkie: pd.DataFrame, braki: pd.DataFrame) -> dict:
+    """Zmierzone NRBC to głównie dokładne zera, uzupełnione nigdy nie są zerem.
+
+    Liczby na częściach testowych (każdy rekord raz). AUC rekordowe na
+    zamrożonych foldach, ten sam model co w części B.
+    """
+    imp = braki.loc[test_wszystkie["custom_id"], "NRBC"].to_numpy()
+    v = test_wszystkie["NRBC"].to_numpy()
+    y = test_wszystkie[KOL_ETYKIETA].to_numpy()
+    male = (v > 0) & (v < 0.05)
+    wyn = {
+        "zmierzone_dokladne_zera": _r(np.mean(v[~imp] == 0)),
+        "uzupelnione_dokladne_zera": _r(np.mean(v[imp] == 0)),
+        "uzupelnione_w_przedziale_0_0_05": _r(np.mean(male[imp])),
+        "neuro_wsrod_wszystkich_rekordow": _r(y.mean()),
+        "neuro_wsrod_uzupelnionych": _r(y[imp].mean()),
+        "neuro_wsrod_zmierzonych": _r(y[~imp].mean()),
+        "neuro_gdy_nrbc_rowne_0": _r(y[v == 0].mean()),
+        "neuro_gdy_nrbc_ponad_0": _r(y[v > 0].mean()),
+        "neuro_gdy_nrbc_w_przedziale_0_0_05": _r(y[male].mean()),
+        "rekordy_nrbc_w_przedziale_0_0_05": int(male.sum()),
+    }
+
+    def tylko_nrbc(tr, te):
+        return tr[["NRBC"]], tr[KOL_ETYKIETA], te[["NRBC"]], te[KOL_ETYKIETA], None
+
+    def tylko_brak(tr, te):
+        btr = braki.loc[tr["custom_id"], ["NRBC"]].astype(int).reset_index(drop=True)
+        bte = braki.loc[te["custom_id"], ["NRBC"]].astype(int).reset_index(drop=True)
+        return btr, tr[KOL_ETYKIETA].reset_index(drop=True), bte, te[KOL_ETYKIETA].reset_index(drop=True), None
+
+    wyn["auc_tylko_nrbc_po_imputacji"] = _auc_po_foldach(foldy, tylko_nrbc)
+    wyn["auc_tylko_wskaznik_braku_nrbc"] = _auc_po_foldach(foldy, tylko_brak)
+    return wyn
+
+
+# ---------------------------------------------------------------------------
 
 def main() -> None:
     przydzial, meta = wczytaj_podzial()
@@ -214,9 +265,11 @@ def main() -> None:
     print("[D] Zgodność imputacji między foldami ...")
     najwiecej_brakow_neuro = sorted(feat, key=lambda x: -a[x]["neuro"]["udzial_uzupelnionych"])[:6]
     d = d_zgodnosc(foldy, braki, najwiecej_brakow_neuro)
+    print("[E] Ślad imputacji NRBC ...")
+    e = e_slad_nrbc(foldy, test_wszystkie, braki)
 
     wynik = {"A_imputacja_per_kohorta": a, "B_diagnostyka_skrotow": b, "C_profil_kohort": c,
-             "D_zgodnosc_miedzy_foldami": d, "odcisk_danych": meta["odcisk_danych_sha256"]}
+             "D_zgodnosc_miedzy_foldami": d, "E_slad_imputacji_nrbc": e, "odcisk_danych": meta["odcisk_danych_sha256"]}
     (WYNIKI / "analiza_wynikow.json").write_text(json.dumps(wynik, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print("\n=== Najważniejsze liczby")
@@ -228,7 +281,12 @@ def main() -> None:
         print(f"    {x:10s} {a[x]['neuro']['udzial_uzupelnionych']:.1%}  położenie {a[x].get('neuro_polozenie_0_neuro_1_kor')}")
     print("  Profil KOR / NEURO (udział poza zakresem referencyjnym):")
     for x, v in c.items():
-        print(f"    {x:5s} {v['granica']:20s} KOR {v['kor']['udzial_poza_zakresem']:.1%}  NEURO {v['neuro']['udzial_poza_zakresem']:.1%}")
+        print(f"    {x:5s} {v['granica']:20s} KOR {v['kor']['udzial_poza_zakresem']:.1%}  NEURO {v['neuro']['udzial_poza_zakresem']:.1%}"
+              f"  (zmierzone: KOR {v['kor']['udzial_zmierzonych']:.0%}, NEURO {v['neuro']['udzial_zmierzonych']:.0%})")
+    print(f"  NRBC: uzupełnione to w {e['neuro_wsrod_uzupelnionych']:.0%} rekordy NEURO (wszystkie rekordy: "
+          f"{e['neuro_wsrod_wszystkich_rekordow']:.1%}); AUC samego NRBC po imputacji "
+          f"{e['auc_tylko_nrbc_po_imputacji']['auc_rekordy_srednia']}, samego wskaźnika braku "
+          f"{e['auc_tylko_wskaznik_braku_nrbc']['auc_rekordy_srednia']}")
     print(f"\nZapisano -> {(WYNIKI / 'analiza_wynikow.json').relative_to(BASE_DIR)}")
 
 

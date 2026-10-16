@@ -30,6 +30,15 @@ więc dla NEURO liczby nie są wprost porównywalne z benchmarkiem. Dlatego obok
 RMSE raportujemy miarę niezależną od skali: RMSE MICE / RMSE uzupełniania
 średnią z treningu (na tych samych maskach; < 1 = MICE lepsze od średniej).
 
+Uwaga o demografii (16.10.2026): maska losowa, jak w etapie 2, ukrywa też wiek
+i płeć, których w prawdziwych danych nigdy nie brakuje. Płeć w skali [0, 1] ma
+błąd rzędu 0,4, więc dominuje sumę kwadratów błędu. Dlatego osobno podajemy:
+  udzial_demografii_w_sse                 część sumy kwadratów błędu MICE z wieku i płci
+  rmse_bez_demografii, *_wzgledem_sredniej_bez_demografii   te same miary tylko na 36 cechach laboratoryjnych
+  rozrzut_uzupelnien_wzgledem_prawdy      RMS(uzupełnienie − średnia) / RMS(prawda − średnia)
+                                          na cechach laboratoryjnych: 0 = MICE wpisuje średnią,
+                                          1 = uzupełnienia są tak zróżnicowane jak prawdziwe wartości
+
 Wynik: sgkf/results/ocena_imputacji.json
 
 Uruchomienie (~15 min — jedno dopasowanie imputera na fold):
@@ -56,6 +65,7 @@ from evaluate import compute_kl_mean, compute_mae, compute_rmse, create_mask  # 
 warnings.filterwarnings("ignore")
 MASK_FRAC, SEED = 0.10, 42
 BENCHMARK = BASE_DIR / "2-imputation" / "final" / "results" / "mice_validation.csv"
+DEMOGRAFIA = ["patient_age", "patient_sex"]   # w prawdziwych danych nigdy nie brakuje
 
 
 def odniesienie_etap2() -> dict:
@@ -80,10 +90,22 @@ def maska_wzorce(kompletne_y: np.ndarray, braki_train: np.ndarray, y_train: np.n
 def metryki(prawda: np.ndarray, uzup: np.ndarray, maska: np.ndarray, kolumny: list,
             uzup_srednia: np.ndarray) -> dict:
     rmse, rmse_sr = compute_rmse(prawda, uzup, maska), compute_rmse(prawda, uzup_srednia, maska)
+    # Te same miary bez wieku i płci (patrz uwaga o demografii w nagłówku)
+    lab = np.array([c not in DEMOGRAFIA for c in kolumny])
+    m_lab = maska[:, lab]
+    rmse_lab = compute_rmse(prawda[:, lab], uzup[:, lab], m_lab)
+    rmse_lab_sr = compute_rmse(prawda[:, lab], uzup_srednia[:, lab], m_lab)
+    sse = ((prawda - uzup) ** 2)[maska].sum()
+    sse_demo = ((prawda - uzup) ** 2)[:, ~lab][maska[:, ~lab]].sum()
+    rozrzut = np.sqrt(((uzup - uzup_srednia)[:, lab][m_lab] ** 2).sum() /
+                      ((prawda - uzup_srednia)[:, lab][m_lab] ** 2).sum())
     return {"rmse": rmse, "mae": compute_mae(prawda, uzup, maska),
             "kl_mean": compute_kl_mean(pd.DataFrame(prawda, columns=kolumny), pd.DataFrame(uzup, columns=kolumny)),
             "rmse_srednia_z_treningu": rmse_sr, "rmse_wzgledem_sredniej": rmse / rmse_sr,
-            "zamaskowane_komorki": int(maska.sum()), "udzial_zamaskowanych": float(maska.mean())}
+            "zamaskowane_komorki": int(maska.sum()), "udzial_zamaskowanych": float(maska.mean()),
+            "udzial_demografii_w_sse": float(sse_demo / sse),
+            "rmse_bez_demografii": rmse_lab, "rmse_wzgledem_sredniej_bez_demografii": rmse_lab / rmse_lab_sr,
+            "rozrzut_uzupelnien_wzgledem_prawdy": float(rozrzut)}
 
 
 def ocen_fold(df: pd.DataFrame, feat: list, train_idx: np.ndarray, test_idx: np.ndarray, fold: int) -> dict:
@@ -133,7 +155,8 @@ def podsumuj(foldy: list) -> dict:
         out[maska] = {}
         for k in ("kor", "neuro"):
             for m in ("rmse", "mae", "kl_mean", "rmse_srednia_z_treningu", "rmse_wzgledem_sredniej",
-                      "udzial_zamaskowanych"):
+                      "udzial_zamaskowanych", "udzial_demografii_w_sse", "rmse_bez_demografii",
+                      "rmse_wzgledem_sredniej_bez_demografii", "rozrzut_uzupelnien_wzgledem_prawdy"):
                 v = [f[maska][k][m] for f in foldy]
                 out[maska].setdefault(k, {})[m] = {"srednia": round(float(np.mean(v)), 4),
                                                    "odch_std": round(float(np.std(v)), 4),
@@ -181,8 +204,13 @@ def main() -> None:
             r = pods[maska][k]["rmse"]
             w = pods[maska][k]["rmse_wzgledem_sredniej"]
             ref = f" | etap 2: {odn[k]['rmse']}" if maska == "etap2" else ""
+            p = pods[maska][k]
             print(f"  {maska:7s} {k.upper():5s} {r['srednia']:.4f} ± {r['odch_std']:.4f}  "
                   f"(względem średniej {w['srednia']:.2f}){ref}")
+            print(f"  {'':7s} {'':5s} bez wieku i płci: RMSE {p['rmse_bez_demografii']['srednia']:.4f}, "
+                  f"względem średniej {p['rmse_wzgledem_sredniej_bez_demografii']['srednia']:.2f}; "
+                  f"udział demografii w błędzie {p['udzial_demografii_w_sse']['srednia']:.0%}; "
+                  f"rozrzut uzupełnień względem prawdy {p['rozrzut_uzupelnien_wzgledem_prawdy']['srednia']:.2f}")
     print(f"\nZapisano -> {(WYNIKI / 'ocena_imputacji.json').relative_to(BASE_DIR)}")
 
 

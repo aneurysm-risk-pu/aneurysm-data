@@ -1,8 +1,15 @@
 NEURO: rekordy z okna 2019-12-29 – 2021-12-26 vs pozostałe, 5 zamrożonych foldów
-  38 cech, braki jako NaN (bez imputacji)              AUC 0.841 [0.824, 0.855]  (rekordy 6,651, w oknie 680)
+  38 cech, braki jako NaN (bez imputacji)              AUC 0.841 [0.827, 0.852]  (rekordy 6,651, w oknie 680)
   tylko wzorzec braków (0/1)                           AUC 0.756 [0.73, 0.787]  (rekordy 6,651, w oknie 680)
-  morfologia podstawowa, tylko zmierzone               AUC 0.562 [0.503, 0.648]  (rekordy 5,810, w oknie 572)
-  morfologia + rozmaz, tylko zmierzone                 AUC 0.656 [0.612, 0.719]  (rekordy 5,791, w oknie 571)
-  morfologia + Na, K, KREA, tylko zmierzone            AUC 0.648 [0.626, 0.659]  (rekordy 3,949, w oknie 409)
+  tylko demografia (wiek, płeć)                        AUC 0.512 [0.438, 0.565]  (rekordy 6,651, w oknie 680)
+  morfologia podstawowa, tylko zmierzone               AUC 0.562 [0.492, 0.632]  (rekordy 5,810, w oknie 572)
+  morfologia podstawowa: wzorzec braków pozostałych cech, te same rekordy AUC 0.773 [0.738, 0.801]  (rekordy 5,810, w oknie 572)
+  morfologia podstawowa: 38 cech z NaN, te same rekordy AUC 0.864 [0.85, 0.884]  (rekordy 5,810, w oknie 572)
+  morfologia + rozmaz, tylko zmierzone                 AUC 0.651 [0.605, 0.704]  (rekordy 5,791, w oknie 571)
+  morfologia + rozmaz: wzorzec braków pozostałych cech, te same rekordy AUC 0.772 [0.737, 0.802]  (rekordy 5,791, w oknie 571)
+  morfologia + rozmaz: 38 cech z NaN, te same rekordy  AUC 0.863 [0.849, 0.88]  (rekordy 5,791, w oknie 571)
+  morfologia + Na, K, KREA, tylko zmierzone            AUC 0.651 [0.625, 0.668]  (rekordy 3,949, w oknie 409)
+  morfologia + Na, K, KREA: wzorzec braków pozostałych cech, te same rekordy AUC 0.764 [0.716, 0.794]  (rekordy 3,949, w oknie 409)
+  morfologia + Na, K, KREA: 38 cech z NaN, te same rekordy AUC 0.858 [0.835, 0.874]  (rekordy 3,949, w oknie 409)
 
 Wynik -> 3-sgkf-split/sgkf/results/kontrola_epoki.json
