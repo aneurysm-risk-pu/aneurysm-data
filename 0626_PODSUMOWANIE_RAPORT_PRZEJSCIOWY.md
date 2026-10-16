@@ -5,7 +5,7 @@
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
 
-> **Dokument historyczny (czerwiec 2026).** Opisuje stan na raport przejściowy. Aktualny stan, w tym decyzje dotyczące danych z 04.10.2026 i podział v2, opisuje `1026_REALIZACJA_DO_SGKF.md`, a propozycję dalszych prac `4-pu-setup/PLAN_MODELOWANIA.md`.
+> **Dokument historyczny (czerwiec 2026).** Opisuje stan na raport przejściowy, ale spisano go 11.09.2026. Uwaga o selekcji cech z użyciem etykiety (sekcja 2) i punkty 5–7 w sekcji 6 pochodzą z weryfikacji we wrześniu (dopisane 18.09), a nie z materiałów czerwcowych. Aktualny stan, w tym decyzje dotyczące danych z 04.10.2026 i podział v2, opisuje `1026_REALIZACJA_DO_SGKF.md`, a propozycję dalszych prac `4-pu-setup/PLAN_MODELOWANIA.md`.
 
 Dokument spina w jedno miejsce cztery etapy opisane dotąd w osobnych raportach cząstkowych.
 

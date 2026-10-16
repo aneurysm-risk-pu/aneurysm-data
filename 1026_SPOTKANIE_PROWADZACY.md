@@ -3,7 +3,7 @@
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
-**Stan na:** 06.10.2026 (branch `pu-modeling-setup-lk`)
+**Stan na:** 16.10.2026 (branch `pu-modeling-setup-lk`; liczby i wnioski zweryfikowane ponownie 16.10, sekcja 9)
 
 **Jak czytać:** 5 minut wystarczy na sekcję 1. Pełny obraz w 15 minut dają sekcje 1–8. Szczegóły techniczne są w dokumentach wymienionych w sekcji 10, a każda liczba pochodzi ze skryptu w repozytorium.
 
@@ -17,7 +17,7 @@
 
 ## 1. W pięciu punktach
 
-1. **Dane są gotowe do modelowania.** Zbiór liczy 78 052 rekordy tygodniowe i 40 924 pacjentów, w tym 1 823 (4,45%) z potwierdzonym tętniakiem. Ma 38 cech. Pacjentów podzielono na 5 zamrożonych foldów, a braki uzupełnia MICE wewnątrz każdego foldu. Imputacja jest wykonana, sprawdzona i powtarzalna.
+1. **Dane są gotowe do modelowania.** Zbiór liczy 78 052 rekordy tygodniowe i 40 924 pacjentów, w tym 1 823 (4,45%) z potwierdzonym tętniakiem. Ma 38 cech. Pacjentów podzielono na 5 zamrożonych foldów, a braki uzupełnia MICE wewnątrz każdego foldu. Imputacja jest wykonana, sprawdzona i powtarzalna. Do strojenia modeli trzeba będzie jeszcze uzupełniać braki osobno w foldach wewnętrznych (sekcja 8, pakiet 2).
 2. **Kwiecień–czerwiec, cały zespół:**
    - czyszczenie i filtracja danych, połączenie kohort z etykietą,
    - benchmark trzech metod imputacji, z którego wybraliśmy MICE z ExtraTrees,
@@ -41,7 +41,7 @@
 
 ## 2. Projekt i dane
 
-**Zadanie.** Na podstawie wyników laboratoryjnych chcemy ocenić ryzyko tętniaka mózgu. Mamy klasę **P** (NEURO, pacjenci z rozpoznanym tętniakiem) i klasę **U** (KOR, nikt nie robił im obrazowania). `label = 0` oznacza „nieoznaczony”, a nie „zdrowy”. Dlatego stosujemy uczenie Positive-Unlabeled, a nie zwykłą klasyfikację.
+**Zadanie.** Na podstawie wyników laboratoryjnych chcemy ocenić ryzyko tętniaka mózgu. Mamy klasę **P** (NEURO, pacjenci z rozpoznanym tętniakiem) i klasę **U** (KOR: w danych nie ma u nich rozpoznania tętniaka, ale nie wiemy, czy i u kogo wykonano obrazowanie). `label = 0` oznacza „nieoznaczony”, a nie „zdrowy”. Dlatego stosujemy uczenie Positive-Unlabeled, a nie zwykłą klasyfikację.
 
 **Rekord** to tydzień uśrednionych wyników laboratoryjnych pacjenta. Cechy (38):
 
@@ -92,12 +92,12 @@
 ### 3.3 Co powstało
 
 **Etap 1: przygotowanie danych.**
-- **Czyszczenie strukturalne.** Listy `{'values': […]}`, czyli niedokończoną agregację tygodniową, zastąpiono średnią. Usunięto kolumny norm i jednostek oraz zmienne techniczne. Usunięto jeden duplikat rekordu. Płeć ujednolicono do 0/1.
+- **Czyszczenie strukturalne.** Listy `{'values': […]}`, czyli niedokończoną agregację tygodniową, zastąpiono średnią. Usunięto kolumny norm i jednostek oraz zmienne techniczne. Płeć ujednolicono do 0/1. Usunięto też jeden rekord uznany za duplikat. Weryfikacja w październiku pokazała, że to dwa różne badania jednego pacjenta NEURO (2017-01-01 i 2017-12-31). Klucz `custom_id` łączy rok kalendarzowy z numerem tygodnia ISO, więc oba badania dostały ten sam identyfikator. Strata to jeden prawdziwy rekord; w obecnym wejściu identyfikatory się nie powtarzają.
 - **Filtracja:**
   - wiek 18–100 lat,
   - próg 60% braków, osobno dla kolumn i dla pacjentów (usunięto 1 793 pacjentów KOR),
-  - u pacjentów z bardzo długą historią zostawiono najnowsze pomiary; pacjentów z jednym pomiarem nie usuwano.
-- **Wartości odstające.** Usuwano całe rekordy poza skrajnymi kwantylami, parametr po parametrze.
+  - u pacjentów z bardzo długą historią zostawiono najnowsze pomiary: limit wynosi 11 rekordów w KOR i 38 w NEURO, ustalony osobno dla każdej kohorty; pacjentów z jednym pomiarem nie usuwano.
+- **Wartości odstające.** Usuwano całe rekordy poza skrajnymi kwantylami, parametr po parametrze. Progi dobierano osobno dla kohort, na całych kohortach przed podziałem. Usunięto 0,8% rekordów KOR i 3,2% rekordów NEURO.
 - **Połączenie kohort** z etykietą (NEURO = 1, KOR = 0): 78 197 rekordów × 38 cech.
 
 **Etap 2: imputacja braków.**
@@ -112,7 +112,7 @@
   | KOR | **0,078** | 0,087 | 0,102 |
   | NEURO | 0,102 | **0,098** | 0,129 |
 
-- **Decyzja: MICE**, czyli `IterativeImputer` z ExtraTrees, parametry 7 / 78 / 10, wspólne dla obu kohort. Żadna metoda nie wygrała na obu zbiorach. MICE wygrywa na mniejszym i trudniejszym NEURO, jest szybsze, a imputacja w foldzie wymaga jednego imputera dla połączonych danych. Ranking potwierdziła niezależna maska (seed 7) i walidacja na 10 maskach.
+- **Decyzja: MICE**, czyli `IterativeImputer` z ExtraTrees, parametry 7 / 78 / 10, wspólne dla obu kohort. Żadna metoda nie wygrała na obu zbiorach. MICE wygrywa na mniejszym i trudniejszym NEURO, a imputacja w foldzie wymaga jednej metody z jednym zestawem parametrów dla połączonych danych. W benchmarku MICE było szybsze na KOR (70,2 wobec 107,6 min), ale wolniejsze na NEURO (30,4 wobec 17,2 min). Na drugiej masce (seed 7) ranking się powtórzył. Dla NEURO strojenie uruchomiono wtedy ponownie, więc nie był to czysty test samej maski. Przewaga MICE nad MissForest na NEURO jest niewielka: 0,002–0,004 RMSE. Walidacja na 10 maskach dotyczyła tylko MICE. Pokazała stabilny wynik (odchylenie 0,0007 na KOR i 0,0025 na NEURO), ale przy parametrach dobranych osobno dla każdej kohorty. Wspólne parametry 7 / 78 / 10 sprawdzono na jednej masce.
 
 **Etap 3, wersja 1: podział.**
 - Liwia zaimplementowała `StratifiedGroupKFold` (5 foldów, grupowanie po `patient_id`). Wszystkie rekordy pacjenta trafiają po jednej stronie podziału.
@@ -122,10 +122,10 @@ Te dwa zabezpieczenia przed wyciekiem były poprawne i zostały zachowane w wers
 
 ### 3.4 Co zostało otwarte po raporcie przejściowym
 
-Część była zastrzeżona już w materiale czerwcowym (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 6):
+Listę zebrała weryfikacja materiału czerwcowego we wrześniu (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 6; dokument spisano 11.09, a punkty o okresach kohort i 63 pacjentach dopisano 18.09). Wcześniej, od kwietnia, znaliśmy błędy jednostek kreatyniny i wartości niemożliwe (notatki ze sprintu 1) oraz pacjentów obecnych w obu kohortach (`check_duplicates.py`, 31.05), ale raport przejściowy żadnego z tych problemów nie rozstrzygnął:
 1. 63 pacjentów ma rekordy w obu kohortach i nie miało ustalonej etykiety.
 2. Zostały wartości niemożliwe fizjologicznie, a jednostki kreatyniny są mieszane.
-3. Cechy CRP, MONO i %MONO wybrano z użyciem etykiety na całym zbiorze. Już wtedy zapisaliśmy, że selekcję trzeba cofnąć albo przenieść do walidacji krzyżowej.
+3. Cechy CRP, MONO i %MONO usunięto na podstawie korelacji z etykietą liczonej na całym zbiorze. Ten problem wskazała weryfikacja we wrześniu; w czerwcu raport imputacji zalecał jako wejście do modelowania plik z 35 cechami.
 4. Podział nie był tasowany ani zapisywany.
 5. Kohorty pochodzą z różnych okresów, a dane nie mają daty rozpoznania tętniaka.
 
@@ -133,7 +133,7 @@ Część była zastrzeżona już w materiale czerwcowym (`0626_PODSUMOWANIE_RAPO
 
 ## 4. Część II: prace od września (Łukasz), do zamrożonego SGKF
 
-Od 11.09 do 05.10 powstało 25 commitów: około 3 000 linii kodu i 2 800 linii dokumentacji. Wszystko leży na branchu `pu-modeling-setup-lk`. **`master` kończy się na stanie z 11.09**, więc reszta zespołu nie widziała jeszcze tych zmian w głównej gałęzi.
+Od 11.09 do 05.10 powstały 24 commity: około 3 000 linii kodu i 2 800 linii dokumentacji. Wszystko leży na branchu `pu-modeling-setup-lk`. **`master` kończy się na stanie z 11.09**, więc reszta zespołu nie widziała jeszcze tych zmian w głównej gałęzi.
 
 ### 4.1 Wrzesień: weryfikacja i diagnostyka
 
@@ -146,9 +146,9 @@ Od 11.09 do 05.10 powstało 25 commitów: około 3 000 linii kodu i 2 800 linii 
 
   | Ustalenie | Liczby |
   |---|---|
-  | **kohorty niemal rozłączne w czasie** | KOR: 99,5% rekordów z lat 2020–2021; NEURO: 2000–2024, większość przed 2020. We wspólnym oknie dat jest 271 z 1 823 pozytywnych |
+  | **kohorty niemal rozłączne w czasie** | KOR: 99,5% rekordów z lat 2020–2021; NEURO: 2000–2024, większość przed 2020. We wspólnym oknie dat (2019-12-29 – 2021-12-26) co najmniej jeden rekord ma 271 z 1 823 pozytywnych (680 rekordów), a co najmniej połowę rekordów 159 |
   | **wyniki NEURO najpewniej pochodzą z hospitalizacji** | u 1 215 chorych z więcej niż jednym rekordem mediana rozpiętości badań wynosi 35 dni |
-  | **reguła agregacji rekordów do pacjenta tworzy sygnał** | maksimum koreluje z liczbą badań w 17 z 35 cech, mediana w 2; rekomendacja: mediana |
+  | **reguła agregacji rekordów do pacjenta tworzy sygnał** | maksimum koreluje z liczbą badań w 19 z 38 cech, mediana w 2 (wrzesień, na starszym wejściu: 17 z 35 i 2); rekomendacja: mediana |
   | **podział nie jest powtarzalny** | ta sama konfiguracja SGKF daje inne foldy w sklearn 1.6 i 1.8 |
 
 - **Prototyp pipeline'u PU.** Stan sprzed spotkania 21.09, zarchiwizowany 25.09: ukrywanie pozytywnych, metryki pacjentowe, funkcja celu, 17 testów. Po spotkaniu modelowanie odłożono, a priorytetem stało się domknięcie SGKF. Branch usunięto, ale kod da się odzyskać z commita `2cb6d1a` (sekcja 9).
@@ -163,7 +163,7 @@ Decyzje wdraża osobny skrypt (`3-sgkf-split/przygotowanie/przygotuj_dane.py`). 
 | KREA > 50 mg/dl | → brak (błąd jednostki, najpewniej µmol/l) | 210 wartości |
 | KREA > 10 mg/dl przy eGFR ≥ 30 | → brak (sprzeczność z eGFR) | 516 wartości |
 | K > 15 mmol/l, Na < 80 mmol/l | → brak (niezgodne z życiem) | 25 + 1 wartość |
-| skrajne, ale możliwe (K 9–15, Na 80–100, WBC > 200, KREA > 10 przy eGFR < 30) | **zostają** | 327 wartości |
+| skrajne, ale możliwe (K 9–15, Na 80–100, WBC > 200, KREA > 10 przy eGFR < 30) | **zostają** | 325 wartości |
 | zestaw cech | **38**: selekcja z etapu 1 cofnięta | CRP, MONO, %MONO wracają |
 | rozjazd czasowy, asymetria braków | **bez korekty**, opisane jako ograniczenia | — |
 
@@ -190,7 +190,7 @@ Porównanie strategii, rozstęp między foldami, najgorszy wynik z 5 ziaren:
 | pacjenci, stratyfikacja tylko po etykiecie | 0,01 pp | 4,91 pp | 8,49 pp |
 | **v2 (etykieta × okno × liczba rekordów)** | **0,01 pp** | **0,55 pp** | **0,22 pp** |
 
-Każdy fold ma 8 184–8 185 pacjentów, w tym 364–365 pozytywnych (4,45–4,46%).
+Każdy fold ma 8 184–8 185 pacjentów, w tym 364–365 pozytywnych (4,45–4,46%). Wyrównanie dotyczy pacjentów: rekordów w foldach jest 15 540–15 722, a udział rekordów NEURO waha się od 8,1% do 9,2%, bo chorzy mają różną liczbę rekordów. Metryki będą liczone na pacjentach. Kolumna „okno czasowe” w tabeli oznacza pacjentów z co najmniej połową rekordów w oknie (159 chorych).
 
 ### 4.4 Imputacja w foldach i jej ocena
 
@@ -201,9 +201,12 @@ Każdy fold ma 8 184–8 185 pacjentów, w tym 364–365 pozytywnych (4,45–4,4
   | Maska | KOR: RMSE / wobec średniej | NEURO: RMSE / wobec średniej |
   |---|---|---|
   | losowe 10% komórek, jak w etapie 2 | 0,083 / **0,61** | 0,080 / **0,65** |
+  | to samo, bez wieku i płci² | 0,043 / **0,41** | 0,041 / **0,45** |
   | realistyczne wzorce braków (całe panele) | 0,108 / **0,98** | 0,079 / **0,89** |
 
-  Przy losowych brakach MICE działa tak dobrze jak w benchmarku, jednakowo dla obu kohort. W prawdziwych danych braki idą jednak całymi panelami: koagulogramu i glukozy brakuje w około połowie rekordów. Wtedy uzupełnienie jest bliskie średniej z treningu. **Benchmark z etapu 2 przeszacowywał więc użyteczność imputacji.**
+  Przy losowych brakach MICE działa tak dobrze jak w benchmarku, jednakowo dla obu kohort. W prawdziwych danych braki idą jednak całymi panelami: koagulogramu i glukozy brakuje w około połowie rekordów. Wtedy MICE jest tylko trochę lepsze od średniej z treningu, a jego uzupełnienia skupiają się wokół niej. Odchylają się od średniej trzy razy mniej niż prawdziwe wartości w KOR i dwa razy mniej w NEURO. **Benchmark z etapu 2 przeszacowywał więc użyteczność imputacji.**
+
+  ² Losowa maska, tak jak w benchmarku z etapu 2, ukrywa też wiek i płeć, których w danych nigdy nie brakuje. Przypada na nie około 3/4 sumy kwadratów błędu, głównie na płeć. Bez nich przewaga MICE przy losowych brakach jest jeszcze większa. Wniosek o przeszacowaniu nie wynika więc z demografii.
 - **38 czy 35 cech.** Wybór nie zmienia istotnie imputacji. W teście kontrolowanym RMSE wynosi 0,0846 dla 38 cech i 0,0859 dla 35. W prawdziwych foldach uzupełnienia różnią się średnio o 0,11 odchylenia standardowego.
 
 ### 4.5 Diagnostyka „skrótów”
@@ -214,18 +217,22 @@ Na zamrożonych foldach sprawdziliśmy, jak łatwo odróżnić grupy, które nie
 |---|---:|
 | NEURO vs KOR, 38 cech po imputacji (pacjenci) | **0,93** |
 | NEURO vs KOR, **tylko wzorzec braków**, czyli które badania zlecono (pacjenci) | **0,82** |
-| NEURO vs KOR, tylko rekordy ze wspólnego okna dat (pacjenci) | 0,80 |
+| NEURO vs KOR, tylko rekordy ze wspólnego okna dat (pacjenci)¹ | 0,80 |
 | NEURO z okna dat KOR vs NEURO z innych lat (rekordy) | **0,83** |
 
-**Kontrola z 06.10** (`3-sgkf-split/sgkf/kontrola_epoki.py`). Ostatni test liczono na danych po imputacji, więc nie wiadomo było, gdzie siedzi sygnał epoki. Na danych przed imputacją wychodzi tak:
-- sam wzorzec braków daje AUC **0,76**,
-- wartości zmierzone, bez imputacji, dają tylko 0,56–0,66 (morfologia: 0,56; morfologia z rozmazem: 0,66).
+¹ Imputer dopasowano na całym treningu foldu, ze wszystkich okresów, a okno wybrano dopiero po imputacji. Wersja w pełni ograniczona do okna jest zaplanowana jako analiza wrażliwości.
 
-Epokę zdradza więc głównie to, *które badania zlecano* w danym okresie. W samych wartościach sygnał jest umiarkowany.
+**Kontrola z 06.10, uzupełniona 16.10** (`3-sgkf-split/sgkf/kontrola_epoki.py`). Ostatni test liczono na danych po imputacji, więc nie wiadomo było, gdzie siedzi sygnał epoki. Na danych przed imputacją, na tych samych rekordach z kompletnym panelem, wychodzi tak:
+- same zmierzone wartości panelu dają AUC 0,56–0,65 (morfologia: 0,56; morfologia z rozmazem: 0,65),
+- wzorzec braków pozostałych badań daje 0,76–0,77,
+- wszystkie 38 cech razem dają 0,86,
+- wiek i płeć nie zdradzają okresu (0,51).
 
-**Profil KOR nie wygląda na populację ogólną.** CRP > 5 mg/l ma 61% rekordów KOR (NEURO 62%), WBC > 10 G/l 37%, glukozę > 99 mg/dl 64%. KOR wygląda na pacjentów szpitalnych z lat 2020–2021, czyli z okresu pandemii.
+Najsilniejszym pojedynczym śladem epoki jest więc to, *które badania zlecano* w danym okresie. W wartościach podstawowych paneli sygnał jest umiarkowany. Nie jest to jednak jedyne źródło, bo 38 cech razem daje więcej niż sam wzorzec braków: część sygnału niosą też wartości pozostałych badań.
 
-**Ślad imputacji.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i w 3% KOR. Uzupełniona wartość w praktyce oznacza więc „rekord NEURO”.
+**Profil KOR nie wygląda na populację ogólną.** Wśród zmierzonych wyników KOR CRP > 5 mg/l ma 61% (NEURO 62%), WBC > 10 G/l 37%, a glukoza > 99 mg/dl 64%. Odsetki dotyczą badań wykonanych: CRP zmierzono w 81% rekordów KOR, glukozę w 50%. Względem wszystkich rekordów KOR CRP > 5 mg/l ma 50%. Profil pasuje do pacjentów szpitalnych z lat 2020–2021, czyli z okresu pandemii. To hipoteza do potwierdzenia (pytanie 1 w sekcji 7).
+
+**Ślad imputacji.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i w 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO, wobec 8,5% w całych danych. Model widzący tylko NRBC po imputacji odróżnia kohorty z AUC 0,73 (rekordy), tak samo jak sam wskaźnik braku NRBC. Uzupełnienie nie ukrywa więc informacji, że badania nie zrobiono. Nie jest to jednak jednoznaczny znacznik NEURO: wśród wszystkich rekordów z małym niezerowym NRBC (0–0,05) NEURO stanowi 19%, bo takie wartości dają też pomiary.
 
 **Wnioski dla modelowania:**
 - AUC P-vs-U raportujemy tylko jako rozdzielność kohort.
@@ -234,7 +241,7 @@ Epokę zdradza więc głównie to, *które badania zlecano* w danym okresie. W s
 
 ### 4.6 Porządki i odtwarzalność
 
-- **Jedno polecenie.** Cały etap 3 uruchamia `python 3-sgkf-split/uruchom_sgkf.py`: około 35 minut, logi z każdego kroku. Opcja `--bez-mice` pozwala sprawdzić etap w około 2 minuty.
+- **Jedno polecenie.** Cały etap 3 uruchamia `python 3-sgkf-split/uruchom_sgkf.py`: około 35 minut, logi z każdego kroku. Opcja `--bez-mice` pozwala sprawdzić etap w mniej niż minutę (42 s na Macu z procesorem M).
 - **Testy.** 16 testów automatycznych (6 w części A, 10 w części B). Pilnują m.in., że plik wejściowy w repozytorium jest dokładnie wynikiem kodu.
 - **Jeden branch roboczy** zamiast pięciu, dokumenty nazwane datą.
 
@@ -258,7 +265,7 @@ Epokę zdradza więc głównie to, *które badania zlecano* w danym okresie. W s
 
 ## 6. Decyzje do potwierdzenia
 
-Decyzje przygotował i wdrożył Łukasz 04.10, gdy reszta zespołu nie pracowała nad projektem. **Są propozycją do akceptacji przez zespół i prowadzącego.** Zmiana każdej z nich to edycja jednej reguły w `przygotuj_dane.py` i ponowne uruchomienie etapu 3 (około 35 minut).
+Decyzje przygotował i wdrożył Łukasz 04.10. **Są propozycją do akceptacji przez zespół i prowadzącego.** Zmiana każdej z nich to edycja jednej reguły w `przygotuj_dane.py` i ponowne uruchomienie etapu 3 (około 35 minut).
 
 | # | Kwestia | Decyzja | Uzasadnienie |
 |---|---|---|---|
@@ -278,11 +285,11 @@ W kolejności wpływu na projekt:
 1. **Skąd pochodzi kohorta KOR?** Jaki oddział lub jakie kryteria włączenia? Czy to pacjenci hospitalizowani i czy ma to związek z okresem pandemii? Od odpowiedzi zależy interpretacja klasy U i sens zastosowania przesiewowego.
 2. **Skąd pochodzą wyniki NEURO?** Czy są sprzed rozpoznania tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Czy da się uzyskać datę rozpoznania?
 3. **Rozjazd czasowy:** czy akceptuje Pan „bez korekty” z analizą wrażliwości we wspólnym oknie dat?
-4. **NRBC i %NRBC:** wykluczyć z modelowania? To ślad imputacji, a u dorosłych cechy mają niską wartość kliniczną.
+4. **NRBC i %NRBC:** wykluczyć z modelowania? Uzupełnione wartości zdradzają brak badania (sekcja 4.5), a u dorosłych cechy mają niską wartość kliniczną.
 5. **Parametry oceny:**
    - `q`, czyli ilu pacjentów realnie da się skierować na obrazowanie,
    - główny udział ukrywanych pozytywnych (propozycja: 40%),
-   - metody PU (propozycja: PU Bagging i korekta Elkana–Noto obok modeli bazowych),
+   - metody PU (propozycja: PU Bagging i korekta Elkana–Noto obok modeli bazowych; sama korekta Elkana–Noto dzieli wynik przez stałą, więc nie zmienia rankingu ani `RecallHidden@q` względem modelu bazowego, a inny wynik daje dopiero wariant z ważonym ponownym treningiem),
    - reguła agregacji rekordów do pacjenta (propozycja: mediana).
 6. **Termin i oczekiwany zakres raportu końcowego.**
 
@@ -305,7 +312,7 @@ Strojenia `q` pod wynik nie dopuszczamy.
 | 1 | protokół oceny | ukrywanie pozytywnych, `RecallHidden@q`, Lift@q, RecallKnown, funkcja celu; punkt wyjścia: prototyp `2cb6d1a` | pytanie 5 z sekcji 7 | do ustalenia |
 | 2 | pipeline modelowania | walidacja zagnieżdżona na zamrożonych foldach, imputacja od nowa w foldach wewnętrznych, agregacja do pacjenta | 1 | do ustalenia |
 | 3 | modele bazowe | regresja logistyczna (z regularyzacją, bo procenty rozmazu sumują się do 100%), Random Forest, jeden boosting | 2 | do ustalenia |
-| 4 | metody PU | PU Bagging, Elkan–Noto (class prior szacowany tylko na treningu) | 2 | do ustalenia |
+| 4 | metody PU | PU Bagging, Elkan–Noto w wariancie z ważonym treningiem (class prior szacowany tylko na treningu) | 2 | do ustalenia |
 | 5 | analizy wrażliwości | wartości zmierzone z paneli o niskim odsetku braków; wspólne okno dat; bez NRBC; bez 63 pacjentów mieszanych | 3, 4 | do ustalenia |
 | 6 | raport końcowy | metodologia etapów 1–3 (materiał gotowy), ograniczenia, wyniki | wszystko | do ustalenia |
 
@@ -317,33 +324,61 @@ Pakiety 3 i 4 można prowadzić równolegle, gdy gotowe są pakiety 1 i 2.
 
 ---
 
-## 9. Uwagi z weryfikacji repozytorium (06.10.2026)
+## 9. Weryfikacja repozytorium (06.10 i 16.10.2026)
 
-Przed spotkaniem sprawdziliśmy, czy dokumenty zgadzają się z danymi i kodem. Środowisko: Python 3.13, sklearn 1.9.1, pandas 3.0, czyli inne niż to, w którym powstały wyniki.
+### 9.1 Druga weryfikacja, 16.10.2026
+
+Liczby i wnioski sprawdziliśmy ponownie w środowisku, w którym powstały wyniki (Python 3.9.6, sklearn 1.6.1, pandas 2.3.3). Najważniejsze liczby policzyliśmy niezależnym skryptem, bez kodu projektu.
 
 **Co się zgadza:**
-- liczby z danych: rekordy, pacjenci, pozytywni, 63 pacjentów mieszanych, rozkład lat, braki per kohorta, kompletne wiersze,
-- testy: 16/16 przechodzą,
-- zapisany podział pasuje do danych (`podzial.py --sprawdz`),
-- przydział pacjentów do foldów odtwarza się identycznie,
-- część A odtwarza plik wejściowy (test zgodności przechodzi).
+- **część A:** plik wejściowy odtwarza się z `aneurysm_concatted.csv` wartość w wartość. Zgadzają się liczby: 63 pacjentów mieszanych, 145 rekordów KOR, 210 + 516 + 25 + 1 = 752 wartości;
+- **podział:** przydział zbudowany od zera (StratifiedKFold na 12 warstwach) jest identyczny z `pacjent_fold.csv`. Każdy pacjent jest w jednym foldzie, a etykiety są zgodne z danymi;
+- **imputacja w foldach:** wszystkie 10 zapisanych plików ma odciski zgodne z zapisem przebiegu (5/5). Pacjenci train i test są rozłączni, nie ma braków ani wartości ujemnych, a wartości zmierzone zostały zachowane (maks. odchylenie 2,3 · 10⁻¹³);
+- **ocena imputacji:** ponowny pełny przebieg daje te same wyniki we wszystkich foldach (różnice rzędu 10⁻¹⁷);
+- **pozostałe wyniki:** AUC diagnostyki, porównanie 38/35, liczby z etapu 2 (tabela RMSE, czasy) i oś czasu prac zgadzają się z zapisanymi wynikami i historią repozytorium;
+- **testy:** 16/16 przechodzą, a `podzial.py --sprawdz` potwierdza zgodność podziału z danymi.
 
-Pełnej imputacji (około 35 minut) nie powtarzaliśmy. Jej wyniki opieramy na zapisanych logach i odciskach.
+**Co poprawiliśmy.** Żadna poprawka nie zmienia danych, podziału ani imputacji. Zmieniają się opisy i siła kilku wniosków:
+1. „Duplikat” z etapu 1 to kolizja klucza: dwa różne badania dostały ten sam `custom_id` (sekcja 3.3).
+2. Opis stabilności benchmarku: seed 7 dla NEURO był liczony z ponownym strojeniem, a walidacja na 10 maskach dotyczyła tylko MICE (sekcja 3.3; korekta w `RAPORT_IMPUTACJA.md`, sekcja 4.2).
+3. Losowa maska ukrywa wiek i płeć, które dają około 3/4 jej błędu. Wynik bez nich wzmacnia wniosek o przeszacowaniu użyteczności imputacji (sekcja 4.4).
+4. „Uzupełnienie bliskie średniej” zastąpiliśmy liczbami. MICE jest niewiele lepsze od średniej, a jego uzupełnienia skupiają się wokół niej, ale jej nie powtarzają (sekcja 4.4).
+5. Epoka: porównanie na tych samych rekordach. Wzorzec braków jest najsilniejszym, ale nie jedynym śladem (sekcja 4.5).
+6. Profil KOR: odsetki liczone są wśród zmierzonych wyników, teraz z podanym mianownikiem (sekcja 4.5).
+7. NRBC: zamiast „oznacza NEURO” podajemy liczby: 63% uzupełnień dotyczy NEURO, a samo NRBC daje AUC 0,73 (sekcja 4.5).
+8. Drobne poprawki:
+   - 325, a nie 327 wartości skrajnych: liczone po przygotowaniu danych, bez rekordów KOR pacjentów mieszanych,
+   - 24, a nie 25 commitów,
+   - analiza agregacji powtórzona na obecnym wejściu: 19 z 38 cech, wniosek bez zmian,
+   - opis KOR: „nie wiemy, czy wykonano obrazowanie” zamiast „nikt nie robił obrazowania”,
+   - czyszczenie z etapu 1 było ustawiane osobno dla kohort (sekcja 3.3).
 
-**Poprawione przy okazji:**
-- liczba testów w `1026_REALIZACJA_DO_SGKF.md`: 16 (6 + 10), a nie 17,
-- `2-imputation/RAPORT_IMPUTACJA.md`, sekcja 4.7: nadal stało tam, że globalnie imputowany plik 35 cech jest „właściwym wejściem do pipeline PU”; dodaliśmy adnotację, że to nieaktualne,
-- przy decyzji o parametrach MICE dopisaliśmy jego wynik z parametrami finalnymi (0,0861 / 0,0984). Tabela porównawcza pochodzi z wcześniejszego przebiegu.
+Nowe liczby liczą skrypty z repozytorium:
+- `ocena_imputacji.py`: wynik bez wieku i płci, rozrzut uzupełnień,
+- `analiza_wynikow.py`: sekcja E (NRBC) i mianowniki profilu,
+- `kontrola_epoki.py`: porównanie na tych samych rekordach,
+- `analiza_decyzji.py`: wartości skrajne po przygotowaniu,
+- `4-pu-setup/etap0_agregacja.py`: obecne wejście.
 
-**Do zrobienia:**
+### 9.2 Pierwsza weryfikacja, 06.10.2026
+
+Sprawdzono ją w innym środowisku niż to, w którym powstały wyniki (Python 3.13, sklearn 1.9.1, pandas 3.0). Liczby z danych, testy 16/16, zgodność zapisanego podziału i odtworzenie przydziału się zgadzały. W środowisku źródłowym części A i B bez imputacji (`--bez-mice`) odtwarzają pliki wynikowe co do bajtu, poza datą utworzenia w `podzial_meta.json`. Poprawiono wtedy liczbę testów (16, nie 17) i dodano adnotację w `RAPORT_IMPUTACJA.md` (sekcja 4.7), że globalnie imputowany plik 35 cech nie jest wejściem do modeli. Przy decyzji o parametrach dopisano też wynik MICE z parametrami finalnymi (0,0861 / 0,0984).
+
+### 9.3 Do zrobienia
+
 1. **`master` nie zawiera prac z września i października.** Zespół powinien je przejrzeć przed scaleniem (pakiet 0).
-2. **Odcisk danych zależy od wersji pandas.** Ponowne przygotowanie danych w pandas 3.x zmienia ostatnią cyfrę kilku wartości, więc zmienia się odcisk pliku. Zapisany podział odmawia wtedy działania, choć przydział pacjentów jest identyczny. Rozwiązanie: przypięte wersje bibliotek albo odcisk liczony z zaokrąglonych wartości.
-3. **Kod prototypu PU** (commit `2cb6d1a`, 25.09) jest dostępny tylko po SHA, bo branch usunięto. Warto oznaczyć go tagiem, zanim GitHub go usunie.
-4. **Drobne porządki:**
+2. **Kod SGKF przed modelowaniem** (sprawdzenie kodu przed pakietem 2):
+   - odczyt przydziału kontroluje dziś tylko odcisk danych, a nie sam plik `pacjent_fold.csv` (unikalność pacjentów, dozwolone numery foldów, etykiety). Obecny plik jest poprawny;
+   - zaimputowane foldy są czytane po nazwie pliku, bez manifestu z konfiguracją i odciskami;
+   - imputacja w foldach wewnętrznych nie jest jeszcze zaimplementowana. Do strojenia nie wolno dzielić zaimputowanego treningu foldu zewnętrznego.
+3. **Odcisk danych zależy od wersji pandas.** Ponowne przygotowanie danych w pandas 3.x zmienia ostatnią cyfrę kilku wartości, więc zmienia się odcisk pliku. Zapisany podział odmawia wtedy działania, choć przydział pacjentów jest identyczny. Rozwiązanie: przypięte wersje bibliotek (wspólny `requirements.txt`, łącznie z PyArrow) albo odcisk liczony z zaokrąglonych wartości.
+4. **Odtwarzalność od danych surowych.** `uruchom_sgkf.py` odtwarza etap 3 od `aneurysm_concatted.csv`, a nie cały proces od danych surowych. Kroki z etapu 1 istnieją w notebookach i skryptach o niespójnych ścieżkach.
+5. **Kod prototypu PU** (commit `2cb6d1a`, 25.09) jest dostępny tylko po SHA, bo branch usunięto. Warto oznaczyć go tagiem, zanim GitHub go usunie.
+6. **Drobne porządki:**
    - plik `scripts-lf/aneurysm_data_analysis.ipynb` to zapisana strona HTML,
    - notebooki mają ścieżki z Colab,
-   - kopie tych samych CSV leżą w kilku miejscach (`data/interim/` to 138 MB),
-   - na serwerze został nieaktualny branch `dataset_analysis_lf`.
+   - kopie i wersje pośrednie plików CSV leżą w kilku miejscach (`data/interim/` to 138 MB) i nie zawsze są identyczne. Na przykład `data/interim/cleaned/neuro_shortend.csv` ma 6 616 rekordów, a obowiązujący `data/imputation-inputs/neuro_shortend.csv` ma 6 651,
+   - `custom_id` łączy rok kalendarzowy z tygodniem ISO; przy kolejnym zamrożeniu danych klucz powinien łączyć rok i tydzień ISO.
 
 ---
 

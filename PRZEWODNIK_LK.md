@@ -1,6 +1,6 @@
 # Przewodnik po projekcie: powrót po przerwie
 
-*Notatki dla Łukasza, 04.10.2026. Nie jest to dokument dla prowadzącego, tylko ściąga do zrozumienia, co tu się dzieje i dlaczego.*
+*Notatki dla Łukasza, 04.10.2026, liczby i wnioski poprawione po weryfikacji 16.10.2026. Nie jest to dokument dla prowadzącego, tylko ściąga do zrozumienia, co tu się dzieje i dlaczego.*
 
 Jeśli masz 15 minut: przeczytaj sekcje 1, 2 i 7. Jeśli masz godzinę: całość, a potem pytania kontrolne na końcu.
 
@@ -14,11 +14,11 @@ Prawie każda decyzja w repo jest odpowiedzią na to pytanie. Mamy dwie bazy, kt
 
 | | KOR (`label = 0`) | NEURO (`label = 1`) |
 |---|---|---|
-| kto | populacja ogólna | pacjenci oddziału neurologicznego z tętniakiem |
+| kto | nie wiemy; profil laboratoryjny wskazuje raczej na pacjentów szpitalnych niż na populację ogólną (pytanie do prowadzącego) | pacjenci oddziału neurologicznego z tętniakiem |
 | kiedy | prawie wyłącznie 2020–2021 | 2000–2024, głównie przed 2020 |
 | jak często badani | 1,83 rekordu na osobę | 3,65 rekordu na osobę |
 | ile braków | 12% komórek | 26% komórek |
-| w jakiej sytuacji | rutynowe badania | najpewniej hospitalizacja (mediana rozpiętości badań: 35 dni) |
+| w jakiej sytuacji | nieznana; wśród zmierzonych wyników CRP > 5 mg/l ma 61% | najpewniej hospitalizacja (mediana rozpiętości badań: 35 dni) |
 
 Model, który ma odróżnić `label = 1` od `label = 0`, może więc nauczyć się rozpoznawać **rok, częstość badań, wzorzec braków albo pobyt w szpitalu** zamiast tętniaka. To zjawisko nazywa się *confounding* (zmienne zakłócające) albo *shortcut learning*. Większość pracy z września to szukanie tych skrótów i ich mierzenie.
 
@@ -26,7 +26,7 @@ Model, który ma odróżnić `label = 1` od `label = 0`, może więc nauczyć si
 
 ## 2. Dlaczego „Positive-Unlabeled”, a nie zwykła klasyfikacja
 
-W zwykłej klasyfikacji masz chorych (P) i potwierdzonych zdrowych (N). Tu nikt nie zrobił obrazowania pacjentom KOR, więc wśród nich mogą być osoby z niewykrytym tętniakiem. `label = 0` znaczy **nieoznaczony (U)**, a nie zdrowy.
+W zwykłej klasyfikacji masz chorych (P) i potwierdzonych zdrowych (N). Tu o pacjentach KOR wiemy tylko tyle, że w danych nie mają rozpoznania tętniaka. Nie wiemy, czy i u kogo robiono obrazowanie, więc wśród nich mogą być osoby z niewykrytym tętniakiem. `label = 0` znaczy **nieoznaczony (U)**, a nie zdrowy.
 
 Konsekwencje, które warto mieć w głowie:
 
@@ -184,11 +184,12 @@ Prawdziwych brakujących wartości nie znamy, więc błędu imputacji nie da si�
 
 Dwie lekcje:
 - **RMSE w skali [0,1] zależy od skalera.** NEURO wyszło 0,080, mniej niż 0,098 w benchmarku. Nie znaczy to jednak, że imputacja NEURO się poprawiła: w etapie 2 NEURO miało własny skaler, a tu skaler pochodzi z treningu w 96% złożonego z KOR. Dlatego obok RMSE liczymy **stosunek do uzupełniania średnią**, niezależny od skali: 0,61 dla KOR i 0,65 dla NEURO, czyli praktycznie tak samo.
-- **Losowa maska jest za łatwa.** Losowo ukryta komórka ma zwykle obok siebie resztę swojego panelu, np. ukryte HCT przy znanych HGB i RBC, więc łatwo ją odtworzyć. W prawdziwych danych braki idą całymi panelami: brakuje całego koagulogramu albo całego rozmazu. Przy takich realistycznych wzorcach MICE jest prawie równe średniej (0,98 w KOR, 0,89 w NEURO). Wniosek: dla brakujących paneli uzupełnienie to w praktyce „średnia z treningu”, a nie informacja o pacjencie.
+- **Losowa maska jest za łatwa.** Losowo ukryta komórka ma zwykle obok siebie resztę swojego panelu, np. ukryte HCT przy znanych HGB i RBC, więc łatwo ją odtworzyć. W prawdziwych danych braki idą całymi panelami: brakuje całego koagulogramu albo całego rozmazu. Przy takich realistycznych wzorcach MICE jest prawie równe średniej (0,98 w KOR, 0,89 w NEURO). Wniosek: dla brakujących paneli uzupełnienie to w praktyce wartość bliska „średniej z treningu”, a nie informacja o pacjencie.
+- **Losowa maska ukrywa też wiek i płeć.** W prawdziwych danych tych cech nigdy nie brakuje, a płeć (0/1) ma w skali [0, 1] błąd około 0,4, więc wiek i płeć dają około 3/4 całego błędu losowej maski. Tak samo było w etapie 2. Bez nich stosunek do średniej spada do 0,41 (KOR) i 0,45 (NEURO): na cechach laboratoryjnych losowa maska pokazuje MICE jeszcze lepiej, więc różnica wobec realistycznych wzorców jest jeszcze większa. Lekcja: zanim porównasz liczby z benchmarku, sprawdź, które cechy maska w ogóle ukrywa.
 
 ### 6.6 Podpis imputacji: jak uzupełnienie może zdradzić kohortę
 
-NRBC (erytroblasty) u dorosłych jest prawie zawsze 0: w 78% zmierzonych rekordów wynosi dokładnie 0. MICE nigdy nie wpisze dokładnego zera, tylko coś w rodzaju 0,009. NRBC brakuje w 48% rekordów NEURO i tylko w 3% KOR. Drzewo decyzyjne łatwo nauczy się reguły „NRBC różne od 0, ale mniejsze niż 0,05 → NEURO”. Taka reguła nie mówi nic o tętniaku, tylko o tym, że NRBC nie zmierzono.
+NRBC (erytroblasty) u dorosłych jest prawie zawsze 0: w 78% zmierzonych rekordów wynosi dokładnie 0. MICE nigdy nie wpisze dokładnego zera, tylko coś w rodzaju 0,009. NRBC brakuje w 48% rekordów NEURO i tylko w 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO (w całych danych 8,5%). Model widzący tylko NRBC po imputacji odróżnia kohorty z AUC 0,73, czyli tak samo jak sam wskaźnik „NRBC nie zmierzono”. Uzupełnienie przenosi więc informację o braku badania, choć nie jest jednoznacznym znacznikiem: wśród wszystkich rekordów z NRBC między 0 a 0,05 NEURO to tylko 19%, bo małe niezerowe wartości dają też pomiary. Taka informacja nie mówi nic o tętniaku, tylko o tym, że NRBC nie zmierzono.
 
 Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sam wzorzec braków odróżnia u nas kohorty z AUC 0,82. Lepiej tę informację kontrolować jawnie (wykluczyć cechę, dodać wskaźnik braku, porównać z modelem na cechach bez braków), niż liczyć, że zniknęła.
 
@@ -202,9 +203,9 @@ Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sa
 | stratyfikacja etykieta × okno × n_rek | wyrównuje znane skróty między foldami | tylko etykieta: foldy rozjeżdżają się do 8 pp |
 | zapisany przydział | powtarzalność między komputerami i wersjami | przepis + seed: zależny od sklearn |
 | MICE w foldzie | brak wycieku przez preprocessing | imputacja globalna: wyciek |
-| MICE (ExtraTrees) zamiast MissForest | wygrywa na NEURO, szybszy, jeden imputer dla obu | MissForest lepszy tylko na KOR |
+| MICE (ExtraTrees) zamiast MissForest | wygrywa na NEURO, jeden imputer dla obu; szybszy tylko na KOR (na NEURO wolniejszy) | MissForest lepszy tylko na KOR |
 | jeden zestaw 38 cech, selekcja z etapu 1 cofnięta | w PU etykieta to kohorta, więc kryterium działa w złą stronę; granica wyboru była remisem rozstrzygniętym alfabetycznie; zgodność z benchmarkiem imputacji. Wyciek był formalny, realny wpływ znikomy (\|ρ\| ≤ 0,02) | 35 cech: bez istotnej różnicy w imputacji, ale uzasadnienie niezależne od etykiety istnieje tylko dla MONO/%MONO (redundancja) |
-| mediana jako agregacja do pacjenta | najmniej koreluje z liczbą badań | maksimum przenosi liczbę badań do 17 cech; „ostatni” znaczy co innego w każdej kohorcie |
+| mediana jako agregacja do pacjenta | najmniej koreluje z liczbą badań | maksimum przenosi liczbę badań do 19 z 38 cech (mediana do 2); „ostatni” znaczy co innego w każdej kohorcie |
 | mieszani: pozytywni, rekordy KOR usunięte | rozpoznanie jest faktem; rekordy KOR mogą być sprzed choroby | zostawić KOR z etykietą 1: uczy „profilu chorego” na rutynowych wynikach; wykluczyć: −63 z 1 823 pozytywnych |
 | KREA: > 50 albo > 10 przy eGFR ≥ 30 → brak | sprzeczność z eGFR (liczonym z kreatyniny) | próg „> 20”: wyrzuca wiarygodne niewydolności; przeliczanie ÷ 88,4: zgadywanie jednostki |
 | K > 15, Na < 80 → brak; skrajne, ale możliwe zostają | tylko wartości niezgodne z życiem | szersze progi: usuwałyby prawdziwe ciężkie stany |
@@ -318,7 +319,7 @@ Materiał dla prowadzącego: `1026_SPOTKANIE_PROWADZACY.md`. Poniżej pytania, k
 | Czy imputacja nie przecieka? | Scaler i MICE są dopasowywane tylko na treningu foldu, a test jest jedynie transformowany. Etykieta nie jest cechą imputera. | 4.1, testy |
 | Skąd wiecie, że reguła KREA jest dobra? | eGFR liczy się z kreatyniny. Powyżej KREA 10 mg/dl mediana eGFR wraca do normy, czyli te dwa pomiary sobie przeczą. Wiarygodne skrajne przypadki (eGFR < 30) zostają. | 2.2, `analiza_decyzji.json` D |
 | Dlaczego nie usuwacie wartości odstających szerzej? | Usuwamy tylko wartości niemożliwe do przeżycia albo sprzeczne z innym pomiarem; skrajne, ale możliwe stany zostają (K 9–15, WBC > 200). | 2.1 |
-| Czemu 38 cech, skoro w czerwcu było 35? | Już w czerwcu zastrzegliśmy, że selekcję trzeba cofnąć albo przenieść do CV. W PU etykieta to kohorta, więc kryterium działa w złą stronę, a granicę rozstrzygnął remis alfabetyczny. Wpływ na wyniki był znikomy (\|ρ\| ≤ 0,02), więc to porządkowanie metody, nie naprawa błędu. | 2.6, 4.5 |
+| Czemu 38 cech, skoro w czerwcu było 35? | Przy weryfikacji we wrześniu wyszło, że selekcję zrobiono z użyciem etykiety na całym zbiorze, więc trzeba ją cofnąć albo przenieść do CV (w czerwcu tego nie zauważyliśmy). W PU etykieta to kohorta, więc kryterium działa w złą stronę, a granicę rozstrzygnął remis alfabetyczny. Wpływ na wyniki był znikomy (\|ρ\| ≤ 0,02), więc to porządkowanie metody, nie naprawa błędu. | 2.6, 4.5 |
 | Jak dobra jest imputacja? | Przy losowych brakach jak w benchmarku (0,61–0,65 błędu średniej, obie kohorty). Przy brakach całymi panelami prawie równa średniej. | 4.3 |
 | Czy to znaczy, że model jest dobry, skoro AUC 0,93? | Nie. To rozdzielność kohort, a sam wzorzec braków daje 0,82, a epoka 0,83. Miarą sukcesu będzie odzyskiwanie ukrytych chorych, a nie AUC P-vs-U. | 5.2, plan 3.4 |
 | Co z rozjazdem czasowym? | Zostaje bez korekty, jako ograniczenie, ale epoka jest wyraźnie widoczna w danych, więc proponujemy analizę wrażliwości we wspólnym oknie dat. | 5.2, 1026 6.1 |

@@ -2,7 +2,7 @@
 
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Status:** **propozycja do ustalenia z prowadzącym.** Streszcza plany z września (dawne `02_PLAN_PRZED_MODELOWANIEM.md` i `03_PLAN_MODELOWANIE.md`) i wnioski z prototypu kodu. Po spotkaniu powstanie z tego plan obowiązujący, a dopiero potem implementacja.
-**Stan na:** 04.10.2026, po decyzjach dotyczących danych
+**Stan na:** 04.10.2026, po decyzjach dotyczących danych; liczby i opisy poprawione po weryfikacji 16.10.2026 (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
 
 To jedyny dokument w `4-pu-setup/`. Wejście do modelowania jest gotowe i zamrożone: dane po decyzjach z 04.10.2026, podział i imputacja w foldach (etapy 1–3, `1026_REALIZACJA_DO_SGKF.md`). Ten dokument opisuje, co dalej, i zbiera założenia oraz ograniczenia, które modelowanie musi uwzględnić (sekcja 3.0). Rozstrzygnięte problemy z danymi opisuje `1026_REALIZACJA_DO_SGKF.md`, sekcja 6.
 
@@ -10,7 +10,7 @@ To jedyny dokument w `4-pu-setup/`. Wejście do modelowania jest gotowe i zamro�
 
 ## 1. Na czym polega zadanie i dlaczego ocena jest nietypowa
 
-Mamy klasę **P** (NEURO, potwierdzony tętniak) i klasę **U** (KOR, populacja ogólna, nikt nie robił im obrazowania). `label = 0` znaczy „nieoznaczony”, a nie „zdrowy”. Konsekwencje:
+Mamy klasę **P** (NEURO, potwierdzony tętniak) i klasę **U** (KOR: w danych nie ma u nich rozpoznania tętniaka, ale nie wiemy, czy i u kogo wykonano obrazowanie; profil laboratoryjny wskazuje raczej na pacjentów szpitalnych niż na populację ogólną, sekcja 2). `label = 0` znaczy „nieoznaczony”, a nie „zdrowy”. Konsekwencje:
 
 1. **Nie zmierzymy liczby pomyłek.** Wysoki wynik pacjenta KOR może być błędem albo niewykrytym chorym, więc „false positive” traci sens.
 2. **Accuracy jest bezużyteczna.** Przy 4,45% pozytywnych model mówiący zawsze „0” ma 95,5% trafności.
@@ -53,10 +53,10 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 |---|---|
 | kohorty rozdzielne na cechach po imputacji z AUC **0,93** (pacjenci), a we wspólnym oknie dat z AUC 0,80 | wysokie AUC P-vs-U **nie jest** dowodem wykrywania tętniaka; raportujemy je wyłącznie jako metrykę P-vs-U |
 | sam wzorzec braków (które badania zlecono) odróżnia kohorty z AUC **0,82** | analiza wrażliwości na cechach z niskim odsetkiem braków w obu kohortach (morfologia, wiek, płeć); porównanie z modelem na pełnym zestawie |
-| **podpis imputacji NRBC / %NRBC**: zmierzone to w 78% dokładne zera, uzupełnione nigdy nie są zerem; NRBC brakuje w 48% rekordów NEURO i 3% KOR | przed modelowaniem rozstrzygnąć: wykluczyć NRBC i %NRBC (niska wartość kliniczna u dorosłych) albo sprawdzić ważność tych cech w modelu; inaczej model nauczy się „uzupełniony NRBC = NEURO” |
-| przy brakach całymi panelami (koagulogram, glukoza: ~50% rekordów) uzupełnienia ≈ średnia z treningu; przy skośnych rozkładach zawyżone (CRP, GLU) | ważność tych cech interpretować ostrożnie; rozważyć wskaźniki braków jako jawną informację zamiast ukrytego śladu |
-| epoka rozpoznawalna w wynikach NEURO z AUC **0,83** | analiza wrażliwości we wspólnym oknie dat (patrz wyżej) |
-| KOR ma profil szpitalny (CRP > 5 mg/l w 61% rekordów) | interpretacja klasy U i zastosowania „przesiewowego” zależy od odpowiedzi prowadzącego, skąd pochodzi KOR |
+| **podpis imputacji NRBC / %NRBC**: zmierzone to w 78% dokładne zera, uzupełnione nigdy nie są zerem; NRBC brakuje w 48% rekordów NEURO i 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO (w całych danych 8,5%); samo NRBC po imputacji odróżnia kohorty z AUC 0,73, tak jak sam wskaźnik braku | przed modelowaniem rozstrzygnąć: wykluczyć NRBC i %NRBC (niska wartość kliniczna u dorosłych) albo sprawdzić ważność tych cech w modelu; inaczej model wykorzysta informację o braku badania |
+| przy brakach całymi panelami (koagulogram, glukoza: ~50% rekordów) MICE jest niewiele lepsze od średniej z treningu (błąd 98% błędu średniej w KOR, 89% w NEURO), a uzupełnienia skupiają się wokół średniej; przy skośnych rozkładach są wyższe od typowej zmierzonej wartości (CRP, GLU) | ważność tych cech interpretować ostrożnie; rozważyć wskaźniki braków jako jawną informację zamiast ukrytego śladu |
+| epoka rozpoznawalna w wynikach NEURO z AUC **0,83** (po imputacji); przed imputacją, na tych samych rekordach, wzorzec braków daje 0,76–0,77, a zmierzone wartości paneli 0,56–0,65 | analiza wrażliwości we wspólnym oknie dat (patrz wyżej) i na wartościach zmierzonych |
+| KOR ma profil szpitalny (CRP > 5 mg/l w 61% zmierzonych wyników; CRP zmierzono w 81% rekordów KOR) | interpretacja klasy U i zastosowania „przesiewowego” zależy od odpowiedzi prowadzącego, skąd pochodzi KOR |
 
 **Zostaje do potwierdzenia lub decyzji przy planie:**
 
@@ -67,16 +67,16 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 | NRBC i %NRBC | rekomendacja: wykluczyć z modelowania albo kontrolować (podpis imputacji) | zestaw cech modelu |
 | reguła agregacji rekordów do pacjenta | rekomendacja: **mediana**, średnia jako wrażliwość | parametr pipeline'u |
 
-**Uzasadnienie reguły agregacji** (`4-pu-setup/etap0_agregacja.py`, wyniki w `4-pu-setup/results/`, dane z 09.2026 sprzed przygotowania). 41% pacjentów ma więcej niż jeden rekord, a NEURO ma ich średnio dwa razy więcej niż KOR (3,65 wobec 1,83), bo pacjenci leżą w szpitalu. Reguła wrażliwa na liczbę pomiarów tworzy sygnał z samej częstości badania. Korelacja liczby rekordów z wartością cechy, liczona wewnątrz KOR:
+**Uzasadnienie reguły agregacji** (`4-pu-setup/etap0_agregacja.py`, wyniki w `4-pu-setup/results/`; od 16.10.2026 na obecnym wejściu etapu 3, 38 cech; pierwsza wersja z 09.2026 na danych sprzed przygotowania dała te same wnioski). 41% pacjentów ma więcej niż jeden rekord, a NEURO ma ich średnio dwa razy więcej niż KOR (3,65 wobec 1,83), bo pacjenci leżą w szpitalu. Reguła wrażliwa na liczbę pomiarów tworzy sygnał z samej częstości badania. Korelacja liczby rekordów z wartością cechy, liczona wewnątrz KOR:
 
 | Reguła | Mediana \|ρ\| | Maks. \|ρ\| | Cech z \|ρ\| > 0,2 |
 |---|---:|---:|---:|
 | **mediana** | 0,079 | 0,257 | **2** |
-| ostatni pomiar | 0,083 | 0,296 | 1 |
-| średnia | 0,125 | 0,284 | 6 |
-| maksimum | 0,190 | 0,379 | **17** |
+| ostatni pomiar | 0,086 | 0,296 | 1 |
+| średnia | 0,124 | 0,284 | 7 |
+| maksimum | 0,204 | 0,379 | **19** |
 
-Pozorna siła sygnału jest przy tym niemal identyczna dla średniej, mediany i maksimum (mediana \|AUC − 0,5\|: 0,0440, 0,0438, 0,0467). Maksimum odpada, bo przemyca liczbę badań do 17 z 35 cech i wciąga skrajne wartości. „Ostatni pomiar” daje wyraźnie silniejszy pozorny sygnał (0,0606), ale też odpada: przy założeniu hospitalizacji oznacza u chorych pomiar po leczeniu, a u KOR zwykły wynik kontrolny. Silniejszy sygnał prawdopodobnie bierze się właśnie z tej różnicy, a nie z choroby.
+Pozorna siła sygnału jest przy tym zbliżona dla średniej, mediany i maksimum (mediana \|AUC − 0,5\|: 0,0429, 0,0415, 0,0503). Maksimum odpada, bo przemyca liczbę badań do 19 z 38 cech i wciąga skrajne wartości (K poza zakresem 1,5–9 mmol/l u 57 pacjentów wobec 10 przy medianie). „Ostatni pomiar” daje najsilniejszy pozorny sygnał (0,0522), ale też odpada: przy założeniu hospitalizacji oznacza u chorych pomiar po leczeniu, a u KOR zwykły wynik kontrolny. Silniejszy sygnał prawdopodobnie bierze się właśnie z tej różnicy, a nie z choroby.
 
 ### 3.1 Foldy z walidacją zagnieżdżoną
 
@@ -96,7 +96,7 @@ Nie wolno zaimputować całego outer-train raz i dopiero potem dzielić go na fo
 ### 3.2 Ukrywanie części pozytywnych
 
 - losujemy **całych pacjentów** z NEURO, nigdy pojedyncze rekordy,
-- trzy kolumny: `true_label` (prawda), `observed_label` (to, co widzi model), `is_hidden` (flaga kontrolna),
+- trzy kolumny: `true_label` (pochodzenie: 1 = znany chory z NEURO), `observed_label` (to, co widzi model), `is_hidden` (flaga kontrolna). `true_label = 0` nie oznacza zdrowego: prawdziwy status KOR jest nieznany, dlatego w kodzie lepiej nazwać tę kolumnę `original_label`,
 - scenariusz główny, np. 40% ukrytych, oraz 20% i 60% jako wrażliwość, każdy na 5–10 ziarnach,
 - **identyczne maski dla wszystkich modeli**,
 - maski są deterministyczne (`patient_id` + udział + ziarno), więc wystarczy zapisać parametry, a nie tabelę liczącą 21 MB.
@@ -149,7 +149,7 @@ Optuna w walidacji zagnieżdżonej (3.1), z funkcją celu `RecallHidden@q`. Stro
 | Random Forest | baseline drzewiasty |
 | XGBoost **albo** LightGBM | jeden boosting (do doinstalowania) |
 | **PU Bagging** | właściwa metoda PU |
-| **Elkan–Noto** / estymacja class prior | korekta PU; prior szacowany tylko na treningu |
+| **Elkan–Noto** / estymacja class prior | korekta PU; prior szacowany tylko na treningu. Sama korekta dzieli wynik przez stałą `c`, więc nie zmienia rankingu ani `RecallHidden@q` względem modelu bazowego; inne wyniki daje dopiero wariant z ważonym ponownym treningiem. Trzeba wskazać, który porównujemy |
 
 Same baseline'y z KOR jako klasą 0 to klasyfikacja na zaszumionych etykietach, a nie PU learning. Potrzebna jest co najmniej jedna prawdziwa metoda PU.
 
@@ -190,7 +190,7 @@ We wrześniu powstała robocza implementacja punktów 3.1–3.5: moduły konfigu
 
 ## 7. Do ustalenia z prowadzącym
 
-1. **Skąd pochodzi kohorta KOR?** Profil laboratoryjny (CRP > 5 mg/l w 61% rekordów, WBC > 10 G/l w 37%) wskazuje na pacjentów szpitalnych z lat 2020–2021, a nie na populację ogólną. Od tego zależy interpretacja klasy U.
+1. **Skąd pochodzi kohorta KOR?** Profil laboratoryjny (wśród zmierzonych wyników CRP > 5 mg/l w 61%, WBC > 10 G/l w 37%) wskazuje na pacjentów szpitalnych z lat 2020–2021, a nie na populację ogólną. Od tego zależy interpretacja klasy U.
 2. **Pochodzenie wyników NEURO:** czy pochodzą sprzed rozpoznania tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Od tego zależy, jak wolno opisać model.
 3. **Rozjazd czasowy:** epokę widać w wynikach chorych z AUC 0,83. Czy przyjmujemy „bez korekty, z analizą wrażliwości we wspólnym oknie dat”?
 4. **NRBC i %NRBC:** wykluczyć z modelowania (podpis imputacji, niska wartość kliniczna u dorosłych) czy zostawić i kontrolować?

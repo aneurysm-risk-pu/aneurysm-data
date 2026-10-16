@@ -170,6 +170,8 @@ Najlepsze hiperparametry:
 ### 4.2 seed=7 (weryfikacja stabilności ewaluacji)
 
 > **Ważne:** seed=7 to **inna maska ewaluacyjna**, ale **te same hiperparametry** co seed=42 — Optuna nie była ponownie uruchamiana. Celem jest sprawdzenie czy wyniki zależą od konkretnego wzorca braków, nie od metody.
+>
+> **Korekta (16.10.2026).** Zdanie o tych samych hiperparametrach nie zgadza się z artefaktami. `run_all.py` uruchamia Optunę przy każdym przebiegu, a zapisane parametry różnią się dla NEURO: MICE `max_iter=51, n_estimators=29` przy seed=7 wobec `18, 100` przy seed=42, MissForest `217/12/7` wobec `142/13/5` (`results/*_seed7_best_params.json`). Dla KOR parametry są identyczne. Ranking metod jest w obu maskach taki sam, ale dla NEURO ten eksperyment nie izoluje wpływu samej maski.
 
 #### KOR
 
@@ -360,7 +362,7 @@ Koleżanka dostarczyła `aneurysm_concatted_cleaned.csv` — zbiór po usunięci
 - [x] Przebieg 1: wersja bazowa (leakage — odrzucona)
 - [x] Przebieg 2: naprawa leakage, korekta sufitów MissForest, ograniczenie `max_depth` MICE
 - [x] Przebieg 3 (seed=42): wyniki główne
-- [x] Weryfikacja stabilności: seed=7 (te same params, inna maska)
+- [x] Weryfikacja stabilności: seed=7 (inna maska; dla NEURO parametry dobrane od nowa, zob. korekta w sekcji 4.2)
 - [x] **Przebieg 4** ✅ MICE extended Optuna (n_estimators do 200, 40 trials) — KOR: `max_iter=7, n_est=78`; NEURO: `max_iter=28, n_est=110`
 - [x] **Walidacja multi-seed + cross-param** ✅ → stabilność potwierdzona (KOR std=0.0007, NEURO std=0.0025)
 - [x] **Wybór finalnych params** ✅ → `max_iter=7, n_estimators=78` (params KOR) **dla obu zbiorów** — identyczne RMSE, 7× szybsze na NEURO

@@ -7,7 +7,7 @@
 | Plik | Zbiór | Pacjenci | Rekordy | Śr. rekordów/pacjent |
 |------|-------|---------|---------|----------------------|
 | `data/raw/neuro_merged_aggregated_1W_mean.csv` | **Positive** (pacjenci z tętniakiem) | 2 016 | 7 655 | 3.8 |
-| `data/raw/kor_merged_aggregated_1W_mean.csv` | **Unlabeled** (pacjenci ogólnie) | 39 893 | 73 679 | 1.8 |
+| `data/raw/kor_merged_aggregated_1W_mean.csv` | **Unlabeled** (bez rozpoznania tętniaka w danych; pochodzenie do potwierdzenia) | 39 893 | 73 679 | 1.8 |
 
 Rekord = jeden tydzień zagregowanych (średnia) wyników laboratoryjnych danego pacjenta; klucz: `{patient_id}-{rok}-W{tydzień}`.
 
@@ -44,5 +44,5 @@ Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CR
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install scikit-learn pandas numpy scipy pyarrow
-.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # szybkie sprawdzenie etapu 3 (~20 s)
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # szybkie sprawdzenie etapu 3 (~40 s)
 ```

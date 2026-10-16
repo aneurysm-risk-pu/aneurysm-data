@@ -2,6 +2,7 @@
 
 **Wersja 1:** 11.06.2026, StratifiedGroupKFold na rekordach, materiał do raportu przejściowego (`archiwum/`)
 **Wersja 2:** 04.10.2026, decyzje dotyczące danych, zamrożony podział po pacjentach, pełna imputacja w foldach
+**Weryfikacja:** 06.10 i 16.10.2026; poprawione opisy wniosków, dane, podział i imputacja bez zmian (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
 **Wejście etapu:** `data/imputation-inputs/aneurysm_concatted.csv` (78 197 rekordów, 38 cech, przed imputacją)
 **Wyjście etapu:** zamrożony przydział `sgkf/results/pacjent_fold.csv` oraz zaimputowane foldy (38 cech)
 
@@ -19,7 +20,7 @@
 | zestaw cech: **38, jeden wariant** | selekcja z etapu 1 (usunięcie CRP, MONO, %MONO) cofnięta | `przygotowanie/results/analiza_selekcji_cech.json`, sekcja 2.6 |
 | imputacja MICE w foldach | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_38.json` |
 | zaimputowane foldy | lokalnie, poza gitem (46 MB), odtwarzalne jednym poleceniem; dwa przebiegi dały identyczne odciski | `sgkf/results/foldy_imputowane_38/` |
-| jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami uzupełnienia ≈ średnia | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
+| jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami MICE niewiele lepsze od średniej, a uzupełnienia skupione wokół niej | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
 | analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
 | porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | brak istotnego wpływu na imputację | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
 | testy | 6/6 (część A), 10/10 (część B) | `przygotowanie/tests/`, `sgkf/tests/` |
@@ -84,7 +85,7 @@ Część A jest osobnym krokiem. Czyta plik źródłowy i zapisuje przygotowany 
 | K 9–15 mmol/l | 61 | ciężka hiperkaliemia, w skrajnych przypadkach przeżywalna |
 | Na 80–100 mmol/l | 7 | ciężka hiponatremia, przeżywalna |
 | WBC > 200 G/l (maks. 253) | 7 | możliwa przy białaczce |
-| KREA > 10 przy eGFR < 30 | 252 | spójne z niewydolnością nerek (dializa) |
+| KREA > 10 przy eGFR < 30 | 250 | spójne z niewydolnością nerek (dializa) |
 | KREA > 10 bez eGFR | 21 | brak podstaw, by uznać je za sprzeczne |
 
 Wartości są średnimi tygodniowymi. Niemożliwa średnia (np. K = 26) oznacza, że co najmniej jeden pomiar w tym tygodniu był niemożliwy. Możliwa średnia może jednak ukrywać pojedynczy błędny pomiar, i tego nie da się wykryć.
@@ -108,7 +109,7 @@ Do KREA ≈ 10 mg/dl zależność jest taka, jak powinna: wyższa kreatynina ozn
 
 - **KREA > 50 mg/dl → brak.** Takiej wartości w mg/dl nie ma u żywego człowieka, więc to błąd jednostki.
 - **KREA > 10 mg/dl przy eGFR-MDRD ≥ 30 → brak.** To sprzeczność z eGFR. Próg 10 jest zachowawczy: w przedziale 5–10 zostaje około 90 wartości z eGFR ≥ 30, ale tam część pacjentów może być w trakcie dializy, co zaburza zależność.
-- **Pozostałe KREA > 10 zostają**: 252 przy eGFR < 30 to wiarygodna niewydolność nerek, a 21 bez eGFR nie da się sprawdzić.
+- **Pozostałe KREA > 10 zostają**: 250 przy eGFR < 30 to wiarygodna niewydolność nerek, a 21 bez eGFR nie da się sprawdzić. Obie liczby dotyczą danych po przygotowaniu; w pliku źródłowym, razem z rekordami KOR 63 pacjentów mieszanych, były to 252 i 21.
 
 Prosty próg „KREA > 20” byłby łatwiejszy do opisania, ale usunąłby 83 wiarygodne wartości (eGFR < 30) i zostawił sprzeczne wartości 10–20. Dlatego go nie wybraliśmy.
 
@@ -174,7 +175,7 @@ W etapie 1 (notebook `1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb`, 
 - benchmark imputacji z etapu 2 był liczony na 38 cechach, więc parametry MICE pasują do tego zestawu bez ponownego benchmarku,
 - jednorazowe porównanie nie wykazało istotnej różnicy w jakości imputacji (sekcja 4.5).
 
-Dokument czerwcowy (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`) już wtedy zastrzegał, że przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. Ta decyzja domyka to zastrzeżenie.
+Problem wskazała weryfikacja materiału czerwcowego we wrześniu (zapis w `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 2, dodany 18.09): przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. W czerwcu raport imputacji zalecał plik z 35 cechami. Ta decyzja zamyka tę kwestię.
 
 Redundancja MONO i %MONO zostaje. Procenty rozmazu sumują się do 100%, więc w modelach liniowych są dokładnie współliniowe. W modelowaniu trzeba to obsłużyć regularyzacją albo pominięciem jednego procentu; modelom drzewiastym to nie przeszkadza. CRP ma 48% braków w NEURO i zawyżone uzupełnienia (sekcja 5.1), więc jego wpływ sprawdzi analiza wrażliwości na cechach o niskim odsetku braków.
 
@@ -317,13 +318,15 @@ Obok RMSE podajemy **stosunek do uzupełniania średnią z treningu** na tych sa
 |---|---|---:|---:|---:|---:|
 | losowe 10% | KOR | 0,0829 ± 0,0019 | 0,031 | **0,61** | 0,0861 |
 | losowe 10% | NEURO | 0,0801 ± 0,0078 | 0,031 | **0,65** | 0,0984 |
+| losowe 10%, bez wieku i płci | KOR | 0,0434 | | **0,41** | — |
+| losowe 10%, bez wieku i płci | NEURO | 0,0411 | | **0,45** | — |
 | realistyczne wzorce | KOR | 0,1080 ± 0,0014 | 0,060 | **0,98** | — |
 | realistyczne wzorce | NEURO | 0,0792 ± 0,0058 | 0,045 | **0,89** | — |
 
 **Wnioski:**
-1. **MICE w ustawieniu produkcyjnym działa co najmniej tak dobrze jak w benchmarku.** Dla KOR liczby są wprost porównywalne: 0,083 wobec 0,086. Dla NEURO RMSE wyszło niższe niż w benchmarku, ale nie jest wprost porównywalne. W etapie 2 NEURO miało własny skaler z 780 wierszy, a tu skaler pochodzi z treningu, w ~96% z KOR. Miara względna pokazuje, że **NEURO jest uzupełniane praktycznie tak samo dobrze jak KOR** (0,65 wobec 0,61).
-2. **Przy brakach całymi panelami imputacja prawie nic nie wnosi**: w KOR jest o 2% lepsza od średniej, w NEURO o 11%. Gdy brakuje całego panelu, pozostałe cechy niosą o nim mało informacji i uzupełnienie jest bliskie średniej z treningu. Dotyczy to zwłaszcza koagulogramu (PT, INR, APTT, WAPTT) i glukozy, których brakuje w około połowie rekordów obu kohort. **Benchmark z etapu 2, maskujący losowe komórki, przeszacowywał więc użyteczność imputacji dla tych danych.** Skutki opisuje sekcja 5.1.
-3. Najtrudniejsze dla NEURO w protokole z etapu 2 są płeć i wiek, co jest artefaktem protokołu, bo w prawdziwych danych tych cech nigdy nie brakuje. Dalej MPV, CRP i eGFR. Przy realistycznych wzorcach najtrudniejsze są eGFR, MPV i parametry czerwonokrwinkowe (HGB, RBC, HCT).
+1. **MICE w ustawieniu produkcyjnym działa co najmniej tak dobrze jak w benchmarku.** Dla KOR liczby są wprost porównywalne: 0,083 wobec 0,086. W obu protokołach większość tego błędu pochodzi jednak z wieku i płci (pkt 3). Dla NEURO RMSE wyszło niższe niż w benchmarku, ale nie jest wprost porównywalne. W etapie 2 NEURO miało własny skaler z 780 wierszy, a tu skaler pochodzi z treningu, w ~96% z KOR. Miara względna pokazuje, że **NEURO jest uzupełniane praktycznie tak samo dobrze jak KOR** (0,65 wobec 0,61).
+2. **Przy brakach całymi panelami imputacja prawie nic nie wnosi**: w KOR jest o 2% lepsza od średniej, w NEURO o 11%. Gdy brakuje całego panelu, pozostałe cechy niosą o nim mało informacji, więc uzupełnienia skupiają się wokół średniej z treningu. Miara rozrzutu, czyli RMS(uzupełnienie − średnia) / RMS(prawda − średnia) na cechach laboratoryjnych, wynosi 0,33 w KOR i 0,53 w NEURO, wobec 0,88 i 0,86 przy losowych brakach. MICE nie wpisuje więc samej średniej, ale jego odchylenia od niej są małe i prawie nie zmniejszają błędu. Dotyczy to zwłaszcza koagulogramu (PT, INR, APTT, WAPTT) i glukozy, których brakuje w około połowie rekordów obu kohort. **Benchmark z etapu 2, maskujący losowe komórki, przeszacowywał więc użyteczność imputacji dla tych danych.** Skutki opisuje sekcja 5.1.
+3. **Losowa maska ocenia głównie uzupełnianie demografii.** Ukrywa też wiek i płeć, których w prawdziwych danych nigdy nie brakuje; tak samo działała maska w etapie 2 (`create_mask` maskuje wszystkie kolumny). Płeć ma w skali [0, 1] błąd około 0,41, więc wiek i płeć dają 74% (KOR) i 75% (NEURO) sumy kwadratów błędu, głównie płeć. Bez nich RMSE wynosi 0,043 w KOR i 0,041 w NEURO, a stosunek do średniej 0,41 i 0,45. Przewaga MICE przy losowych brakach jest więc jeszcze większa, niż pokazuje pierwszy wiersz tabeli, a wniosek z pkt 2 się wzmacnia. Wśród cech laboratoryjnych najtrudniejsze dla NEURO są MPV, CRP i eGFR. Przy realistycznych wzorcach najtrudniejsze są eGFR, MPV i parametry czerwonokrwinkowe (HGB, RBC, HCT).
 4. Wyniki NEURO są bardziej zmienne między foldami (odch. 0,008), bo opierają się na 142–176 kompletnych wierszach na fold. KL dla NEURO (0,06 przy maskach losowych) jest przy tej liczbie wierszy mało wiarygodne.
 
 ### 4.4 Asymetria braków między kohortami
@@ -382,8 +385,8 @@ To nie jest model ryzyka tętniaka, tylko diagnostyka zbioru przygotowanego do m
 
 ### 5.1 Jak wyglądają uzupełnione wartości
 
-- **Uzupełnienia brakujących paneli skupiają się wokół średniej z treningu, tak samo w obu kohortach.** APTT: uzupełniona mediana 32,7 wobec średniej zmierzonych 32,5 (mediana zmierzonych 30,0). GLU: 120,8 wobec średniej 124,7 (mediana 107). CRP: 26,6 wobec średniej 41,7 (mediana 10,8). Przy skośnych rozkładach (CRP, GLU) uzupełnienia są więc **systematycznie wyższe niż typowa zmierzona wartość**. To bezpośredni skutek tego, że przy brakach panelowych imputacja ≈ średnia (sekcja 4.3).
-- **Podpis imputacji NRBC i %NRBC.** Zmierzone NRBC wynosi dokładnie 0 w 77,6% rekordów. Uzupełnione nigdy nie jest zerem: 99,5% uzupełnień to wartości z przedziału (0; 0,05). NRBC brakuje w 47,7% rekordów NEURO i w 2,6% KOR. „Mała niezerowa wartość NRBC” oznacza więc w praktyce „rekord NEURO”, a model drzewiasty łatwo to wykorzysta. Tak samo zachowuje się %NRBC.
+- **Uzupełnienia brakujących paneli skupiają się wokół średniej z treningu, tak samo w obu kohortach** (miara rozrzutu z sekcji 4.3: 0,33 w KOR i 0,53 w NEURO). APTT: uzupełniona mediana 32,7 wobec średniej zmierzonych 32,5 (mediana zmierzonych 30,0). GLU: 120,8 wobec średniej 124,7 (mediana 107). CRP: 26,6 wobec średniej 41,7 (mediana 10,8). Przy skośnych rozkładach (CRP, GLU) uzupełnienia są więc **systematycznie wyższe niż typowa zmierzona wartość**. To skutek tego, że przy brakach panelowych uzupełnienia skupiają się wokół średniej (sekcja 4.3). Prawdziwych brakujących wartości nie znamy, więc to sygnał ostrzegawczy, a nie zmierzony błąd.
+- **Podpis imputacji NRBC i %NRBC.** Zmierzone NRBC wynosi dokładnie 0 w 77,6% rekordów. Uzupełnione nigdy nie jest zerem: 99,5% uzupełnień to wartości z przedziału (0; 0,05). NRBC brakuje w 47,7% rekordów NEURO i w 2,6% KOR, więc 63,5% rekordów z uzupełnionym NRBC to NEURO, wobec 8,5% wszystkich rekordów (`analiza_wynikow.json`, sekcja E). Model widzący tylko NRBC po imputacji odróżnia kohorty z AUC 0,728 (rekordy), praktycznie tak samo jak sam wskaźnik braku NRBC (0,726): uzupełnienie przenosi całą informację o braku badania. Nie jest to jednak jednoznaczny znacznik NEURO. Wśród wszystkich rekordów z NRBC w (0; 0,05) NEURO stanowi 19,3%, bo małe niezerowe wartości dają też pomiary uśrednione w tygodniu. Tak samo zachowuje się %NRBC.
 - **Imputacja jest stabilna między foldami.** Mediany uzupełnień różnią się między foldami o ułamek jednostki (APTT o 1,1–1,2 s, GLU o 1,3–2,1 mg/dl).
 
 ### 5.2 Diagnostyka skrótów
@@ -399,34 +402,37 @@ Na zamrożonych foldach (HistGradientBoosting, ocena na części testowej każde
 
 Wnioski:
 1. **Kohorty są bardzo łatwe do odróżnienia (0,93 na pacjentach).** To nie jest miara wykrywania tętniaka, bo etykieta oznacza kohortę. Wysokie AUC P-vs-U w modelowaniu będzie się należało przede wszystkim temu.
-2. **Sam wzorzec braków odróżnia kohorty z AUC 0,82.** Informacja o tym, *które* badania zlecono, jest silnym sygnałem kohorty. Imputacja jej nie usuwa: zostaje w podpisie NRBC i w uzupełnieniach równych średniej.
-3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości.
+2. **Sam wzorzec braków odróżnia kohorty z AUC 0,82.** Informacja o tym, *które* badania zlecono, jest silnym sygnałem kohorty. Imputacja jej nie usuwa: zostaje w podpisie NRBC (sekcja 5.1) i w uzupełnieniach skupionych wokół średniej.
+3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości. Zastrzeżenie: okno wybrano po imputacji, a scaler i MICE dopasowano na całym treningu foldu, ze wszystkich okresów. Wersja z preprocessingiem dopasowanym tylko w oknie należy do analiz wrażliwości.
 4. **Epokę widać w wynikach samych chorych (AUC 0,83).** Rozjazd czasowy nie jest więc problemem teoretycznym: wyniki laboratoryjne niosą wyraźny ślad okresu, z którego pochodzą. Decyzja „bez korekty” (sekcja 2.1) wymaga w modelowaniu przynajmniej analizy wrażliwości we wspólnym oknie dat.
 
-**Kontrola testu B4 (06.10.2026, `sgkf/kontrola_epoki.py`, wynik `sgkf/results/kontrola_epoki.json`).** B4 liczono na cechach po imputacji, więc nie rozstrzygał, czy epoka siedzi w wartościach, czy w tym, które badania zlecano. Ten sam test na danych przed imputacją, na tych samych foldach:
+**Kontrola testu B4 (06.10.2026, uzupełniona 16.10.2026; `sgkf/kontrola_epoki.py`, wynik `sgkf/results/kontrola_epoki.json`).** B4 liczono na cechach po imputacji, więc nie rozstrzygał, czy epoka siedzi w wartościach, czy w tym, które badania zlecano. Ten sam test na danych przed imputacją, na tych samych foldach. Pierwsza wersja porównywała wzorzec braków na wszystkich rekordach z wartościami na rekordach z kompletnym panelem, czyli różne rekordy. Dlatego dla każdego panelu liczymy też pozostałe warianty na tych samych rekordach:
 
-| NEURO z okna dat vs NEURO z innych lat | AUC (rekordy) |
-|---|---:|
-| 38 cech, braki jako NaN | 0,841 |
-| tylko wzorzec braków | **0,756** |
-| morfologia + rozmaz, tylko wartości zmierzone | 0,656 |
-| morfologia + Na, K, KREA, tylko wartości zmierzone | 0,648 |
-| morfologia podstawowa (9 parametrów), tylko wartości zmierzone | **0,562** |
+| NEURO z okna dat vs NEURO z innych lat, AUC (rekordy) | wartości panelu, zmierzone | wzorzec braków pozostałych cech | 38 cech, braki jako NaN |
+|---|---:|---:|---:|
+| wszystkie rekordy NEURO (6 651, w oknie 680) | — | **0,756** | 0,841 |
+| kompletna morfologia podstawowa, 9 parametrów (5 810, w oknie 572) | **0,562** | 0,773 | 0,864 |
+| kompletna morfologia + rozmaz (5 791, w oknie 571) | 0,651 | 0,772 | 0,863 |
+| kompletna morfologia + Na, K, KREA (3 949, w oknie 409) | 0,651 | 0,764 | 0,858 |
 
-Sygnał epoki pochodzi więc głównie z tego, **które badania zlecano** w danym okresie. W samych zmierzonych wartościach jest umiarkowany. Wniosek dla modelowania się nie zmienia, ale przesuwa akcent: kluczowa analiza wrażliwości to model na wartościach zmierzonych z paneli o niskim odsetku braków, obok analizy we wspólnym oknie dat. Zastrzeżenie: w oknie jest około 570 rekordów NEURO z kompletną morfologią, stąd rozrzut między foldami (0,50–0,72). Liczone w sklearn 1.9.1.
+Sama demografia (wiek, płeć) daje 0,512, czyli okresu nie zdradza.
+
+Na tych samych rekordach wzorzec braków pozostałych badań rozróżnia okres wyraźnie lepiej niż zmierzone wartości panelu (0,76–0,77 wobec 0,56–0,65). Najsilniejszym pojedynczym śladem epoki jest więc to, **które badania zlecano** w danym okresie. Nie jest to jednak jedyne źródło: 38 cech razem daje 0,86, więcej niż sam wzorzec, więc część sygnału niosą też wartości pozostałych badań. Wniosek dla modelowania się nie zmienia, ale przesuwa akcent: kluczowa analiza wrażliwości to model na wartościach zmierzonych z paneli o niskim odsetku braków, obok analizy we wspólnym oknie dat. Zastrzeżenie: w oknie jest około 570 rekordów NEURO z kompletną morfologią, stąd rozrzut między foldami (0,49–0,70 dla wartości paneli). Przeliczone 16.10.2026 w środowisku źródłowym (sklearn 1.6.1); pierwsza wersja z 06.10 (sklearn 1.9.1) różniła się o najwyżej 0,005 AUC.
 
 ### 5.3 Profil kohort względem zakresów referencyjnych
 
-Odsetek rekordów poza typowym zakresem referencyjnym dla dorosłych, wśród wartości zmierzonych:
+Odsetek wyników poza typowym zakresem referencyjnym dla dorosłych. Mianownikiem są **wartości zmierzone**, a nie wszystkie rekordy; udział rekordów z wykonanym badaniem podaje ostatnia kolumna (`analiza_wynikow.json`, sekcja C):
 
-| Parametr | Granica | KOR | NEURO |
-|---|---|---:|---:|
-| CRP | > 5 mg/l | **61,4%** | 62,2% |
-| WBC | > 10 G/l | 36,9% | 32,5% |
-| NEUT | > 7 G/l | 39,5% | 33,9% |
-| GLU | > 99 mg/dl | 64,0% | 57,7% |
-| HGB | < 12 g/dl | 39,6% | 43,2% |
-| PLT | < 150 G/l | 12,1% | 7,3% |
+| Parametr | Granica | KOR | NEURO | Zmierzone w rekordach: KOR / NEURO |
+|---|---|---:|---:|---:|
+| CRP | > 5 mg/l | **61,4%** | 62,2% | 81% / 52% |
+| WBC | > 10 G/l | 36,9% | 32,5% | 97% / 88% |
+| NEUT | > 7 G/l | 39,5% | 33,9% | 97% / 58% |
+| GLU | > 99 mg/dl | 64,0% | 57,7% | 50% / 45% |
+| HGB | < 12 g/dl | 39,6% | 43,2% | 97% / 88% |
+| PLT | < 150 G/l | 12,1% | 7,3% | 97% / 87% |
+
+Względem wszystkich rekordów KOR CRP > 5 mg/l ma 50,0%, a glukozę > 99 mg/dl 32,0%, bo glukozę zmierzono tylko w połowie rekordów.
 
 KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej odbiegający od normy niż NEURO. **KOR nie wygląda na populację ogólną ani przesiewową, tylko raczej na pacjentów szpitalnych z lat 2020–2021**, czyli z okresu pandemii. Zastrzeżenie: to średnie tygodniowe z badań zlecanych z powodów klinicznych. Jeśli się to potwierdzi, zmienia interpretację klasy U i całego zastosowania „przesiewowego”. To pytanie do prowadzącego lub właściciela danych.
 
@@ -437,7 +443,7 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 | Obszar | Sprawdzenie | Wynik |
 |---|---|---|
 | wyciek przez pacjenta | wspólni pacjenci train/test w każdym foldzie; każdy pacjent raz w teście | 0; spełnione (asercje w pipeline, testy) |
-| wyciek przez preprocessing | scaler i MICE dopasowywane tylko na treningu foldu | spełnione (struktura `prepare_fold`) |
+| wyciek przez preprocessing | scaler i MICE dopasowywane tylko na treningu foldu | spełnione w etapie 3 (struktura `prepare_fold`). Czyszczenie z etapu 1 (kwantyle, limit historii) liczono jednak na całych kohortach przed podziałem i z ustawieniami osobnymi dla kohort (sekcja 7, pkt 2) |
 | wyciek przez etykietę | etykieta nie jest cechą imputera ani modelu; używana tylko do stratyfikacji | spełnione |
 | wyciek przez selekcję cech | CRP, MONO, %MONO usunięte w etapie 1 na podstawie korelacji z etykietą na całym zbiorze | selekcja cofnięta, jeden zestaw 38 cech (sekcja 2.6); wpływ na imputację zmierzony (sekcja 4.5) |
 | powtarzalność podziału | ziarno działa, wynik nie zależy od kolejności wierszy ani od wersji sklearn | testy `test_podzial_nie_zalezy_od_kolejnosci_wierszy`, `test_ziarno_*`; przydział zapisany |
@@ -445,7 +451,7 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 | spójność przygotowania | plik w repozytorium = wynik kodu na danych źródłowych | `test_plik_w_repozytorium_zgodny_z_kodem` |
 | jakość danych | unikalność `custom_id`, zakresy, brak ujemnych, płeć i wiek bez braków | spełnione (sekcja 2.5) |
 | powtarzalność imputacji | ponowny przebieg na tym samym komputerze daje identyczne odciski wyników | sekcja 4.2 |
-| jakość imputacji w produkcji | protokół z etapu 2 out-of-fold + realistyczne wzorce braków | jak w benchmarku przy losowych brakach; przy brakach panelowych ≈ średnia (sekcja 4.3) |
+| jakość imputacji w produkcji | protokół z etapu 2 out-of-fold + realistyczne wzorce braków; osobno bez wieku i płci | jak w benchmarku przy losowych brakach; przy brakach panelowych niewiele lepsza od średniej (sekcja 4.3) |
 | skróty dla modelu | rozdzielność kohort na cechach, na wzorcu braków, we wspólnym oknie; epoka w NEURO | AUC 0,93 / 0,82 / 0,80 / 0,83 (sekcja 5.2) |
 | redundancja cech | %NEUT + %LYMPH + %EO + %BAZO + %MONO = 100,0 (odch. 0,11); MONO ≈ %MONO × WBC / 100 (mediana błędu 0,4%) | MONO i %MONO zostają: pomagają imputacji; kolinearność do obsłużenia w modelowaniu |
 | cenzurowanie eGFR | eGFR-MDRD = 60 w 56% rekordów, eGFR-CKD = 90 w 33% | laboratorium raportuje „≥ 60” / „≥ 90”; reguła KREA (eGFR ≥ 30) działa mimo cenzury; do opisu |
@@ -456,13 +462,13 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 ## 7. Ograniczenia tego etapu
 
 1. **Rozjazd czasowy kohort** (99,5% KOR to lata 2020–2021, NEURO to lata 2000–2024) nie jest korygowany. Stratyfikacja wyrównuje go między foldami, ale model nadal może rozpoznawać epokę.
-2. **Asymetria braków** (NEURO 26%, KOR 12% komórek uzupełnianych) i **asymetryczne czyszczenie kwantylowe z etapu 1** (NEURO 3,2%, KOR 0,8% usuniętych rekordów).
+2. **Asymetria braków** (NEURO 26%, KOR 12% komórek uzupełnianych) i **czyszczenie z etapu 1 ustawiane osobno dla kohort, na całych danych przed podziałem**: progi kwantylowe (NEURO stracił 3,2% rekordów, KOR 0,8%) i limit historii (11 rekordów w KOR, 38 w NEURO). Poprawna imputacja w foldach nie czyni więc całego procesu wolnym od decyzji podjętych na pełnych danych; wyniki traktujemy jako eksploracyjne.
 3. **Imputacja deterministyczna**, oceniana w benchmarku na kompletnych wierszach; mechanizm braków (MCAR/MAR/MNAR) niezbadany.
 4. **Reguły wartości niemożliwych są zachowawcze.** Usuwają tylko oczywiste przypadki; pojedyncze błędy ukryte w średniej tygodniowej zostają.
 5. **eGFR jest cenzurowane** (60 / 90), co ogranicza jego informatywność w górnym zakresie.
 6. **Zaimputowane foldy są poza gitem** (rozmiar). Odtwarza je jedno polecenie, a ewentualne różnice między wersjami sklearn wykrywa odcisk wyniku.
-7. **Przy brakach całymi panelami uzupełnienia ≈ średnia z treningu** (sekcja 4.3). Nie niosą informacji o pacjencie, a przy skośnych rozkładach są zawyżone (CRP, GLU).
-8. **Podpis imputacji NRBC/%NRBC**: uzupełnione wartości są rozpoznawalne i w praktyce oznaczają NEURO (sekcja 5.1).
+7. **Przy brakach całymi panelami MICE jest niewiele lepsze od średniej z treningu** (sekcja 4.3). Uzupełnienia skupiają się wokół średniej i niosą mało informacji o pacjencie. Przy skośnych rozkładach (CRP, GLU) są wyższe od typowej zmierzonej wartości.
+8. **Podpis imputacji NRBC/%NRBC**: uzupełnione wartości przenoszą informację o braku badania (samo NRBC po imputacji: AUC 0,73, jak sam wskaźnik braku), a 63% z nich dotyczy NEURO (sekcja 5.1).
 9. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w wynikach NEURO z AUC 0,83 (sekcja 5.2). Profil KOR sugeruje populację szpitalną, a nie ogólną (sekcja 5.3).
 
 ---

@@ -3,7 +3,7 @@
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
-**Stan na:** 04.10.2026 (branch `pu-modeling-setup-lk`)
+**Stan na:** 04.10.2026, z poprawkami po weryfikacji z 06.10 i 16.10.2026 (branch `pu-modeling-setup-lk`)
 **Zakres:** etapy 1–3: przygotowanie danych, imputacja braków, przygotowanie danych do podziału i kontrolowany podział z imputacją w foldach (SGKF). Propozycja dalszych prac (modelowanie PU) jest w `4-pu-setup/PLAN_MODELOWANIA.md`; plan obowiązujący zostanie ustalony z prowadzącym.
 
 Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej podstawie i z jakim wynikiem**, do momentu, w którym dane są gotowe do modelowania. Jest punktem wejścia; szczegóły techniczne zostają w raportach etapów, do których prowadzą odnośniki. Każda liczba pochodzi z plików i skryptów w repozytorium; przy decyzjach z 04.10.2026 wskazany jest skrypt, który ją liczy.
@@ -12,15 +12,15 @@ Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej 
 
 ## Streszczenie
 
-1. **Dane są przygotowane, oczyszczone i gotowe do modelowania:** 78 052 rekordy tygodniowe, 40 924 pacjentów, 1 823 (4,45%) z potwierdzonym tętniakiem (NEURO, klasa P), reszta to populacja ogólna (KOR, klasa U). Wejście do podziału ma 38 cech i jest **przed imputacją**.
+1. **Dane są przygotowane, oczyszczone i gotowe do modelowania:** 78 052 rekordy tygodniowe, 40 924 pacjentów, 1 823 (4,45%) z potwierdzonym tętniakiem (NEURO, klasa P), reszta to kohorta KOR (klasa U, nieoznaczona). Wejście do podziału ma 38 cech i jest **przed imputacją**.
 2. **Imputacja jest wybrana na podstawie wspólnego benchmarku trzech metod** (KNN, MissForest, MICE) z oddzieloną maską do strojenia i maską do oceny. Wybrano MICE z estymatorem ExtraTrees, który jest wykonywany **wewnątrz każdego foldu**.
 3. **04.10.2026 zapadły decyzje dotyczące danych** i zostały wdrożone osobnym, przetestowanym kodem z pełnym spisem zmian. Dotyczą 63 pacjentów obecnych w obu kohortach i 752 wartości niemożliwych fizjologicznie (KREA, K, Na). Rozjazd czasowy kohort i asymetria braków zostają bez korekty, jako opisane ograniczenia (sekcja 6).
 4. **Podział jest zamrożony i zapisany:** 5 foldów po pacjentach, zero wspólnych pacjentów między train i test, stratyfikacja po etykiecie, epoce badania i liczbie rekordów. Rozstęp udziału pozytywnych między foldami wynosi 0,01 pp. Wersja z raportu przejściowego była nietasowana, niezapisana i zależna od wersji biblioteki (sekcja 5).
 5. **Imputacja w foldach jest wykonana w pełni na jednym zestawie 38 cech**, z kontrolą braku wycieku w każdym foldzie (sekcja 5.5). Selekcję cech z etapu 1 (usunięcie CRP, MONO, %MONO) cofnięto, bo opierała się na korelacji z etykietą na całym zbiorze (sekcja 6.4).
 6. **Najpoważniejsze ryzyka leżą w danych, nie w kodzie** (sekcja 5.6):
-   - kohorty niemal nie pokrywają się w czasie, a epokę widać w wynikach laboratoryjnych chorych (AUC 0,83),
+   - kohorty niemal nie pokrywają się w czasie, a okres badania da się rozpoznać w danych samych chorych (AUC 0,83); najsilniejszym śladem jest zestaw zleconych badań, ale nie jedynym,
    - sam wzorzec braków odróżnia kohorty z AUC 0,82, a imputacja zostawia rozpoznawalny ślad (NRBC),
-   - przy brakach całymi panelami uzupełnienia są bliskie średniej,
+   - przy brakach całymi panelami MICE jest niewiele lepsze od uzupełniania średnią,
    - KOR ma profil szpitalny, a wyniki NEURO najpewniej pochodzą z hospitalizacji.
 
    Te ryzyka idą do ograniczeń raportu (sekcja 9) i do pytań na spotkanie (`1026_SPOTKANIE_PROWADZACY.md`).
@@ -87,12 +87,12 @@ Udział mierzony liczbą commitów niedoszacowuje pracę w notebookach. Analiza 
 
 | Kohorta | Plik surowy | Wiersze × kolumny | Rola w PU |
 |---|---|---:|---|
-| KOR | `data/raw/kor_merged_aggregated_1W_mean.csv` | 73 679 × 128 | populacja ogólna: **nieoznaczeni (U)** |
+| KOR | `data/raw/kor_merged_aggregated_1W_mean.csv` | 73 679 × 128 | kohorta bez rozpoznania tętniaka w danych (pochodzenie do potwierdzenia, sekcja 5.6): **nieoznaczeni (U)** |
 | NEURO | `data/raw/neuro_merged_aggregated_1W_mean.csv` | 7 655 × 128 | pacjenci z rozpoznanym tętniakiem: **pozytywni (P)** |
 
-Rekord to tydzień uśrednionych wyników laboratoryjnych pacjenta, z kluczem `{patient_id}-{rok}-W{tydzień}`. Cechy obejmują morfologię z rozmazem, biochemię (KREA, Na, K, GLU, eGFR), koagulologię (PT, INR, APTT, WAPTT), CRP, wiek i płeć.
+Rekord to tydzień uśrednionych wyników laboratoryjnych pacjenta, z kluczem `{patient_id}-{rok}-W{tydzień}`. Rok w kluczu jest kalendarzowy, a tydzień według ISO, co na przełomie roku daje kolizje (sekcja 3.1). Cechy obejmują morfologię z rozmazem, biochemię (KREA, Na, K, GLU, eGFR), koagulologię (PT, INR, APTT, WAPTT), CRP, wiek i płeć.
 
-**Dlaczego PU, a nie zwykła klasyfikacja.** Nikt nie przebadał obrazowo pacjentów KOR, więc wśród nich mogą być osoby z niewykrytym tętniakiem. `label = 0` znaczy „nieoznaczony”, a nie „zdrowy”. Ta jedna obserwacja wyznacza większość decyzji metodologicznych w kolejnych etapach.
+**Dlaczego PU, a nie zwykła klasyfikacja.** O pacjentach KOR wiemy tylko, że w danych nie mają rozpoznania tętniaka. Nie wiemy, czy i u kogo wykonano obrazowanie, więc wśród nich mogą być osoby z niewykrytym tętniakiem. `label = 0` znaczy „nieoznaczony”, a nie „zdrowy”. Ta jedna obserwacja wyznacza większość decyzji metodologicznych w kolejnych etapach.
 
 ---
 
@@ -107,7 +107,7 @@ Rekord to tydzień uśrednionych wyników laboratoryjnych pacjenta, z kluczem `{
 | Kolumny w formacie `{'values': […]}` | wartości liczbowe uśrednione; kolumny tekstowe (`examination_type`, `descriptive_result`) usunięte | plik jest agregatem tygodniowym `_1W_mean`, więc lista to niedokończona agregacja, a średnia ją dokańcza |
 | Kolumny zakresów referencyjnych i jednostek | usunięte | norma nie jest cechą pacjenta; zespół zdecydował też, żeby nie uzupełniać norm |
 | Zmienne techniczne (`diagnosis_id`, `description_type`) | usunięte | brak treści klinicznej |
-| Duplikat `custom_id = 194143-2017-W52` | zachowany rekord nowszy | ten sam pacjent i tydzień; różnica wieku 71/72 wynika ze sposobu liczenia |
+| „Duplikat” `custom_id = 194143-2017-W52` | usunięty rekord starszy (2017-01-01), zachowany nowszy (2017-12-31) | **korekta 16.10.2026:** to nie duplikat, tylko dwa różne badania tego samego pacjenta NEURO, odległe o rok (wiek 71,05 i 72,05, inne wyniki). `custom_id` łączy rok kalendarzowy z tygodniem ISO, a 2017-01-01 należy do tygodnia ISO 2016-W52, więc oba dostały ten sam klucz. Strata: jeden prawdziwy rekord. W surowych danych nie ma duplikatów pacjent + data. Rok w kluczu różni się od roku ISO w 583 rekordach KOR i 72 NEURO obecnego wejścia, ale żaden klucz się już nie powtarza |
 | Płeć: `"0.0"/"1.0"` w KOR vs `"0"/"1"` w NEURO | ujednolicona do 0/1 | — |
 
 ### 3.2 Anomalie medyczne (Łukasz: skrypty kontrolne; zespół: decyzje)
@@ -172,11 +172,11 @@ Na tym samym zbiorze referencyjnym, tymi samymi maskami i tym samym kodem urucho
 | KOR | **0,0783** | 0,0865 | 0,1022 |
 | NEURO | 0,1017 | **0,0978** | 0,1291 |
 
-**Stabilność:** na niezależnej masce (seed 7) ranking się nie zmienił. MICE w walidacji multi-seed: KOR 0,0865 ± 0,0007, NEURO 0,0950 ± 0,0025. Parametry dobrane na KOR pogarszają wynik NEURO o 0,00001 RMSE i są przy tym około 7 razy szybsze.
+**Stabilność:** na drugiej masce (seed 7) ranking się nie zmienił. Dla NEURO Optuna dobrała wtedy parametry od nowa (MICE 51/29 zamiast 18/100), więc nie był to test samej maski; dla KOR parametry są te same. Przewaga MICE nad MissForest na NEURO jest niewielka (0,004 i 0,002 RMSE). MICE w walidacji na 10 maskach: KOR 0,0865 ± 0,0007, NEURO 0,0950 ± 0,0025, przy parametrach dobranych osobno dla kohort (KOR 7/78, NEURO 28/110). Parametry dobrane na KOR, sprawdzone na jednej masce (seed 42), pogarszają wynik NEURO o 0,00001 RMSE i są przy tym około 7 razy szybsze.
 
 **Decyzja:** `IterativeImputer` z ExtraTrees (nazywany w projekcie MICE), wspólne parametry dla obu kohort: `max_iter = 7, n_estimators = 78, max_depth = 10`. Tabela wyżej pochodzi z przebiegu 3, w którym porównano wszystkie trzy metody; z parametrami finalnymi (przebieg 4) MICE ma RMSE 0,0861 na KOR i 0,0984 na NEURO.
 
-**Dlaczego nie MissForest, skoro wygrywa na KOR:** żadna metoda nie wygrała na obu zbiorach. MICE wygrywa na mniejszym i trudniejszym NEURO, jest szybsze, a jeden spójny imputer dla obu kohort jest wymagany, bo imputacja odbywa się na połączonym zbiorze wewnątrz foldu.
+**Dlaczego nie MissForest, skoro wygrywa na KOR:** żadna metoda nie wygrała na obu zbiorach. MICE wygrywa na mniejszym i trudniejszym NEURO (w benchmarku było szybsze tylko na KOR: 70,2 wobec 107,6 min; na NEURO 30,4 wobec 17,2 min), a jeden spójny imputer dla obu kohort jest wymagany, bo imputacja odbywa się na połączonym zbiorze wewnątrz foldu.
 
 ### 4.3 Imputacja globalna: tylko walidacja metody
 
@@ -221,7 +221,7 @@ Liwia zaimplementowała `StratifiedGroupKFold` (5 foldów) w notebooku. Grupowan
 | KREA > 10 mg/dl przy eGFR-MDRD ≥ 30 → brak | 516 wartości | eGFR jest liczony z kreatyniny; KREA > 10 mg/dl wymaga skrajnie niskiego eGFR, więc to sprzeczność |
 | K > 15 mmol/l → brak | 25 wartości | niezgodne z życiem |
 | Na < 80 mmol/l → brak | 1 wartość | niezgodne z życiem |
-| skrajne, ale możliwe wartości **zostają** | K 9–15 (61), Na 80–100 (7), WBC > 200 (7), KREA > 10 przy eGFR < 30 (252) | możliwe w ciężkich stanach (hiperkaliemia, hiponatremia, białaczka, niewydolność nerek) |
+| skrajne, ale możliwe wartości **zostają** | K 9–15 (61), Na 80–100 (7), WBC > 200 (7), KREA > 10 przy eGFR < 30 (250) | możliwe w ciężkich stanach (hiperkaliemia, hiponatremia, białaczka, niewydolność nerek) |
 | rozjazd czasowy kohort, asymetria braków | **bez korekty** | dane są, jakie są; opisane jako ograniczenia |
 | zestaw cech: **38, jeden wariant** | CRP, MONO, %MONO wracają | selekcja z etapu 1 była wadliwa metodycznie, choć jej realny wpływ na wyniki był znikomy (sekcja 6.4) |
 
@@ -267,9 +267,10 @@ Procedura w każdym foldzie: scaler dopasowany na kompletnych wierszach treningu
 | Maska | KOR: RMSE / względem średniej | NEURO: RMSE / względem średniej | Etap 2 (KOR / NEURO) |
 |---|---|---|---|
 | losowe 10% komórek (protokół z etapu 2) | 0,083 / **0,61** | 0,080 / **0,65** | 0,086 / 0,098 |
+| to samo, bez wieku i płci | 0,043 / **0,41** | 0,041 / **0,45** | — |
 | realistyczne wzorce braków (całe panele) | 0,108 / **0,98** | 0,079 / **0,89** | — |
 
-Przy losowych brakach MICE w produkcji działa co najmniej tak dobrze jak w benchmarku i jednakowo dobrze dla obu kohort. Przy brakach całymi panelami, jak w prawdziwych danych (koagulogram i glukoza brakują w około połowie rekordów), **uzupełnienia są bliskie średniej z treningu**, czyli niosą niewiele informacji o pacjencie.
+Przy losowych brakach MICE w produkcji działa co najmniej tak dobrze jak w benchmarku i jednakowo dobrze dla obu kohort. Przy brakach całymi panelami, jak w prawdziwych danych (koagulogram i glukoza brakują w około połowie rekordów), **MICE jest niewiele lepsze od uzupełniania średnią z treningu**. Uzupełnienia skupiają się wokół średniej: odchylają się od niej trzy razy mniej niż prawdziwe wartości w KOR i dwa razy mniej w NEURO, więc niosą niewiele informacji o pacjencie. Losowa maska, tak jak w etapie 2, ukrywa też wiek i płeć, których w danych nigdy nie brakuje. Przypada na nie około 3/4 sumy kwadratów błędu, głównie na płeć. Bez nich stosunek do średniej przy losowych brakach wynosi 0,41 w KOR i 0,45 w NEURO, więc wniosek, że benchmark z etapu 2 przeszacowywał użyteczność imputacji, się wzmacnia.
 
 **38 czy 35 cech, porównanie jednorazowe** (`3-sgkf-split/sgkf/results/porownanie_38_35/`). Zanim zapadła decyzja o jednym zestawie, oba warianty policzono na tym samym podziale:
 - **test kontrolowany** (maska 10% na wspólnych 35 cechach): RMSE 0,0846 dla 38 cech wobec 0,0859 dla 35,
@@ -290,9 +291,9 @@ Szczegóły, tabele per fold i odciski wyników: `3-sgkf-split/RAPORT_SGKF_MICE.
 | NEURO vs KOR tylko we wspólnym oknie dat | 0,80 |
 | NEURO z lat 2020–2021 vs NEURO z innych lat (rekordy) | **0,83** |
 
-1. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w wynikach samych chorych z AUC 0,83. Wysokie AUC w modelowaniu P-vs-U nie będzie więc dowodem wykrywania tętniaka.
-2. **Imputacja zostawia rozpoznawalny ślad.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i 3% KOR, więc uzupełniona wartość w praktyce oznacza NEURO. Przy skośnych rozkładach (CRP, GLU) uzupełnienia są zawyżone, bo leżą blisko średniej.
-3. **KOR ma profil szpitalny, nie przesiewowy.** CRP > 5 mg/l w 61% rekordów KOR (NEURO 62%), WBC > 10 G/l w 37%, glukoza > 99 mg/dl w 64%. KOR wygląda na pacjentów hospitalizowanych z lat 2020–2021, a nie na populację ogólną. To pytanie do prowadzącego.
+1. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w danych samych chorych z AUC 0,83. Kontrola przed imputacją (`kontrola_epoki.py`) pokazuje na tych samych rekordach: wzorzec braków 0,76–0,77, zmierzone wartości paneli 0,56–0,65, wszystkie 38 cech 0,86. Wysokie AUC w modelowaniu P-vs-U nie będzie więc dowodem wykrywania tętniaka.
+2. **Imputacja zostawia rozpoznawalny ślad.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO (w całych danych 8,5%). Samo NRBC po imputacji odróżnia kohorty z AUC 0,73, tak jak sam wskaźnik braku NRBC: uzupełnienie nie ukrywa informacji o braku badania. Przy skośnych rozkładach (CRP, GLU) uzupełnienia są wyższe od typowej zmierzonej wartości, bo skupiają się wokół średniej.
+3. **KOR ma profil szpitalny, nie przesiewowy.** Wśród zmierzonych wyników KOR CRP > 5 mg/l ma 61% (NEURO 62%), WBC > 10 G/l 37%, glukoza > 99 mg/dl 64%. Mianownikiem są badania wykonane: CRP zmierzono w 81% rekordów KOR, glukozę w 50%; względem wszystkich rekordów KOR CRP > 5 mg/l ma 50%. KOR wygląda na pacjentów hospitalizowanych z lat 2020–2021, a nie na populację ogólną. To hipoteza i pytanie do prowadzącego.
 
 Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 5.
 
@@ -355,7 +356,7 @@ Spośród 1 823 pacjentów NEURO 1 215 ma więcej niż jeden rekord. U nich medi
 
 ### 6.4 Selekcja cech: dlaczego wracamy z 35 do 38
 
-**Stan w czerwcu.** Raport przejściowy pracował na 35 cechach: w etapie 1 usunięto CRP, MONO i %MONO jako „najsłabiej związane z etykietą”. Już wtedy dokument `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` zastrzegał, że selekcję wykonano z użyciem etykiety na całym zbiorze, więc przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. 04.10.2026 sprawdziliśmy to dokładnie.
+**Stan w czerwcu.** Raport przejściowy pracował na 35 cechach: w etapie 1 usunięto CRP, MONO i %MONO jako „najsłabiej związane z etykietą”. Raport imputacji z 11.06 zalecał plik z 35 cechami jako wejście do modelowania. Problem wskazała dopiero weryfikacja we wrześniu: selekcję wykonano z użyciem etykiety na całym zbiorze, więc przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej (zapis w `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 2, dodany 18.09). 04.10.2026 sprawdziliśmy to dokładnie.
 
 **Co zrobiono w czerwcu.** Skrypt `3-sgkf-split/przygotowanie/analiza_selekcji_cech.py` odtworzył procedurę z notebooka z wynikiem identycznym co do cyfry:
 - dla czterech miar (Pearson, Spearman, Kendall, Phi-K) wybrano po 10 cech najsłabiej skorelowanych z etykietą,
@@ -388,7 +389,7 @@ Czyszczenie kwantylowe z etapu 1 nie usunęło wartości niemożliwych, bo grani
 
 ### 6.6 Reguła agregacji rekordów do pacjenta
 
-NEURO ma średnio 3,65 rekordu na pacjenta, KOR 1,83. Reguła wrażliwa na liczbę pomiarów tworzy sygnał z samej częstości badania: maksimum koreluje z liczbą rekordów dla 17 z 35 cech, mediana dla 2. **Rekomendacja:** mediana, ze średnią jako wrażliwością. To decyzja etapu modelowania (`4-pu-setup/PLAN_MODELOWANIA.md`); podział już wyrównuje liczbę rekordów między foldami.
+NEURO ma średnio 3,65 rekordu na pacjenta, KOR 1,83. Reguła wrażliwa na liczbę pomiarów tworzy sygnał z samej częstości badania: maksimum koreluje z liczbą rekordów dla 19 z 38 cech, mediana dla 2 (obecne wejście; wrześniowa wersja na danych sprzed przygotowania: 17 z 35 i 2). **Rekomendacja:** mediana, ze średnią jako wrażliwością. To decyzja etapu modelowania (`4-pu-setup/PLAN_MODELOWANIA.md`); podział już wyrównuje liczbę rekordów między foldami.
 
 ### 6.7 Asymetria braków
 
@@ -444,10 +445,10 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 2. **Założenie SCAR jest wątpliwe**: znani pozytywni to pacjenci objawowi, a niewykryte tętniaki są bezobjawowe.
 3. **Rozjazd czasowy kohort** (KOR 2020–2021, NEURO 2000–2024). Epokę widać w wynikach chorych (AUC 0,83), więc model może ją rozpoznawać.
 4. **Prawdopodobnie szpitalne pochodzenie wyników NEURO**; model rozpoznaje pacjenta hospitalizowanego, nie ryzyko przesiewowe.
-5. **KOR prawdopodobnie nie jest populacją ogólną**, tylko szpitalną (CRP > 5 mg/l w 61% rekordów), co ogranicza wnioski o zastosowaniu przesiewowym.
+5. **KOR prawdopodobnie nie jest populacją ogólną**, tylko szpitalną (CRP > 5 mg/l w 61% zmierzonych wyników), co ogranicza wnioski o zastosowaniu przesiewowym.
 6. **Asymetria braków**: MICE odtwarza 26% profilu NEURO wobec 12% KOR. Sam wzorzec braków odróżnia kohorty z AUC 0,82, a uzupełnienia NRBC są rozpoznawalne.
-7. **Imputacja przy brakach całymi panelami ≈ średnia** (koagulogram, glukoza). Uzupełnienia niosą mało informacji o pacjencie, a przy skośnych rozkładach są zawyżone.
-8. **Asymetryczne czyszczenie kwantylowe na etapie 1**: NEURO stracił 3,2% rekordów, KOR 0,8%.
+7. **Przy brakach całymi panelami imputacja jest niewiele lepsza od średniej** (koagulogram, glukoza). Uzupełnienia niosą mało informacji o pacjencie, a przy skośnych rozkładach są wyższe od typowej zmierzonej wartości.
+8. **Czyszczenie z etapu 1 ustawiane osobno dla kohort i na całych danych przed podziałem**: progi kwantylowe (NEURO stracił 3,2% rekordów, KOR 0,8%) i limit historii (11 rekordów w KOR, 38 w NEURO). To reguły zależne od źródła, czyli od etykiety, więc wyniki traktujemy jako eksploracyjne, a nie jako niezależnie zwalidowany cały proces.
 9. **Imputacja deterministyczna**; mechanizm braków niezbadany.
 10. **Reguły wartości niemożliwych są zachowawcze**; błędy ukryte w średniej tygodniowej mogły zostać. eGFR jest cenzurowane (60 / 90).
 11. Części historycznych kroków filtracji (stan pośredni 73 276 / 7 611 rekordów, odcięcia percentylowe) **nie da się odtworzyć jednym skryptem**, bo istnieją tylko w notebookach i notatkach.
@@ -464,7 +465,8 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 | `master` nie zawiera prac z września i października | do zrobienia: po akceptacji zmergować `pu-modeling-setup-lk` do `master` |
 | `1-data-preparation/scripts-lf/aneurysm_data_analysis.ipynb` to zapisana strona HTML z GitHuba, a nie notebook; prawdziwy to `aneurysm_data_analysis (1).ipynb` | do zrobienia: zastąpić plik notebookiem |
 | notebooki czytają dane z `/content/…` (Colab) | do zrobienia: ścieżki względne |
-| kopie tych samych CSV w kilku miejscach (`data/interim/`, `2-imputation/knn-am/`) | do zrobienia: jedna kopia w `data/` |
+| kopie i wersje pośrednie tych samych plików w kilku miejscach (`data/interim/`, `2-imputation/knn-am/`), nie zawsze identyczne: `data/interim/cleaned/neuro_shortend.csv` ma 6 616 rekordów, a obowiązujący `data/imputation-inputs/neuro_shortend.csv` 6 651 | do zrobienia: jedna kopia w `data/`, wersje historyczne wyraźnie oznaczone |
+| klucz `custom_id` łączy rok kalendarzowy z tygodniem ISO (stąd kolizja z sekcji 3.1) | do zrobienia przy kolejnym zamrożeniu danych: klucz z roku i tygodnia ISO albo z daty |
 | wersje bibliotek różnią się między komputerami (sklearn 1.8 vs 1.6) | do zrobienia: wspólny `requirements.txt` z przypiętymi wersjami; do tego czasu porównywać odcisk wyników w `przebieg_imputacji_*.json` |
 
 ---
