@@ -1,0 +1,22 @@
+Odzyskiwanie ukrytych pozytywnych przez modele kontrolne ...
+  ziarno 0: gotowe
+  ziarno 1: gotowe
+  ziarno 2: gotowe
+  ziarno 3: gotowe
+  ziarno 4: gotowe
+B3 bez imputacji ...
+
+RecallHidden@q, 40% ukrytych, 25 przebiegów na model (średnio 145.8 ukrytych na fold):
+  model                                                q=  1%  q=  5%  q= 10%
+  losowy ranking pacjentów                              0.011   0.049   0.099
+  losowy wynik rekordów, mediana do pacjenta            0.006   0.028   0.062
+  wiek i płeć                                           0.025   0.136   0.240
+  sam wzorzec braków (0/1)                              0.382   0.516   0.615
+  38 cech, braki jako NaN (bez imputacji)               0.441   0.698   0.796
+  38 cech po imputacji MICE (zapisane foldy)            0.427   0.661   0.758
+  profil pacjenta: udział braków każdej cechy           0.432   0.564   0.644
+  profil pacjenta: mediana 38 cech (NaN)                0.435   0.686   0.775
+
+B3 bez imputacji: AUC rekordy 0.824, pacjenci 0.831 [0.791, 0.865]
+
+Zapisano -> 3-sgkf-split/sgkf/results/kontrola_skrotow.json

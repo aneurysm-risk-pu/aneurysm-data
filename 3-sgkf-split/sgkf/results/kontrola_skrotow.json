@@ -1,0 +1,226 @@
+{
+  "opis": "Kontrola: RecallHidden@q modeli kontrolnych (skróty) i B3 bez imputacji",
+  "protokol_orientacyjny": {
+    "udzial_ukrytych": 0.4,
+    "ziarna": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "q": [
+      0.01,
+      0.05,
+      0.1
+    ],
+    "przebiegi_na_model": 25,
+    "ukrytych_na_fold_srednio": 145.8,
+    "pula": "pacjenci KOR i ukryci NEURO z części testowej foldu",
+    "agregacja_rekordow": "mediana wyników rekordów pacjenta"
+  },
+  "recall_hidden": {
+    "losowy ranking pacjentów": {
+      "q_1%": {
+        "srednia": 0.011,
+        "min_max": [
+          0.0,
+          0.027
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.049,
+        "min_max": [
+          0.014,
+          0.091
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.099,
+        "min_max": [
+          0.05,
+          0.169
+        ]
+      }
+    },
+    "losowy wynik rekordów, mediana do pacjenta": {
+      "q_1%": {
+        "srednia": 0.006,
+        "min_max": [
+          0.0,
+          0.02
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.028,
+        "min_max": [
+          0.007,
+          0.053
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.062,
+        "min_max": [
+          0.031,
+          0.092
+        ]
+      }
+    },
+    "wiek i płeć": {
+      "q_1%": {
+        "srednia": 0.025,
+        "min_max": [
+          0.0,
+          0.052
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.136,
+        "min_max": [
+          0.098,
+          0.174
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.24,
+        "min_max": [
+          0.181,
+          0.307
+        ]
+      }
+    },
+    "sam wzorzec braków (0/1)": {
+      "q_1%": {
+        "srednia": 0.382,
+        "min_max": [
+          0.336,
+          0.447
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.516,
+        "min_max": [
+          0.427,
+          0.58
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.615,
+        "min_max": [
+          0.533,
+          0.687
+        ]
+      }
+    },
+    "38 cech, braki jako NaN (bez imputacji)": {
+      "q_1%": {
+        "srednia": 0.441,
+        "min_max": [
+          0.399,
+          0.481
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.698,
+        "min_max": [
+          0.64,
+          0.748
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.796,
+        "min_max": [
+          0.743,
+          0.868
+        ]
+      }
+    },
+    "38 cech po imputacji MICE (zapisane foldy)": {
+      "q_1%": {
+        "srednia": 0.427,
+        "min_max": [
+          0.399,
+          0.5
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.661,
+        "min_max": [
+          0.618,
+          0.74
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.758,
+        "min_max": [
+          0.711,
+          0.795
+        ]
+      }
+    },
+    "profil pacjenta: udział braków każdej cechy": {
+      "q_1%": {
+        "srednia": 0.432,
+        "min_max": [
+          0.363,
+          0.497
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.564,
+        "min_max": [
+          0.503,
+          0.638
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.644,
+        "min_max": [
+          0.587,
+          0.733
+        ]
+      }
+    },
+    "profil pacjenta: mediana 38 cech (NaN)": {
+      "q_1%": {
+        "srednia": 0.435,
+        "min_max": [
+          0.36,
+          0.5
+        ]
+      },
+      "q_5%": {
+        "srednia": 0.686,
+        "min_max": [
+          0.617,
+          0.745
+        ]
+      },
+      "q_10%": {
+        "srednia": 0.775,
+        "min_max": [
+          0.736,
+          0.843
+        ]
+      }
+    }
+  },
+  "B3_bez_imputacji": {
+    "opis": "NEURO vs KOR, tylko rekordy ze wspólnego okna dat, 38 cech z brakami jako NaN (bez imputacji)",
+    "okno": [
+      "2019-12-29",
+      "2021-12-26"
+    ],
+    "auc_rekordy_srednia": 0.824,
+    "auc_pacjenci_srednia": 0.831,
+    "auc_pacjenci_min_max": [
+      0.791,
+      0.865
+    ]
+  },
+  "odcisk_danych": "5b822c09ebc03011",
+  "wersje": {
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3"
+  }
+}

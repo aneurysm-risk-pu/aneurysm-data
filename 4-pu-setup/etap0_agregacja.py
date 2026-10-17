@@ -7,7 +7,7 @@ do pacjenta.
 
 41,2% pacjentow ma wiecej niz jeden rekord, wiec regula decyduje o tym, jaki
 profil trafia do modelu. Skrypt sprawdza cztery kandydatury (srednia, mediana,
-maksimum, ostatni pomiar) pod katem czterech ryzyk:
+maksimum, ostatnia dostepna wartosc kazdej cechy) pod katem czterech ryzyk:
 
   1. Czy reguly w ogole daja rozne profile — jesli nie, decyzja jest kosmetyczna.
   2. Czy regula przemyca liczbe badan pacjenta. Pacjenci NEURO maja srednio
@@ -58,6 +58,8 @@ def naglowek(tekst: str) -> None:
 def agreguj(df: pd.DataFrame, feat: list, regula: str) -> pd.DataFrame:
     """Jeden wiersz na pacjenta wedlug podanej reguly."""
     if regula == "ostatni":
+        # groupby.last() pomija braki: ostatnia NIEPUSTA wartosc kazdej cechy osobno,
+        # wiec profil moze laczyc rozne badania, a nie pochodzic z jednego ostatniego badania
         d = df.sort_values(DATE_COL).groupby(GROUP_COL)[feat].last()
     else:
         fn = {"srednia": "mean", "mediana": "median", "maksimum": "max"}[regula]

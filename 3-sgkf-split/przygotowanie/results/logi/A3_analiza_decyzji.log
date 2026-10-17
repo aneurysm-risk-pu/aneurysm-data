@@ -436,4 +436,17 @@
   "wiersze_bez_zadnej_cechy": 0
 }
 
+==============================================================================
+  L_limit_historii_etap1
+==============================================================================
+{
+  "maks_rekordow_kor": 11,
+  "maks_rekordow_neuro": 38,
+  "neuro_pacjenci_ponad_limit_kor": 94,
+  "neuro_rekordy_ponad_limit_kor": 943,
+  "rekordow_na_pacjenta_kor": 1.83,
+  "rekordow_na_pacjenta_neuro": 3.65,
+  "rekordow_na_pacjenta_neuro_przy_limicie_kor": 3.13
+}
+
 Zapisano -> 3-sgkf-split/przygotowanie/results/analiza_decyzji.json

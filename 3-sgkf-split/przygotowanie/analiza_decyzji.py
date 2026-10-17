@@ -22,6 +22,7 @@ przygotowanie/results/analiza_decyzji.json.
   I. redundancja MONO / %MONO                      (decyzja 0.4: 38 cech, 35 jako wrażliwość)
   J. cenzurowanie eGFR
   K. kontrole jakości danych po czyszczeniu
+  L. limit historii z etapu 1 (11 rekordów KOR, 38 NEURO): co zmieniłby wspólny limit (17.10.2026)
 
 Uruchomienie:
     python 3-sgkf-split/przygotowanie/analiza_decyzji.py
@@ -289,6 +290,23 @@ def k_kontrole(czyste: pd.DataFrame) -> dict:
             "wiersze_bez_zadnej_cechy": int(czyste[feat].isna().all(axis=1).sum())}
 
 
+def l_limit_historii(czyste: pd.DataFrame) -> dict:
+    """Etap 1 zostawił najnowsze rekordy z limitem ustalonym osobno dla kohort.
+
+    Pokazuje, ile rekordów NEURO przekracza limit KOR i jak zmieniłaby się
+    liczba rekordów na pacjenta przy wspólnym limicie (bez ponownego czyszczenia).
+    """
+    n = czyste.groupby([KOL_ETYKIETA, KOL_PACJENT]).size()
+    kor, neuro = n.loc[0], n.loc[1]
+    limit = int(kor.max())
+    return {"maks_rekordow_kor": limit, "maks_rekordow_neuro": int(neuro.max()),
+            "neuro_pacjenci_ponad_limit_kor": int((neuro > limit).sum()),
+            "neuro_rekordy_ponad_limit_kor": int((neuro[neuro > limit] - limit).sum()),
+            "rekordow_na_pacjenta_kor": _r(kor.mean(), 2),
+            "rekordow_na_pacjenta_neuro": _r(neuro.mean(), 2),
+            "rekordow_na_pacjenta_neuro_przy_limicie_kor": _r(neuro.clip(upper=limit).mean(), 2)}
+
+
 # ---------------------------------------------------------------------------
 
 def main() -> None:
@@ -311,6 +329,7 @@ def main() -> None:
         "I_redundancja_mono": i_redundancja_mono(czyste),
         "J_cenzurowanie_egfr": j_egfr(czyste),
         "K_kontrole_jakosci": k_kontrole(czyste),
+        "L_limit_historii_etap1": l_limit_historii(czyste),
     }
 
     for klucz, w in wyniki.items():
