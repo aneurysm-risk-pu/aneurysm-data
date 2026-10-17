@@ -1,6 +1,6 @@
 # Przewodnik po projekcie: powrót po przerwie
 
-*Notatki dla Łukasza, 04.10.2026, liczby i wnioski poprawione po weryfikacji 16.10.2026. Nie jest to dokument dla prowadzącego, tylko ściąga do zrozumienia, co tu się dzieje i dlaczego.*
+*Notatki dla Łukasza, 04.10.2026, liczby i wnioski poprawione po weryfikacji 16–17.10.2026. Nie jest to dokument dla prowadzącego, tylko ściąga do zrozumienia, co tu się dzieje i dlaczego.*
 
 Jeśli masz 15 minut: przeczytaj sekcje 1, 2 i 7. Jeśli masz godzinę: całość, a potem pytania kontrolne na końcu.
 
@@ -193,6 +193,20 @@ NRBC (erytroblasty) u dorosłych jest prawie zawsze 0: w 78% zmierzonych rekord�
 
 Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sam wzorzec braków odróżnia u nas kohorty z AUC 0,82. Lepiej tę informację kontrolować jawnie (wykluczyć cechę, dodać wskaźnik braku, porównać z modelem na cechach bez braków), niż liczyć, że zniknęła.
 
+### 6.7 Ukrywanie chorych nie usuwa skrótów (kontrola z 17.10)
+
+Ocena przez ukrywanie wygląda na odporną na skróty, ale nie jest. Ukrywamy losowo wybranych chorych z NEURO, więc ukryci mają te same cechy kohorty co widoczni chorzy: okres badań, wzorzec braków i ślad NRBC. Model, który nauczył się rozpoznawać kohortę, wypchnie ich na górę rankingu bez żadnej wiedzy o tętniaku.
+
+`3-sgkf-split/sgkf/kontrola_skrotow.py` to sprawdza (40% ukrytych, 5 ziaren, orientacyjny protokół). Odsetek ukrytych chorych w górnych 5% rankingu:
+- losowy ranking: 5%,
+- sam wiek i płeć: 14%,
+- **sam wzorzec braków: 52%**,
+- 38 cech po imputacji: 66%.
+
+Lekcja: `RecallHidden@q` ma sens tylko obok modeli kontrolnych liczonych na tych samych maskach. Liczy się przewaga nad modelem na samym wzorcu braków, a i ona nie dowodzi jeszcze wykrywania choroby. W raporcie piszemy „odzyskiwanie znanych chorych w tym zbiorze”, a nie „skuteczność wykrywania tętniaka”.
+
+Drobiazg z tej samej kontroli: losowy wynik rekordów zagregowany medianą do pacjenta daje 2,8% zamiast 5%. Mediana wielu losowych liczb leży blisko środka, więc pacjenci z wieloma rekordami rzadko trafiają na skraj rankingu. Losowy punkt odniesienia trzeba więc liczyć na pacjentach.
+
 ---
 
 ## 7. Dziennik decyzji: co, dlaczego, jaka alternatywa
@@ -203,7 +217,7 @@ Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sa
 | stratyfikacja etykieta × okno × n_rek | wyrównuje znane skróty między foldami | tylko etykieta: foldy rozjeżdżają się do 8 pp |
 | zapisany przydział | powtarzalność między komputerami i wersjami | przepis + seed: zależny od sklearn |
 | MICE w foldzie | brak wycieku przez preprocessing | imputacja globalna: wyciek |
-| MICE (ExtraTrees) zamiast MissForest | wygrywa na NEURO, jeden imputer dla obu; szybszy tylko na KOR (na NEURO wolniejszy) | MissForest lepszy tylko na KOR |
+| MICE (ExtraTrees) zamiast MissForest | nieznacznie lepszy na NEURO (0,002–0,004 RMSE), jeden imputer dla obu; szybszy tylko na KOR (na NEURO wolniejszy) | MissForest lepszy tylko na KOR; wybór to kompromis, nie wyraźna wygrana |
 | jeden zestaw 38 cech, selekcja z etapu 1 cofnięta | w PU etykieta to kohorta, więc kryterium działa w złą stronę; granica wyboru była remisem rozstrzygniętym alfabetycznie; zgodność z benchmarkiem imputacji. Wyciek był formalny, realny wpływ znikomy (\|ρ\| ≤ 0,02) | 35 cech: bez istotnej różnicy w imputacji, ale uzasadnienie niezależne od etykiety istnieje tylko dla MONO/%MONO (redundancja) |
 | mediana jako agregacja do pacjenta | najmniej koreluje z liczbą badań | maksimum przenosi liczbę badań do 19 z 38 cech (mediana do 2); „ostatni” znaczy co innego w każdej kohorcie |
 | mieszani: pozytywni, rekordy KOR usunięte | rozpoznanie jest faktem; rekordy KOR mogą być sprzed choroby | zostawić KOR z etykietą 1: uczy „profilu chorego” na rutynowych wynikach; wykluczyć: −63 z 1 823 pozytywnych |
@@ -214,6 +228,8 @@ Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sa
 | przygotowanie danych jako osobny krok z plikiem wynikowym | decyzje w jednym miejscu, spis zmian, odcisk pliku chroni podział | czyszczenie „w locie” przy wczytywaniu: decyzje ukryte w kodzie podziału |
 | ocena imputacji protokołem z etapu 2, out-of-fold, plus realistyczne wzorce braków | porównywalność z benchmarkiem; realistyczne braki pokazują prawdziwą użyteczność imputacji | porównanie rozkładów uzupełnionych i zmierzonych: nie mierzy błędu, bo prawdy nie znamy |
 | `q` nie jest hiperparametrem | strojenie `q` to dobieranie definicji sukcesu pod wynik | — |
+| modele kontrolne w każdym porównaniu (losowy na pacjentach, demografia, sam wzorzec braków) | ukryci chorzy zachowują cechy kohorty; sam wzorzec braków odzyskuje 52% z nich w top 5% | sam `RecallHidden@q`: pomyliłby skróty z chorobą |
+| czyszczenie z etapu 1: na razie ograniczenie | reguły ustalano osobno dla kohort, na całych danych; poprawienie wymaga odtworzenia etapu 1 i ponownego zamrożenia | ujednolicenie od razu: duża praca przed decyzją prowadzącego (pytanie na spotkanie) |
 
 ---
 
@@ -223,10 +239,12 @@ Ogólna lekcja: **imputacja nie usuwa informacji o braku, tylko ją ukrywa.** Sa
 2. **Nie licz podziału od nowa w kolejnych etapach.** Czytaj `3-sgkf-split/sgkf/results/pacjent_fold.csv` przez `wczytaj_podzial()`. Prototyp PU z września liczył własny podział; w nowym kodzie modelowania tego nie powtarzać.
 3. **Metryki licz na pacjentach, nie na rekordach.** Inaczej pacjent z 38 rekordami waży 38 razy więcej.
 4. **Nie dodawaj roku ani liczby rekordów jako cechy.** Ułatwiłoby to modelowi rozpoznanie kohorty, a nie choroby.
-5. **Nie nazywaj wyniku „prawdopodobieństwem tętniaka”**, tylko *risk score*, dopóki nie jest skalibrowany.
+5. **Nie nazywaj wyniku „prawdopodobieństwem tętniaka”**, tylko rankingiem (*risk score*). Kalibracja tego nie zmieni, bo nie znamy statusu KOR, a dobór kohort nie spełnia SCAR.
 6. **Pełny przebieg MICE to ~3 min na fold na Macu (M-series)**, około 16 min na wariant cech; z walidacją zagnieżdżoną wielokrotność tego. Do sprawdzania ścieżki: `--podprobka 3000 --szybkie-mice`.
 7. **Nie poprawiaj ręcznie `data/processed/aneurysm_sgkf_input.csv`.** Zmień regułę w `przygotuj_dane.py` i uruchom `uruchom_sgkf.py`; test w części A wykryje każdą ręczną zmianę.
 8. **Do modelu nie wchodzą kolumny meta**: `patient_id`, `custom_id`, `examination_date`, `label`. `kolumny_cech()` je pomija.
+9. **Nie raportuj `RecallHidden@q` bez modeli kontrolnych** (losowy ranking pacjentów, sama demografia, sam wzorzec braków) na tych samych maskach (sekcja 6.7).
+10. **Losowy punkt odniesienia licz na pacjentach**, nie przez agregację losowych wyników rekordów: mediana daje wtedy 2,8% zamiast 5% przy `q` = 5%.
 
 ---
 
@@ -248,7 +266,7 @@ Szybki start na Macu:
 
 ```bash
 cd ~/repos/aneurysm-data
-.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # część A + podział + testy (~20 s)
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # część A + podział + testy (~40 s)
 .venv/bin/python 3-sgkf-split/sgkf/podzial.py --sprawdz     # czy zapisany podział pasuje do danych
 .venv/bin/python 3-sgkf-split/uruchom_sgkf.py               # całość z imputacją (~35 min)
 ```
@@ -288,6 +306,7 @@ Odpowiedz sobie w głowie, a potem sprawdź pod spodem.
 9. Co było nie tak z selekcją cech z etapu 1, skoro dała „rozsądny” wynik?
 10. RMSE imputacji NEURO wyszło niższe niż w benchmarku. Czy to znaczy, że imputacja NEURO jest teraz lepsza?
 11. Model odróżnia NEURO od KOR samym wzorcem braków z AUC 0,82. Co z tego wynika dla modelowania?
+12. Ukryliśmy 40% chorych, a model odzyskał 66% z nich w górnych 5% rankingu. Czy to dowód, że wykrywa tętniaka?
 
 <details>
 <summary>Odpowiedzi</summary>
@@ -302,7 +321,8 @@ Odpowiedz sobie w głowie, a potem sprawdź pod spodem.
 8. Bo MONO i %MONO są prawie w całości wyliczalne z innych cech: rozmaz sumuje się do 100%, a MONO ≈ %MONO × WBC / 100. Realnie nowej informacji dokłada tylko CRP.
 9. Trzy rzeczy: użyła etykiety na całym zbiorze, czyli wyciek; w PU etykieta to kohorta, więc kryterium wyrzuca cechy, które *nie* odróżniają kohort; a granica wyboru była remisem czterech cech rozstrzygniętym alfabetycznie, więc tą samą metodą mógł wypaść wiek pacjenta. „Rozsądny” wynik dla MONO i %MONO to zbieg okoliczności. Da się go obronić innym argumentem (redundancja), ale nie tym, którego użyto.
 10. Nie wprost. RMSE w skali [0,1] zależy od skalera, a tu skaler pochodzi z danych w 96% KOR. Miara niezależna od skali (stosunek do uzupełniania średnią) daje 0,65 dla NEURO i 0,61 dla KOR, czyli imputacja jest dla obu kohort podobnie dobra.
-11. Że wysokie AUC P-vs-U nie będzie dowodem wykrywania tętniaka. Informacja „które badania zlecono” sama odróżnia kohorty, a imputacja jej nie usuwa (np. podpis NRBC). Potrzebne są analizy wrażliwości: cechy o niskim odsetku braków, ewentualnie bez NRBC.
+11. Że wysokie AUC P-vs-U nie będzie dowodem wykrywania tętniaka. Informacja „które badania zlecono” sama odróżnia kohorty, a imputacja jej nie usuwa (np. podpis NRBC). Potrzebne są analizy wrażliwości (cechy o niskim odsetku braków, ewentualnie bez NRBC) i modele kontrolne w ocenie.
+12. Nie. Sam wzorzec braków odzyskuje 52%, bo ukryci zachowują cechy kohorty NEURO. Liczy się przewaga nad modelami kontrolnymi na tych samych maskach. Nawet ona nie dowodzi wykrywania choroby, tylko pokazuje, że model nie opiera się wyłącznie na skrótach.
 
 </details>
 
@@ -320,11 +340,14 @@ Materiał dla prowadzącego: `1026_SPOTKANIE_PROWADZACY.md`. Poniżej pytania, k
 | Skąd wiecie, że reguła KREA jest dobra? | eGFR liczy się z kreatyniny. Powyżej KREA 10 mg/dl mediana eGFR wraca do normy, czyli te dwa pomiary sobie przeczą. Wiarygodne skrajne przypadki (eGFR < 30) zostają. | 2.2, `analiza_decyzji.json` D |
 | Dlaczego nie usuwacie wartości odstających szerzej? | Usuwamy tylko wartości niemożliwe do przeżycia albo sprzeczne z innym pomiarem; skrajne, ale możliwe stany zostają (K 9–15, WBC > 200). | 2.1 |
 | Czemu 38 cech, skoro w czerwcu było 35? | Przy weryfikacji we wrześniu wyszło, że selekcję zrobiono z użyciem etykiety na całym zbiorze, więc trzeba ją cofnąć albo przenieść do CV (w czerwcu tego nie zauważyliśmy). W PU etykieta to kohorta, więc kryterium działa w złą stronę, a granicę rozstrzygnął remis alfabetyczny. Wpływ na wyniki był znikomy (\|ρ\| ≤ 0,02), więc to porządkowanie metody, nie naprawa błędu. | 2.6, 4.5 |
-| Jak dobra jest imputacja? | Przy losowych brakach jak w benchmarku (0,61–0,65 błędu średniej, obie kohorty). Przy brakach całymi panelami prawie równa średniej. | 4.3 |
-| Czy to znaczy, że model jest dobry, skoro AUC 0,93? | Nie. To rozdzielność kohort, a sam wzorzec braków daje 0,82, a epoka 0,83. Miarą sukcesu będzie odzyskiwanie ukrytych chorych, a nie AUC P-vs-U. | 5.2, plan 3.4 |
+| Jak dobra jest imputacja? | Przy losowych brakach jak w benchmarku (0,61–0,65 błędu średniej, obie kohorty; bez wieku i płci, których nigdy nie brakuje, 0,41–0,45). Przy brakach całymi panelami niewiele lepsza od średniej (0,98 w KOR, 0,89 w NEURO). | 4.3 |
+| Czy to znaczy, że model jest dobry, skoro AUC 0,93? | Nie. To rozdzielność kohort, a sam wzorzec braków daje 0,82, a epoka 0,83. Miarą sukcesu będzie odzyskiwanie ukrytych chorych, a nie AUC P-vs-U, ale zawsze obok modeli kontrolnych. | 5.2, plan 3.4 |
+| Czy ukrywanie chorych rozwiązuje problem skrótów? | Nie. Ukryci zachowują cechy kohorty, a sam wzorzec braków odzyskuje 52% z nich w top 5%. Dlatego porównujemy z modelami kontrolnymi i piszemy „odzyskiwanie znanych chorych w tym zbiorze”. | 5.4 |
+| Czy czyszczenie danych nie zależało od etykiety? | Częściowo tak: w etapie 1 progi kwantylowe i limit historii (11 / 38 rekordów) ustalano osobno dla kohort, na całych danych. Opisujemy to jako ograniczenie, a wyniki jako eksploracyjne. Ujednolicenie reguł to decyzja do podjęcia, bo wymaga ponownego zamrożenia danych. | 7, 1026 sekcja 9 |
+| Czy wyniki NEURO są sprzed rozpoznania? | Nie wiemy. Mediana rozpiętości badań wynosi 35 dni, więc najpewniej to hospitalizacja. Od odpowiedzi zależy cel: wcześniejsze wykrywanie albo rozpoznawanie profilu leczonych. | `analiza_decyzji.json` B2 |
 | Co z rozjazdem czasowym? | Zostaje bez korekty, jako ograniczenie, ale epoka jest wyraźnie widoczna w danych, więc proponujemy analizę wrażliwości we wspólnym oknie dat. | 5.2, 1026 6.1 |
 | Ilu pacjentów i chorych jest w foldzie? | 8 185 pacjentów, około 365 pozytywnych; przy 40% ukrywania około 146 ukrytych na fold. | 3.4, plan 5 |
 | Czy wynik jest powtarzalny? | Tak: przydział zapisany z odciskiem danych, a dwa niezależne przebiegi imputacji dały identyczne odciski wyników. | 3.5, 4.2 |
 
-**Co chcesz wynieść ze spotkania**, czyli odpowiedzi, bez których nie zamrozimy planu modelowania: skąd jest KOR, skąd są wyniki NEURO, akceptacja decyzji o czasie, los NRBC oraz `q` i udział ukrywania.
+**Co chcesz wynieść ze spotkania**, czyli odpowiedzi, bez których nie zamrozimy planu modelowania: skąd jest KOR, skąd są wyniki NEURO (a więc jaki jest cel predykcji), akceptacja decyzji o czasie, los NRBC, decyzja o czyszczeniu z etapu 1, możliwość niezależnej walidacji oraz `q` i udział ukrywania.
 

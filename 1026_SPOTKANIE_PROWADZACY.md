@@ -3,7 +3,7 @@
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
-**Stan na:** 16.10.2026 (branch `pu-modeling-setup-lk`; liczby i wnioski zweryfikowane ponownie 16.10, sekcja 9)
+**Stan na:** 17.10.2026 (branch `pu-modeling-setup-lk`; liczby i wnioski zweryfikowane ponownie 16–17.10, sekcja 9)
 
 **Jak czytać:** 5 minut wystarczy na sekcję 1. Pełny obraz w 15 minut dają sekcje 1–8. Szczegóły techniczne są w dokumentach wymienionych w sekcji 10, a każda liczba pochodzi ze skryptu w repozytorium.
 
@@ -30,10 +30,10 @@
    - nowy, zamrożony podział (v2),
    - pełna imputacja w foldach z oceną jakości,
    - diagnostyka „skrótów” w danych.
-4. **Najważniejszy wniosek merytoryczny: kohorty różnią się wieloma rzeczami poza chorobą.** Różnią się okresem, tym, które badania zlecano, i najpewniej typem pacjenta. Wysokie AUC P-vs-U nie będzie więc dowodem wykrywania tętniaka. Ocena musi się opierać na odzyskiwaniu ukrytych pozytywnych i na analizach wrażliwości.
+4. **Najważniejszy wniosek merytoryczny: kohorty różnią się wieloma rzeczami poza chorobą.** Różnią się okresem, tym, które badania zlecano, i najpewniej typem pacjenta. Wysokie AUC P-vs-U nie będzie więc dowodem wykrywania tętniaka. Nie będzie nim też sam wysoki wynik odzyskiwania ukrytych chorych. Ukryci zachowują bowiem cechy kohorty NEURO, a model, który widzi tylko to, jakie badania zlecono, odzyskuje około połowy z nich w górnych 5% rankingu. Ocena musi więc porównywać modele z modelami kontrolnymi na tych samych maskach i opierać się na analizach wrażliwości.
 5. **Czego potrzebujemy ze spotkania:**
    - potwierdzenia decyzji,
-   - informacji o pochodzeniu danych (KOR, NEURO),
+   - informacji o pochodzeniu danych (KOR, NEURO) i o celu predykcji: wcześniejsze wykrywanie choroby czy rozpoznawanie profilu pacjentów już leczonych,
    - parametrów oceny (`q`, udział ukrywania),
    - podziału prac na etap modelowania.
 
@@ -220,7 +220,7 @@ Na zamrożonych foldach sprawdziliśmy, jak łatwo odróżnić grupy, które nie
 | NEURO vs KOR, tylko rekordy ze wspólnego okna dat (pacjenci)¹ | 0,80 |
 | NEURO z okna dat KOR vs NEURO z innych lat (rekordy) | **0,83** |
 
-¹ Imputer dopasowano na całym treningu foldu, ze wszystkich okresów, a okno wybrano dopiero po imputacji. Wersja w pełni ograniczona do okna jest zaplanowana jako analiza wrażliwości.
+¹ Okno wybrano dopiero po imputacji, a imputer dopasowano na całym treningu foldu, ze wszystkich okresów. Kontrola z 17.10 na danych bez imputacji (braki jako NaN) daje 0,83, więc wynik od imputacji nie zależy. Ograniczeniem pozostaje mała próba: rekord w oknie ma 271 chorych.
 
 **Kontrola z 06.10, uzupełniona 16.10** (`3-sgkf-split/sgkf/kontrola_epoki.py`). Ostatni test liczono na danych po imputacji, więc nie wiadomo było, gdzie siedzi sygnał epoki. Na danych przed imputacją, na tych samych rekordach z kompletnym panelem, wychodzi tak:
 - same zmierzone wartości panelu dają AUC 0,56–0,65 (morfologia: 0,56; morfologia z rozmazem: 0,65),
@@ -234,10 +234,27 @@ Najsilniejszym pojedynczym śladem epoki jest więc to, *które badania zlecano*
 
 **Ślad imputacji.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i w 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO, wobec 8,5% w całych danych. Model widzący tylko NRBC po imputacji odróżnia kohorty z AUC 0,73 (rekordy), tak samo jak sam wskaźnik braku NRBC. Uzupełnienie nie ukrywa więc informacji, że badania nie zrobiono. Nie jest to jednak jednoznaczny znacznik NEURO: wśród wszystkich rekordów z małym niezerowym NRBC (0–0,05) NEURO stanowi 19%, bo takie wartości dają też pomiary.
 
+**Kontrola z 17.10: ile odzyskiwania ukrytych chorych dają same skróty** (`3-sgkf-split/sgkf/kontrola_skrotow.py`). Ukrywamy losowo wybranych chorych z NEURO, więc ukryci zachowują cechy swojej kohorty: okres badań, wzorzec braków i ślad imputacji. Sprawdziliśmy, jaki `RecallHidden@q` dają modele, które widzą tylko takie cechy. Protokół jest orientacyjny, bo nie został jeszcze zamrożony: 40% ukrytych chorych, 5 ziaren, zamrożone foldy, średnio 146 ukrytych na fold.
+
+| Model | Ukryci chorzy w górnych 5% rankingu (`RecallHidden@5%`) |
+|---|---:|
+| losowy ranking | 5% |
+| tylko wiek i płeć | 14% |
+| **tylko wzorzec braków** (które badania zlecono) | **52%** |
+| 38 cech po imputacji MICE | 66% |
+| 38 cech bez imputacji (braki jako NaN) | 70% |
+
+Sam wzorzec braków osiąga około 3/4 wyniku pełnego modelu. W wariancie z jednym profilem na pacjenta zamiast rekordów wychodzi podobnie (56% i 69%). Wysoki `RecallHidden@q` mierzy więc odzyskiwanie znanych chorych NEURO w tym zbiorze, także dzięki skrótom. Nie jest to dowód wykrywania tętniaka.
+
 **Wnioski dla modelowania:**
 - AUC P-vs-U raportujemy tylko jako rozdzielność kohort.
-- Główną miarą jest odzyskiwanie ukrytych pozytywnych.
-- Niezbędne są analizy wrażliwości: model na wartościach zmierzonych z paneli o niskim odsetku braków, model we wspólnym oknie dat i model bez NRBC.
+- Główną miarą zostaje odzyskiwanie ukrytych pozytywnych (`RecallHidden@q`), ale zawsze obok modeli kontrolnych liczonych na tych samych maskach: losowego, samej demografii i samego wzorca braków. Liczy się przewaga nad nimi, a nie sama wartość. Przewaga nie dowodzi jeszcze wykrywania choroby, ale jej brak pokazuje, że model opiera się głównie na skrótach.
+- Wynik opisujemy jako „odzyskiwanie znanych chorych w tym zbiorze”. Model daje ranking pacjentów, a nie prawdopodobieństwo tętniaka. Skuteczność wśród niewykrytych chorych w KOR wymagałaby niezależnej walidacji.
+- Niezbędne są analizy wrażliwości:
+  - model na wartościach zmierzonych z paneli o niskim odsetku braków,
+  - model we wspólnym oknie dat, z preprocessingiem dopasowanym tylko w oknie,
+  - model bez NRBC,
+  - porównanie MICE z prostym uzupełnieniem średnią albo medianą.
 
 ### 4.6 Porządki i odtwarzalność
 
@@ -275,6 +292,7 @@ Decyzje przygotował i wdrożył Łukasz 04.10. **Są propozycją do akceptacji 
 | 4 | rozjazd czasowy kohort | bez korekty, ograniczenie + analiza wrażliwości we wspólnym oknie dat | obcięcie do wspólnego okna zostawia 271 z 1 823 pozytywnych |
 | 5 | asymetria braków | bez korekty, raportowana w każdym foldzie; analiza wrażliwości na wartościach zmierzonych | sam wzorzec braków odróżnia kohorty (AUC 0,82) |
 | 6 | podział | 5 foldów po pacjentach, 12 warstw, seed 42, zamrożony | rozstęp udziału pozytywnych 0,01 pp; niezależny od wersji bibliotek |
+| 7 | czyszczenie z etapu 1: progi kwantylowe i limit historii (11 rekordów w KOR, 38 w NEURO) ustalone osobno dla kohort, na całych danych przed podziałem | na razie bez zmian, opisane jako ograniczenie; wyniki traktujemy jako eksploracyjne. **Do decyzji:** czy ujednolicić reguły przy ponownym zamrożeniu danych | wspólny limit 11 rekordów usunąłby 943 rekordy 94 chorych (3,13 zamiast 3,65 rekordu na chorego). Ujednolicenie wymaga odtworzenia etapu 1 z notebooków i ponownego przeliczenia etapu 3; przy okazji wróciłby rekord usunięty przez kolizję klucza (sekcja 3.3) |
 
 ---
 
@@ -283,15 +301,17 @@ Decyzje przygotował i wdrożył Łukasz 04.10. **Są propozycją do akceptacji 
 W kolejności wpływu na projekt:
 
 1. **Skąd pochodzi kohorta KOR?** Jaki oddział lub jakie kryteria włączenia? Czy to pacjenci hospitalizowani i czy ma to związek z okresem pandemii? Od odpowiedzi zależy interpretacja klasy U i sens zastosowania przesiewowego.
-2. **Skąd pochodzą wyniki NEURO?** Czy są sprzed rozpoznania tętniaka, czy z hospitalizacji, w trakcie której go rozpoznano i leczono? Czy da się uzyskać datę rozpoznania?
+2. **Skąd pochodzą wyniki NEURO i jaki jest cel predykcji?** Czy badania wykonano przed rozpoznaniem tętniaka, w trakcie hospitalizacji, w której go rozpoznano, czy po leczeniu? Czy da się uzyskać datę rozpoznania? Od odpowiedzi zależy, czy badamy możliwość wcześniejszego wykrywania choroby, czy rozpoznawanie profilu pacjentów już hospitalizowanych lub leczonych. Bez tej informacji bezpieczny zakres projektu to eksploracyjny ranking PU w dostępnych kohortach.
 3. **Rozjazd czasowy:** czy akceptuje Pan „bez korekty” z analizą wrażliwości we wspólnym oknie dat?
 4. **NRBC i %NRBC:** wykluczyć z modelowania? Uzupełnione wartości zdradzają brak badania (sekcja 4.5), a u dorosłych cechy mają niską wartość kliniczną.
 5. **Parametry oceny:**
    - `q`, czyli ilu pacjentów realnie da się skierować na obrazowanie,
    - główny udział ukrywanych pozytywnych (propozycja: 40%),
    - metody PU (propozycja: PU Bagging i korekta Elkana–Noto obok modeli bazowych; sama korekta Elkana–Noto dzieli wynik przez stałą, więc nie zmienia rankingu ani `RecallHidden@q` względem modelu bazowego, a inny wynik daje dopiero wariant z ważonym ponownym treningiem),
-   - reguła agregacji rekordów do pacjenta (propozycja: mediana).
-6. **Termin i oczekiwany zakres raportu końcowego.**
+   - reguła agregacji rekordów do pacjenta (propozycja: mediana),
+   - modele kontrolne na tych samych maskach (losowy, sama demografia, sam wzorzec braków) jako stały punkt odniesienia.
+6. **Walidacja:** czy jest szansa na sprawdzenie modelu na niezależnej kohorcie, zebranej w podobny sposób, albo na kliniczną weryfikację części wskazań? Bez tego wynik możemy opisać tylko jako odzyskiwanie znanych chorych w tym zbiorze.
+7. **Termin i oczekiwany zakres raportu końcowego.**
 
 Pełna lista kwestii technicznych: `4-pu-setup/PLAN_MODELOWANIA.md`, sekcja 7.
 
@@ -302,6 +322,7 @@ Pełna lista kwestii technicznych: `4-pu-setup/PLAN_MODELOWANIA.md`, sekcja 7.
 **Zanim powstanie pierwszy model, trzeba zamrozić protokół:**
 - maski ukrywania (całych pacjentów, identyczne dla wszystkich modeli),
 - metryki liczone na pacjentach z ustalonym `q`,
+- modele kontrolne liczone na tych samych maskach (losowy ranking pacjentów, sama demografia, sam wzorzec braków),
 - scenariusz główny i analizy wrażliwości.
 
 Strojenia `q` pod wynik nie dopuszczamy.
@@ -309,24 +330,24 @@ Strojenia `q` pod wynik nie dopuszczamy.
 | # | Pakiet | Zakres | Zależy od | Kto |
 |---|---|---|---|---|
 | 0 | przegląd i scalenie | zespół przegląda zmiany od 11.09; scalenie `pu-modeling-setup-lk` → `master`; wspólny `requirements.txt` z przypiętymi wersjami | — | wszyscy |
-| 1 | protokół oceny | ukrywanie pozytywnych, `RecallHidden@q`, Lift@q, RecallKnown, funkcja celu; punkt wyjścia: prototyp `2cb6d1a` | pytanie 5 z sekcji 7 | do ustalenia |
+| 1 | protokół oceny | ukrywanie pozytywnych, `RecallHidden@q`, Lift@q, RecallKnown, funkcja celu, modele kontrolne; jednostka treningu i kolejność agregacji względem imputacji; punkt wyjścia: prototyp `2cb6d1a` i `kontrola_skrotow.py` | pytania 2 i 5 z sekcji 7 | do ustalenia |
 | 2 | pipeline modelowania | walidacja zagnieżdżona na zamrożonych foldach, imputacja od nowa w foldach wewnętrznych, agregacja do pacjenta | 1 | do ustalenia |
 | 3 | modele bazowe | regresja logistyczna (z regularyzacją, bo procenty rozmazu sumują się do 100%), Random Forest, jeden boosting | 2 | do ustalenia |
 | 4 | metody PU | PU Bagging, Elkan–Noto w wariancie z ważonym treningiem (class prior szacowany tylko na treningu) | 2 | do ustalenia |
-| 5 | analizy wrażliwości | wartości zmierzone z paneli o niskim odsetku braków; wspólne okno dat; bez NRBC; bez 63 pacjentów mieszanych | 3, 4 | do ustalenia |
+| 5 | analizy wrażliwości | wartości zmierzone z paneli o niskim odsetku braków; wspólne okno dat z preprocessingiem dopasowanym w oknie; bez NRBC; bez 63 pacjentów mieszanych; MICE wobec prostego uzupełnienia średnią lub medianą | 3, 4 | do ustalenia |
 | 6 | raport końcowy | metodologia etapów 1–3 (materiał gotowy), ograniczenia, wyniki | wszystko | do ustalenia |
 
 Pakiety 3 i 4 można prowadzić równolegle, gdy gotowe są pakiety 1 i 2.
 
 **Koszt obliczeń.** MICE zajmuje około 3 minut na fold (Mac M-series). Walidacja zagnieżdżona 5 × 3 oznacza około godziny na jedną konfigurację preprocessingu. Wynik preprocessingu nie zależy od hiperparametrów klasyfikatora, więc da się go zapisać raz na split i używać ponownie.
 
-**Czego się spodziewać.** Przy 40% ukrywania na fold przypada około 146 ukrytych chorych, więc rozdzielczość `RecallHidden@q` wynosi około 0,7 pp. We wspólnym oknie dat zostałoby około 22 ukrytych na fold. Dlatego to okno nadaje się na analizę wrażliwości, ale nie na scenariusz główny.
+**Czego się spodziewać.** Przy 40% ukrywania na fold przypada około 146 ukrytych chorych, więc rozdzielczość `RecallHidden@q` wynosi około 0,7 pp. Poprzeczkę ustawiają modele kontrolne: sam wzorzec braków odzyskuje około 52% ukrytych w górnych 5% (sekcja 4.5). We wspólnym oknie dat zostałoby około 22 ukrytych na fold. Dlatego to okno nadaje się na analizę wrażliwości, ale nie na scenariusz główny.
 
 ---
 
-## 9. Weryfikacja repozytorium (06.10 i 16.10.2026)
+## 9. Weryfikacja repozytorium (06.10 i 16–17.10.2026)
 
-### 9.1 Druga weryfikacja, 16.10.2026
+### 9.1 Druga weryfikacja, 16–17.10.2026
 
 Liczby i wnioski sprawdziliśmy ponownie w środowisku, w którym powstały wyniki (Python 3.9.6, sklearn 1.6.1, pandas 2.3.3). Najważniejsze liczby policzyliśmy niezależnym skryptem, bez kodu projektu.
 
@@ -353,11 +374,18 @@ Liczby i wnioski sprawdziliśmy ponownie w środowisku, w którym powstały wyni
    - opis KOR: „nie wiemy, czy wykonano obrazowanie” zamiast „nikt nie robił obrazowania”,
    - czyszczenie z etapu 1 było ustawiane osobno dla kohort (sekcja 3.3).
 
+**Dodane 17.10, po przeglądzie listy problemów przed modelowaniem:**
+9. Odzyskiwanie ukrytych chorych też jest podatne na skróty: sam wzorzec braków daje `RecallHidden@5%` około 52% (sekcja 4.5). Zmieniło to wnioski dla modelowania (modele kontrolne na tych samych maskach), opis wyniku w sekcji 1 i pakiety 1 i 5 w sekcji 8.
+10. Rozdzielność kohort we wspólnym oknie dat bez imputacji wynosi 0,83, więc wcześniejsze zastrzeżenie o imputacji dopasowanej na innych okresach nie zmienia wniosku (sekcja 4.5).
+11. Czyszczenie z etapu 1 trafiło do decyzji do potwierdzenia (sekcja 6, pkt 7), a pytanie o pochodzenie wyników NEURO doprecyzowaliśmy o cel predykcji. Doszło pytanie o niezależną walidację (sekcja 7).
+12. W planie modelowania poprawiliśmy opis reguły „ostatni”: `groupby.last()` bierze ostatnią dostępną wartość każdej cechy, a nie jedno ostatnie badanie. Dopisaliśmy też, że losowy punkt odniesienia trzeba liczyć na pacjentach. Losowy wynik rekordów zagregowany medianą daje bowiem 3% zamiast 5%, bo agregacja predykcji wchodzi w interakcję z liczbą rekordów pacjenta.
+
 Nowe liczby liczą skrypty z repozytorium:
 - `ocena_imputacji.py`: wynik bez wieku i płci, rozrzut uzupełnień,
 - `analiza_wynikow.py`: sekcja E (NRBC) i mianowniki profilu,
 - `kontrola_epoki.py`: porównanie na tych samych rekordach,
-- `analiza_decyzji.py`: wartości skrajne po przygotowaniu,
+- `kontrola_skrotow.py` (17.10): `RecallHidden@q` modeli kontrolnych i rozdzielność w oknie bez imputacji,
+- `analiza_decyzji.py`: wartości skrajne po przygotowaniu i limit historii z etapu 1 (sekcja L),
 - `4-pu-setup/etap0_agregacja.py`: obecne wejście.
 
 ### 9.2 Pierwsza weryfikacja, 06.10.2026
@@ -391,6 +419,7 @@ Sprawdzono ją w innym środowisku niż to, w którym powstały wyniki (Python 3
 | cały etap 3 jednym poleceniem | `python 3-sgkf-split/uruchom_sgkf.py` |
 | pełny opis etapów 1–3, kto co zrobił, decyzje | `1026_REALIZACJA_DO_SGKF.md` |
 | szczegóły techniczne etapu 3 | `3-sgkf-split/RAPORT_SGKF_MICE.md` |
+| kontrole skrótów: okres badań, modele kontrolne w odzyskiwaniu ukrytych | `3-sgkf-split/sgkf/kontrola_epoki.py`, `3-sgkf-split/sgkf/kontrola_skrotow.py` (`RAPORT_SGKF_MICE.md`, sekcje 5.2 i 5.4) |
 | benchmark imputacji | `2-imputation/RAPORT_IMPUTACJA.md` |
 | propozycja planu modelowania | `4-pu-setup/PLAN_MODELOWANIA.md` |
 | stan na raport przejściowy (historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |

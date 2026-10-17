@@ -3,7 +3,7 @@
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Zespół:** Łukasz Kubik (kierownik), Liwia Florkiewicz, Dominika Malisz, Adrian Meredyk
 **Opiekun:** dr inż. Patryk Jasik (IFiIS)
-**Stan na:** 04.10.2026, z poprawkami po weryfikacji z 06.10 i 16.10.2026 (branch `pu-modeling-setup-lk`)
+**Stan na:** 04.10.2026, z poprawkami po weryfikacji z 06.10 i 16–17.10.2026 (branch `pu-modeling-setup-lk`)
 **Zakres:** etapy 1–3: przygotowanie danych, imputacja braków, przygotowanie danych do podziału i kontrolowany podział z imputacją w foldach (SGKF). Propozycja dalszych prac (modelowanie PU) jest w `4-pu-setup/PLAN_MODELOWANIA.md`; plan obowiązujący zostanie ustalony z prowadzącym.
 
 Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej podstawie i z jakim wynikiem**, do momentu, w którym dane są gotowe do modelowania. Jest punktem wejścia; szczegóły techniczne zostają w raportach etapów, do których prowadzą odnośniki. Każda liczba pochodzi z plików i skryptów w repozytorium; przy decyzjach z 04.10.2026 wskazany jest skrypt, który ją liczy.
@@ -21,7 +21,8 @@ Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej 
    - kohorty niemal nie pokrywają się w czasie, a okres badania da się rozpoznać w danych samych chorych (AUC 0,83); najsilniejszym śladem jest zestaw zleconych badań, ale nie jedynym,
    - sam wzorzec braków odróżnia kohorty z AUC 0,82, a imputacja zostawia rozpoznawalny ślad (NRBC),
    - przy brakach całymi panelami MICE jest niewiele lepsze od uzupełniania średnią,
-   - KOR ma profil szpitalny, a wyniki NEURO najpewniej pochodzą z hospitalizacji.
+   - KOR ma profil szpitalny, a wyniki NEURO najpewniej pochodzą z hospitalizacji,
+   - ukryci chorzy zachowują cechy kohorty NEURO: sam wzorzec braków odzyskuje około 52% z nich w górnych 5% rankingu, więc także odzyskiwanie ukrytych wymaga porównania z modelami kontrolnymi.
 
    Te ryzyka idą do ograniczeń raportu (sekcja 9) i do pytań na spotkanie (`1026_SPOTKANIE_PROWADZACY.md`).
 
@@ -294,6 +295,8 @@ Szczegóły, tabele per fold i odciski wyników: `3-sgkf-split/RAPORT_SGKF_MICE.
 1. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w danych samych chorych z AUC 0,83. Kontrola przed imputacją (`kontrola_epoki.py`) pokazuje na tych samych rekordach: wzorzec braków 0,76–0,77, zmierzone wartości paneli 0,56–0,65, wszystkie 38 cech 0,86. Wysokie AUC w modelowaniu P-vs-U nie będzie więc dowodem wykrywania tętniaka.
 2. **Imputacja zostawia rozpoznawalny ślad.** Zmierzone NRBC to w 78% dokładne zera, a uzupełnione nigdy nie są zerem. NRBC brakuje w 48% rekordów NEURO i 3% KOR, więc 63% rekordów z uzupełnionym NRBC to NEURO (w całych danych 8,5%). Samo NRBC po imputacji odróżnia kohorty z AUC 0,73, tak jak sam wskaźnik braku NRBC: uzupełnienie nie ukrywa informacji o braku badania. Przy skośnych rozkładach (CRP, GLU) uzupełnienia są wyższe od typowej zmierzonej wartości, bo skupiają się wokół średniej.
 3. **KOR ma profil szpitalny, nie przesiewowy.** Wśród zmierzonych wyników KOR CRP > 5 mg/l ma 61% (NEURO 62%), WBC > 10 G/l 37%, glukoza > 99 mg/dl 64%. Mianownikiem są badania wykonane: CRP zmierzono w 81% rekordów KOR, glukozę w 50%; względem wszystkich rekordów KOR CRP > 5 mg/l ma 50%. KOR wygląda na pacjentów hospitalizowanych z lat 2020–2021, a nie na populację ogólną. To hipoteza i pytanie do prowadzącego.
+4. **Skróty wystarczają, żeby odzyskać dużą część ukrytych chorych** (`3-sgkf-split/sgkf/kontrola_skrotow.py`, 17.10.2026). Ukrywamy losowo wybranych chorych z NEURO, więc ukryci zachowują okres badań, wzorzec braków i ślad imputacji swojej kohorty. Przy 40% ukrytych i 5 ziarnach `RecallHidden@5%` wynosi: losowy ranking 5%, sama demografia 14%, **sam wzorzec braków 52%**, 38 cech po imputacji MICE 66%, 38 cech bez imputacji 70%. Wysoki `RecallHidden@q` nie będzie więc sam w sobie dowodem wykrywania tętniaka. Każdy model porównujemy z modelami kontrolnymi na tych samych maskach, a wynik opisujemy jako odzyskiwanie znanych chorych w tym zbiorze. Protokół tej kontroli jest orientacyjny, bo nie ustalono jeszcze jednostki treningu ani agregacji.
+5. **Rozdzielność we wspólnym oknie dat nie zależy od imputacji.** W teście z tabeli okno wybierano po imputacji dopasowanej także na innych okresach. Bez imputacji (braki jako NaN) AUC na pacjentach wynosi 0,83, wobec 0,80 po imputacji.
 
 Szczegóły: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 5.
 
@@ -431,11 +434,13 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 | Nr | Kwestia | Stan | Kto |
 |---|---|---|---|
 | — | **skąd pochodzi kohorta KOR**: profil laboratoryjny wskazuje na pacjentów szpitalnych z lat 2020–2021 | pytanie | prowadzący / właściciel danych |
-| 0.2b | czy wyniki NEURO pochodzą sprzed rozpoznania, czy z hospitalizacji | założenie: hospitalizacja | prowadzący / właściciel danych |
+| 0.2b | czy wyniki NEURO pochodzą sprzed rozpoznania, z hospitalizacji, w której go rozpoznano, czy po leczeniu, czyli jaki jest cel predykcji: wcześniejsze wykrywanie czy rozpoznawanie profilu leczonych | założenie: hospitalizacja; bez odpowiedzi zakres eksploracyjny | prowadzący / właściciel danych |
+| — | czyszczenie z etapu 1 ustawione osobno dla kohort (kwantyle, limit historii 11 / 38 rekordów): ograniczenie czy ujednolicenie przy ponownym zamrożeniu danych | ograniczenie; wspólny limit 11 usunąłby 943 rekordy 94 chorych (`analiza_decyzji.json`, sekcja L) | zespół + prowadzący |
+| — | walidacja na niezależnej kohorcie albo kliniczna weryfikacja części wskazań | brak; bez niej wynik = odzyskiwanie znanych chorych w tym zbiorze | prowadzący |
 | 0.2 | rozjazd czasowy: „bez korekty” wobec AUC 0,83 dla epoki w NEURO | decyzja zespołu do potwierdzenia; minimum: analiza wrażliwości we wspólnym oknie | zespół + prowadzący |
 | — | obsługa śladu braków w modelowaniu (wzorzec braków AUC 0,82, podpis NRBC) | propozycja: analiza wrażliwości na cechach o niskim odsetku braków | zespół, przy planie modelowania |
 | 0.3 | reguła agregacji rekordów do pacjenta | rekomendacja: mediana | zespół, przy planie modelowania |
-| — | plan modelowania (wartość `q`, udział ukrywania, metody PU) | propozycja w `4-pu-setup/PLAN_MODELOWANIA.md` | zespół + prowadzący |
+| — | plan modelowania (wartość `q`, udział ukrywania, metody PU, modele kontrolne) | propozycja w `4-pu-setup/PLAN_MODELOWANIA.md` | zespół + prowadzący |
 
 ---
 
@@ -452,6 +457,8 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 9. **Imputacja deterministyczna**; mechanizm braków niezbadany.
 10. **Reguły wartości niemożliwych są zachowawcze**; błędy ukryte w średniej tygodniowej mogły zostać. eGFR jest cenzurowane (60 / 90).
 11. Części historycznych kroków filtracji (stan pośredni 73 276 / 7 611 rekordów, odcięcia percentylowe) **nie da się odtworzyć jednym skryptem**, bo istnieją tylko w notebookach i notatkach.
+12. **Odzyskiwanie ukrytych pozytywnych mierzy odzyskiwanie znanych chorych w tym zbiorze.** Ukryci zachowują cechy kohorty NEURO, a sam wzorzec braków odzyskuje około 52% z nich w górnych 5% rankingu. Skuteczność wśród niewykrytych chorych w KOR wymagałaby niezależnej walidacji.
+13. **Model daje ranking, a nie prawdopodobieństwo tętniaka.** Ani metoda PU, ani kalibracja nie usuwają skutków doboru kohort.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Wersja 1:** 11.06.2026, StratifiedGroupKFold na rekordach, materiał do raportu przejściowego (`archiwum/`)
 **Wersja 2:** 04.10.2026, decyzje dotyczące danych, zamrożony podział po pacjentach, pełna imputacja w foldach
-**Weryfikacja:** 06.10 i 16.10.2026; poprawione opisy wniosków, dane, podział i imputacja bez zmian (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
+**Weryfikacja:** 06.10 i 16–17.10.2026; poprawione opisy wniosków i dodane kontrole (sekcja 5.4), dane, podział i imputacja bez zmian (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
 **Wejście etapu:** `data/imputation-inputs/aneurysm_concatted.csv` (78 197 rekordów, 38 cech, przed imputacją)
 **Wyjście etapu:** zamrożony przydział `sgkf/results/pacjent_fold.csv` oraz zaimputowane foldy (38 cech)
 
@@ -21,7 +21,7 @@
 | imputacja MICE w foldach | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_38.json` |
 | zaimputowane foldy | lokalnie, poza gitem (46 MB), odtwarzalne jednym poleceniem; dwa przebiegi dały identyczne odciski | `sgkf/results/foldy_imputowane_38/` |
 | jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami MICE niewiele lepsze od średniej, a uzupełnienia skupione wokół niej | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
-| analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
+| analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną; sam wzorzec braków odzyskuje około 52% ukrytych chorych w górnych 5% rankingu (sekcja 5.4) | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
 | porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | brak istotnego wpływu na imputację | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
 | testy | 6/6 (część A), 10/10 (część B) | `przygotowanie/tests/`, `sgkf/tests/` |
 
@@ -403,7 +403,7 @@ Na zamrożonych foldach (HistGradientBoosting, ocena na części testowej każde
 Wnioski:
 1. **Kohorty są bardzo łatwe do odróżnienia (0,93 na pacjentach).** To nie jest miara wykrywania tętniaka, bo etykieta oznacza kohortę. Wysokie AUC P-vs-U w modelowaniu będzie się należało przede wszystkim temu.
 2. **Sam wzorzec braków odróżnia kohorty z AUC 0,82.** Informacja o tym, *które* badania zlecono, jest silnym sygnałem kohorty. Imputacja jej nie usuwa: zostaje w podpisie NRBC (sekcja 5.1) i w uzupełnieniach skupionych wokół średniej.
-3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości. Zastrzeżenie: okno wybrano po imputacji, a scaler i MICE dopasowano na całym treningu foldu, ze wszystkich okresów. Wersja z preprocessingiem dopasowanym tylko w oknie należy do analiz wrażliwości.
+3. **W tym samym okresie rozdzielność spada do 0,80, ale zostaje wysoka.** Różnica epok podnosi rozdzielność (0,93 wobec 0,80), lecz jej nie tłumaczy w całości. Zastrzeżenie: okno wybrano po imputacji, a scaler i MICE dopasowano na całym treningu foldu, ze wszystkich okresów. Wersja z preprocessingiem dopasowanym tylko w oknie należy do analiz wrażliwości. Ten sam test bez imputacji daje 0,831 na pacjentach (sekcja 5.4), więc wniosek od imputacji nie zależy.
 4. **Epokę widać w wynikach samych chorych (AUC 0,83).** Rozjazd czasowy nie jest więc problemem teoretycznym: wyniki laboratoryjne niosą wyraźny ślad okresu, z którego pochodzą. Decyzja „bez korekty” (sekcja 2.1) wymaga w modelowaniu przynajmniej analizy wrażliwości we wspólnym oknie dat.
 
 **Kontrola testu B4 (06.10.2026, uzupełniona 16.10.2026; `sgkf/kontrola_epoki.py`, wynik `sgkf/results/kontrola_epoki.json`).** B4 liczono na cechach po imputacji, więc nie rozstrzygał, czy epoka siedzi w wartościach, czy w tym, które badania zlecano. Ten sam test na danych przed imputacją, na tych samych foldach. Pierwsza wersja porównywała wzorzec braków na wszystkich rekordach z wartościami na rekordach z kompletnym panelem, czyli różne rekordy. Dlatego dla każdego panelu liczymy też pozostałe warianty na tych samych rekordach:
@@ -436,6 +436,40 @@ Względem wszystkich rekordów KOR CRP > 5 mg/l ma 50,0%, a glukozę > 99 mg/dl 
 
 KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej odbiegający od normy niż NEURO. **KOR nie wygląda na populację ogólną ani przesiewową, tylko raczej na pacjentów szpitalnych z lat 2020–2021**, czyli z okresu pandemii. Zastrzeżenie: to średnie tygodniowe z badań zlecanych z powodów klinicznych. Jeśli się to potwierdzi, zmienia interpretację klasy U i całego zastosowania „przesiewowego”. To pytanie do prowadzącego lub właściciela danych.
 
+### 5.4 Kontrola skrótów w odzyskiwaniu ukrytych chorych (17.10.2026)
+
+**Kod:** `sgkf/kontrola_skrotow.py` · **wynik:** `sgkf/results/kontrola_skrotow.json`
+
+Plan modelowania ocenia modele przez ukrywanie części znanych chorych w puli U (`RecallHidden@q`). Ukrywamy jednak losowo wybranych chorych z NEURO, więc ukryci zachowują wszystkie cechy swojej kohorty: okres badań, wzorzec braków i ślad imputacji. Model, który nauczył się tylko tych cech, też wypchnie ich na górę rankingu. Ta kontrola mierzy, ile `RecallHidden@q` dają modele widzące wyłącznie skróty.
+
+Protokół jest orientacyjny, bo modelowanie nie ma jeszcze zamrożonego protokołu:
+- ukrywani są całi pacjenci NEURO, 40%, ziarna 0–4, zamrożone foldy (25 przebiegów na model, średnio 145,8 ukrytych na fold);
+- model uczy się na treningu foldu z etykietą widzianą (ukryci = 0);
+- pula oceny to pacjenci KOR i ukryci NEURO z części testowej;
+- top-`q` to `ceil(q · |pula|)` pacjentów, remisy rozstrzyga `patient_id`;
+- w wariantach rekordowych wynik pacjenta to mediana wyników jego rekordów;
+- model to HistGradientBoosting, ten sam co w sekcji 5.2.
+
+| Model (`RecallHidden@q`, średnia z 25 przebiegów) | q = 1% | q = 5% | q = 10% |
+|---|---:|---:|---:|
+| losowy ranking pacjentów | 1,1% | 4,9% | 9,9% |
+| losowy wynik rekordów, mediana do pacjenta | 0,6% | 2,8% | 6,2% |
+| wiek i płeć | 2,5% | 13,6% | 24,0% |
+| sam wzorzec braków (0/1) | 38,2% | 51,6% | 61,5% |
+| 38 cech, braki jako NaN (bez imputacji) | 44,1% | 69,8% | 79,6% |
+| 38 cech po imputacji MICE (zapisane foldy) | 42,7% | 66,1% | 75,8% |
+| profil pacjenta: udział braków każdej cechy | 43,2% | 56,4% | 64,4% |
+| profil pacjenta: mediana 38 cech (NaN) | 43,5% | 68,6% | 77,5% |
+
+Wnioski:
+1. **Sam wzorzec braków odzyskuje około połowy ukrytych chorych w górnych 5% rankingu**, dziesięć razy więcej niż losowanie i około 3/4 wyniku pełnego modelu. Przy `q` = 1% przewaga nad losowaniem jest jeszcze większa. Wysoki `RecallHidden@q` nie jest więc sam w sobie dowodem wykrywania tętniaka. Mierzy odzyskiwanie znanych chorych NEURO w tym zbiorze, także dzięki skrótom.
+2. **Modele kontrolne muszą być częścią protokołu.** Losowy ranking pacjentów, sama demografia i sam wzorzec braków, liczone na tych samych maskach, wyznaczają poprzeczkę. Przewaga nad nimi nie dowodzi jeszcze wykrywania choroby, ale jej brak pokazuje, że model opiera się głównie na skrótach.
+3. **Imputacja tylko trochę ukrywa wzorzec braków.** Model na 38 cechach po MICE ma nieco niższy wynik niż ten sam model z brakami jako NaN (66% wobec 70% przy `q` = 5%).
+4. **Jednostka treningu nie zmienia obrazu.** W wariancie z jednym profilem na pacjenta (udział braków, mediana cech) wyniki są podobne.
+5. **Losowy punkt odniesienia trzeba liczyć na pacjentach.** Losowy wynik rekordów zagregowany medianą daje przy `q` = 5% tylko 2,8% zamiast 5%. Mediana wielu losowych liczb skupia się wokół środka, więc pacjenci z wieloma rekordami rzadziej trafiają na skraj rankingu. Agregacja predykcji wchodzi więc w interakcję z liczbą rekordów pacjenta. To argument za ustaleniem jednostki treningu i agregacji przed porównaniami modeli.
+
+**B3 bez imputacji.** W teście B3 (sekcja 5.2) okno dat wybierano po imputacji dopasowanej na całym treningu foldu. Ten sam test na danych bez imputacji, z brakami jako NaN, daje AUC 0,824 na rekordach i 0,831 na pacjentach (0,791–0,865), wobec 0,793 i 0,801 po imputacji. Wynik B3 nie zależy więc od imputacji. Pełna analiza wrażliwości w oknie, z preprocessingiem dopasowanym tylko w oknie, zostaje w planie modelowania. Jej ograniczeniem jest mała próba: rekord w oknie ma 271 chorych, czyli około 22 ukrytych na fold.
+
 ---
 
 ## 6. Przegląd merytoryczny: co sprawdzono
@@ -452,7 +486,8 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 | jakość danych | unikalność `custom_id`, zakresy, brak ujemnych, płeć i wiek bez braków | spełnione (sekcja 2.5) |
 | powtarzalność imputacji | ponowny przebieg na tym samym komputerze daje identyczne odciski wyników | sekcja 4.2 |
 | jakość imputacji w produkcji | protokół z etapu 2 out-of-fold + realistyczne wzorce braków; osobno bez wieku i płci | jak w benchmarku przy losowych brakach; przy brakach panelowych niewiele lepsza od średniej (sekcja 4.3) |
-| skróty dla modelu | rozdzielność kohort na cechach, na wzorcu braków, we wspólnym oknie; epoka w NEURO | AUC 0,93 / 0,82 / 0,80 / 0,83 (sekcja 5.2) |
+| skróty dla modelu | rozdzielność kohort na cechach, na wzorcu braków, we wspólnym oknie; epoka w NEURO | AUC 0,93 / 0,82 / 0,80 / 0,83 (sekcja 5.2); w oknie bez imputacji 0,83 (sekcja 5.4) |
+| skróty w ocenie PU | `RecallHidden@q` modeli kontrolnych na tych samych maskach | losowy 5%, demografia 14%, sam wzorzec braków 52%, 38 cech 66–70% przy `q` = 5% (sekcja 5.4) |
 | redundancja cech | %NEUT + %LYMPH + %EO + %BAZO + %MONO = 100,0 (odch. 0,11); MONO ≈ %MONO × WBC / 100 (mediana błędu 0,4%) | MONO i %MONO zostają: pomagają imputacji; kolinearność do obsłużenia w modelowaniu |
 | cenzurowanie eGFR | eGFR-MDRD = 60 w 56% rekordów, eGFR-CKD = 90 w 33% | laboratorium raportuje „≥ 60” / „≥ 90”; reguła KREA (eGFR ≥ 30) działa mimo cenzury; do opisu |
 | zgodność między komputerami | odcisk wartości po imputacji w każdym foldzie (`przebieg_imputacji_*.json`) | pozwala sprawdzić, czy Windows (sklearn 1.8) liczy to samo co Mac (sklearn 1.6) |
@@ -470,6 +505,7 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 7. **Przy brakach całymi panelami MICE jest niewiele lepsze od średniej z treningu** (sekcja 4.3). Uzupełnienia skupiają się wokół średniej i niosą mało informacji o pacjencie. Przy skośnych rozkładach (CRP, GLU) są wyższe od typowej zmierzonej wartości.
 8. **Podpis imputacji NRBC/%NRBC**: uzupełnione wartości przenoszą informację o braku badania (samo NRBC po imputacji: AUC 0,73, jak sam wskaźnik braku), a 63% z nich dotyczy NEURO (sekcja 5.1).
 9. **Kohorty różnią się wieloma rzeczami poza chorobą.** Sam wzorzec braków daje AUC 0,82, a epokę widać w wynikach NEURO z AUC 0,83 (sekcja 5.2). Profil KOR sugeruje populację szpitalną, a nie ogólną (sekcja 5.3).
+10. **Odzyskiwanie ukrytych chorych też korzysta ze skrótów.** Sam wzorzec braków odzyskuje około 52% ukrytych w górnych 5% rankingu (sekcja 5.4), więc `RecallHidden@q` trzeba zawsze zestawiać z modelami kontrolnymi i opisywać jako odzyskiwanie znanych chorych w tym zbiorze.
 
 ---
 
@@ -493,12 +529,14 @@ KOR ma profil zapalny i „szpitalny”, w części parametrów nawet bardziej o
 │   ├── ocena_imputacji.py            jakość imputacji protokołem z etapu 2 (w foldach)
 │   ├── analiza_wynikow.py            diagnostyka: uzupełnienia, skróty, profil kohort
 │   ├── porownanie_cech.py            jednorazowe porównanie 38 / 35 (podkładka pod decyzję)
-│   ├── kontrola_epoki.py             kontrola testu B4 na danych przed imputacją (06.10.2026)
+│   ├── kontrola_epoki.py             kontrola testu B4 na danych przed imputacją (06.10, uzupełniona 16.10.2026)
+│   ├── kontrola_skrotow.py           RecallHidden@q modeli kontrolnych i B3 bez imputacji (17.10.2026)
 │   ├── etap0_sgkf_stabilnosc.py      siatka stabilności z 09.2026
 │   ├── tests/test_podzial.py         10 testów
 │   └── results/                      pacjent_fold.csv, podzial_meta.json, podzial_diagnostyka.csv,
 │                                     podzial_porownanie_strategii.csv, przebieg_imputacji_38.json,
-│                                     ocena_imputacji.json, analiza_wynikow.json, logi/,
+│                                     ocena_imputacji.json, analiza_wynikow.json, kontrola_epoki.json,
+│                                     kontrola_skrotow.json, logi/,
 │                                     porownanie_38_35/, foldy_imputowane_38/ (poza gitem)
 └── archiwum/
     └── aneurysm_data_StratifiedGroupKFold.ipynb   wersja 1 (Liwia, 08.06.2026)
@@ -509,4 +547,6 @@ python 3-sgkf-split/uruchom_sgkf.py                      # całość (~35 min)
 python 3-sgkf-split/uruchom_sgkf.py --czesc A            # tylko przygotowanie danych (sekundy)
 python 3-sgkf-split/uruchom_sgkf.py --czesc B --bez-mice # tylko podział i testy
 python 3-sgkf-split/sgkf/podzial.py --sprawdz            # czy zapisany podział pasuje do danych
+python 3-sgkf-split/sgkf/kontrola_epoki.py               # kontrola okresu badań (~1 min)
+python 3-sgkf-split/sgkf/kontrola_skrotow.py             # modele kontrolne, wymaga zaimputowanych foldów (~2 min)
 ```
