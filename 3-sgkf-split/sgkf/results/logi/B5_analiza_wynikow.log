@@ -9,17 +9,17 @@
 [E] Ślad imputacji NRBC ...
 
 === Najważniejsze liczby
-  B1_neuro_vs_kor_cechy              AUC rekordy 0.906 | pacjenci 0.928
-  B2_neuro_vs_kor_wzorzec_brakow     AUC rekordy 0.819 | pacjenci 0.823
-  B3_neuro_vs_kor_wspolne_okno       AUC rekordy 0.793 | pacjenci 0.801
-  B4_neuro_epoka                     AUC rekordy 0.832
+  B1_neuro_vs_kor_cechy              AUC rekordy 0.906 | pacjenci 0.927
+  B2_neuro_vs_kor_wzorzec_brakow     AUC rekordy 0.818 | pacjenci 0.823
+  B3_neuro_vs_kor_wspolne_okno       AUC rekordy 0.782 | pacjenci 0.782
+  B4_neuro_epoka                     AUC rekordy 0.831
   Cechy z największymi brakami w NEURO (udział uzupełnionych, położenie mediany uzupełnień 0=NEURO, 1=KOR):
-    APTT       56.0%  położenie 3.61
-    WAPTT      56.0%  położenie 2.63
+    APTT       56.0%  położenie 3.9
+    WAPTT      56.0%  położenie 2.77
     GLU        55.2%  położenie None
     PT         54.1%  położenie None
-    INR        53.9%  położenie -0.47
-    WPT        53.9%  położenie 1.9
+    INR        53.9%  położenie -0.38
+    WPT        53.9%  położenie 1.86
   Profil KOR / NEURO (udział poza zakresem referencyjnym):
     CRP   powyżej 5.0 mg/l     KOR 61.4%  NEURO 62.2%  (zmierzone: KOR 81%, NEURO 52%)
     WBC   powyżej 10.0 G/l     KOR 36.9%  NEURO 32.5%  (zmierzone: KOR 97%, NEURO 88%)

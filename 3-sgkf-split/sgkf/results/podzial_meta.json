@@ -1,4 +1,5 @@
 {
+  "metoda": "StratifiedGroupKFold na rekordach: y = warstwa pacjenta, groups = pacjent, losowa kolejnosc pacjentow sterowana ziarnem",
   "konfiguracja": {
     "n_splits": 5,
     "shuffle": true,
@@ -52,11 +53,11 @@
   "pacjenci": 40924,
   "pozytywni": 1823,
   "rozstepy": {
-    "udzial_poz_pacjenci_pp": 0.012217470983506146,
-    "udzial_poz_rekordy_pp": 1.115084044736761,
-    "rekordy_wzgl_proc": 1.1658894070619588,
-    "poz_w_oknie_pp": 0.5479452054794526,
-    "poz_5plus_rek_pp": 0.21752220382357523
+    "udzial_poz_pacjenci_pp": 0.024434941967012985,
+    "udzial_poz_rekordy_pp": 0.03312279096836651,
+    "rekordy_wzgl_proc": 0.019217957259263056,
+    "poz_w_oknie_pp": 0.5246123739274424,
+    "poz_5plus_rek_pp": 0.2747252747252765
   },
   "wersje": {
     "python": "3.9.6",
@@ -64,5 +65,5 @@
     "pandas": "2.3.3",
     "numpy": "2.0.2"
   },
-  "utworzono": "2026-10-04T18:23:55"
+  "utworzono": "2026-10-31T09:12:12"
 }

@@ -1,7 +1,9 @@
   OK   test_kazdy_pacjent_dokladnie_w_jednym_foldzie
   OK   test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko
+  OK   test_podzial_to_stratified_group_kfold_z_warstwa_jako_y
   OK   test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami
   OK   test_podzial_nie_zalezy_od_kolejnosci_wierszy
+  OK   test_sgkf_bez_tasowania_tez_nie_zalezy_od_kolejnosci_wierszy
   OK   test_ziarno_zmienia_podzial_a_to_samo_ziarno_go_powtarza
   OK   test_stratyfikacja_wielokluczowa_wyrownuje_czynniki_zaklocajace
   OK   test_male_warstwy_sa_scalane
@@ -9,4 +11,4 @@
   OK   test_zapisany_podzial_jest_zgodny_z_danymi
   OK   test_zmiana_danych_uniewaznia_podzial
 
-10/10 testow przeszlo
+12/12 testow przeszlo

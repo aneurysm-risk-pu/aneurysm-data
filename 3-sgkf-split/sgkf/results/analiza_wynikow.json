@@ -5,15 +5,15 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 12.6,
-        "mediana_uzupelnionych": 12.6665,
-        "ks_uzupelnione_vs_obserwowane": 0.4641
+        "mediana_uzupelnionych": 12.6266,
+        "ks_uzupelnione_vs_obserwowane": 0.4576
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 12.4,
-        "mediana_uzupelnionych": 12.6658,
-        "ks_uzupelnione_vs_obserwowane": 0.5183
+        "mediana_uzupelnionych": 12.6338,
+        "ks_uzupelnione_vs_obserwowane": 0.5059
       },
       "odch_std_cechy": 2.3152
     },
@@ -22,15 +22,15 @@
         "uzupelnione": 34522,
         "udzial_uzupelnionych": 0.4835,
         "mediana_obserwowanych": 12.0,
-        "mediana_uzupelnionych": 12.2168,
-        "ks_uzupelnione_vs_obserwowane": 0.7136
+        "mediana_uzupelnionych": 12.2166,
+        "ks_uzupelnione_vs_obserwowane": 0.6778
       },
       "neuro": {
         "uzupelnione": 3597,
         "udzial_uzupelnionych": 0.5408,
         "mediana_obserwowanych": 12.0,
-        "mediana_uzupelnionych": 12.1986,
-        "ks_uzupelnione_vs_obserwowane": 0.7863
+        "mediana_uzupelnionych": 12.1866,
+        "ks_uzupelnione_vs_obserwowane": 0.7527
       },
       "odch_std_cechy": 4.3814
     },
@@ -39,17 +39,17 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 88.94,
-        "mediana_uzupelnionych": 89.5247,
-        "ks_uzupelnione_vs_obserwowane": 0.4687
+        "mediana_uzupelnionych": 89.0762,
+        "ks_uzupelnione_vs_obserwowane": 0.4302
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 90.1,
-        "mediana_uzupelnionych": 89.5886,
-        "ks_uzupelnione_vs_obserwowane": 0.4603
+        "mediana_uzupelnionych": 89.0614,
+        "ks_uzupelnione_vs_obserwowane": 0.491
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.44,
+      "neuro_polozenie_0_neuro_1_kor": 0.9,
       "odch_std_cechy": 6.2254
     },
     "GLU": {
@@ -57,15 +57,15 @@
         "uzupelnione": 35680,
         "udzial_uzupelnionych": 0.4997,
         "mediana_obserwowanych": 107.0,
-        "mediana_uzupelnionych": 121.0166,
-        "ks_uzupelnione_vs_obserwowane": 0.368
+        "mediana_uzupelnionych": 121.0972,
+        "ks_uzupelnione_vs_obserwowane": 0.3712
       },
       "neuro": {
         "uzupelnione": 3672,
         "udzial_uzupelnionych": 0.5521,
         "mediana_obserwowanych": 104.0,
-        "mediana_uzupelnionych": 118.9781,
-        "ks_uzupelnione_vs_obserwowane": 0.4643
+        "mediana_uzupelnionych": 118.951,
+        "ks_uzupelnione_vs_obserwowane": 0.4593
       },
       "odch_std_cechy": 63.3795
     },
@@ -74,15 +74,15 @@
         "uzupelnione": 2076,
         "udzial_uzupelnionych": 0.0291,
         "mediana_obserwowanych": 0.5,
-        "mediana_uzupelnionych": 0.6,
-        "ks_uzupelnione_vs_obserwowane": 0.5851
+        "mediana_uzupelnionych": 0.6175,
+        "ks_uzupelnione_vs_obserwowane": 0.5941
       },
       "neuro": {
         "uzupelnione": 1803,
         "udzial_uzupelnionych": 0.2711,
         "mediana_obserwowanych": 0.4,
-        "mediana_uzupelnionych": 0.6078,
-        "ks_uzupelnione_vs_obserwowane": 0.6666
+        "mediana_uzupelnionych": 0.641,
+        "ks_uzupelnione_vs_obserwowane": 0.6777
       },
       "odch_std_cechy": 1.6217
     },
@@ -91,15 +91,15 @@
         "uzupelnione": 13292,
         "udzial_uzupelnionych": 0.1862,
         "mediana_obserwowanych": 10.7,
-        "mediana_uzupelnionych": 27.194,
-        "ks_uzupelnione_vs_obserwowane": 0.3897
+        "mediana_uzupelnionych": 27.5915,
+        "ks_uzupelnione_vs_obserwowane": 0.3922
       },
       "neuro": {
         "uzupelnione": 3169,
         "udzial_uzupelnionych": 0.4765,
         "mediana_obserwowanych": 12.095,
-        "mediana_uzupelnionych": 23.5096,
-        "ks_uzupelnione_vs_obserwowane": 0.3784
+        "mediana_uzupelnionych": 22.6646,
+        "ks_uzupelnione_vs_obserwowane": 0.381
       },
       "odch_std_cechy": 65.6245
     },
@@ -108,15 +108,15 @@
         "uzupelnione": 2086,
         "udzial_uzupelnionych": 0.0292,
         "mediana_obserwowanych": 0.68,
-        "mediana_uzupelnionych": 0.8457,
-        "ks_uzupelnione_vs_obserwowane": 0.6081
+        "mediana_uzupelnionych": 0.8222,
+        "ks_uzupelnione_vs_obserwowane": 0.5973
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 0.65,
-        "mediana_uzupelnionych": 0.8317,
-        "ks_uzupelnione_vs_obserwowane": 0.6434
+        "mediana_uzupelnionych": 0.8117,
+        "ks_uzupelnione_vs_obserwowane": 0.6311
       },
       "odch_std_cechy": 0.4047
     },
@@ -142,17 +142,17 @@
         "uzupelnione": 2071,
         "udzial_uzupelnionych": 0.029,
         "mediana_obserwowanych": 0.09,
-        "mediana_uzupelnionych": 0.1713,
-        "ks_uzupelnione_vs_obserwowane": 0.69
+        "mediana_uzupelnionych": 0.1726,
+        "ks_uzupelnione_vs_obserwowane": 0.6968
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 0.1171,
-        "mediana_uzupelnionych": 0.1689,
-        "ks_uzupelnione_vs_obserwowane": 0.6092
+        "mediana_uzupelnionych": 0.17,
+        "ks_uzupelnione_vs_obserwowane": 0.6165
       },
-      "neuro_polozenie_0_neuro_1_kor": -1.91,
+      "neuro_polozenie_0_neuro_1_kor": -1.95,
       "odch_std_cechy": 0.1812
     },
     "%EO": {
@@ -160,17 +160,17 @@
         "uzupelnione": 2071,
         "udzial_uzupelnionych": 0.029,
         "mediana_obserwowanych": 1.05,
-        "mediana_uzupelnionych": 1.9809,
-        "ks_uzupelnione_vs_obserwowane": 0.6417
+        "mediana_uzupelnionych": 1.9798,
+        "ks_uzupelnione_vs_obserwowane": 0.6382
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 1.5,
-        "mediana_uzupelnionych": 1.9598,
-        "ks_uzupelnione_vs_obserwowane": 0.5348
+        "mediana_uzupelnionych": 1.9377,
+        "ks_uzupelnione_vs_obserwowane": 0.5319
       },
-      "neuro_polozenie_0_neuro_1_kor": -1.02,
+      "neuro_polozenie_0_neuro_1_kor": -0.97,
       "odch_std_cechy": 1.9994
     },
     "APTT": {
@@ -178,17 +178,17 @@
         "uzupelnione": 36853,
         "udzial_uzupelnionych": 0.5161,
         "mediana_obserwowanych": 30.0,
-        "mediana_uzupelnionych": 32.6765,
-        "ks_uzupelnione_vs_obserwowane": 0.5788
+        "mediana_uzupelnionych": 32.936,
+        "ks_uzupelnione_vs_obserwowane": 0.6405
       },
       "neuro": {
         "uzupelnione": 3726,
         "udzial_uzupelnionych": 0.5602,
         "mediana_obserwowanych": 29.0,
-        "mediana_uzupelnionych": 32.6072,
-        "ks_uzupelnione_vs_obserwowane": 0.7195
+        "mediana_uzupelnionych": 32.8998,
+        "ks_uzupelnione_vs_obserwowane": 0.7748
       },
-      "neuro_polozenie_0_neuro_1_kor": 3.61,
+      "neuro_polozenie_0_neuro_1_kor": 3.9,
       "odch_std_cechy": 8.6195
     },
     "%BAZO": {
@@ -196,17 +196,17 @@
         "uzupelnione": 2068,
         "udzial_uzupelnionych": 0.029,
         "mediana_obserwowanych": 0.4,
-        "mediana_uzupelnionych": 0.5326,
-        "ks_uzupelnione_vs_obserwowane": 0.5936
+        "mediana_uzupelnionych": 0.5343,
+        "ks_uzupelnione_vs_obserwowane": 0.6255
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 0.35,
-        "mediana_uzupelnionych": 0.5385,
-        "ks_uzupelnione_vs_obserwowane": 0.7053
+        "mediana_uzupelnionych": 0.5342,
+        "ks_uzupelnione_vs_obserwowane": 0.7333
       },
-      "neuro_polozenie_0_neuro_1_kor": 3.77,
+      "neuro_polozenie_0_neuro_1_kor": 3.68,
       "odch_std_cechy": 0.2975
     },
     "MPV": {
@@ -214,15 +214,15 @@
         "uzupelnione": 2623,
         "udzial_uzupelnionych": 0.0367,
         "mediana_obserwowanych": 10.5667,
-        "mediana_uzupelnionych": 10.5214,
-        "ks_uzupelnione_vs_obserwowane": 0.3828
+        "mediana_uzupelnionych": 10.4985,
+        "ks_uzupelnione_vs_obserwowane": 0.3691
       },
       "neuro": {
         "uzupelnione": 832,
         "udzial_uzupelnionych": 0.1251,
         "mediana_obserwowanych": 10.6,
-        "mediana_uzupelnionych": 10.444,
-        "ks_uzupelnione_vs_obserwowane": 0.4346
+        "mediana_uzupelnionych": 10.4186,
+        "ks_uzupelnione_vs_obserwowane": 0.4298
       },
       "odch_std_cechy": 1.0436
     },
@@ -231,17 +231,17 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 4.2,
-        "mediana_uzupelnionych": 4.1827,
-        "ks_uzupelnione_vs_obserwowane": 0.456
+        "mediana_uzupelnionych": 4.1873,
+        "ks_uzupelnione_vs_obserwowane": 0.4694
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 4.09,
-        "mediana_uzupelnionych": 4.1812,
-        "ks_uzupelnione_vs_obserwowane": 0.5063
+        "mediana_uzupelnionych": 4.1867,
+        "ks_uzupelnione_vs_obserwowane": 0.5036
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.83,
+      "neuro_polozenie_0_neuro_1_kor": 0.88,
       "odch_std_cechy": 0.7562
     },
     "WBC": {
@@ -249,15 +249,15 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 8.78,
-        "mediana_uzupelnionych": 9.6607,
-        "ks_uzupelnione_vs_obserwowane": 0.5606
+        "mediana_uzupelnionych": 9.6633,
+        "ks_uzupelnione_vs_obserwowane": 0.5441
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 8.37,
-        "mediana_uzupelnionych": 9.6615,
-        "ks_uzupelnione_vs_obserwowane": 0.6058
+        "mediana_uzupelnionych": 9.6476,
+        "ks_uzupelnione_vs_obserwowane": 0.5928
       },
       "odch_std_cechy": 5.946
     },
@@ -266,17 +266,17 @@
         "uzupelnione": 2068,
         "udzial_uzupelnionych": 0.029,
         "mediana_obserwowanych": 0.035,
-        "mediana_uzupelnionych": 0.0492,
-        "ks_uzupelnione_vs_obserwowane": 0.6679
+        "mediana_uzupelnionych": 0.0499,
+        "ks_uzupelnione_vs_obserwowane": 0.6519
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 0.03,
-        "mediana_uzupelnionych": 0.0489,
-        "ks_uzupelnione_vs_obserwowane": 0.7663
+        "mediana_uzupelnionych": 0.0497,
+        "ks_uzupelnione_vs_obserwowane": 0.7627
       },
-      "neuro_polozenie_0_neuro_1_kor": 3.78,
+      "neuro_polozenie_0_neuro_1_kor": 3.94,
       "odch_std_cechy": 0.0257
     },
     "IG": {
@@ -284,15 +284,15 @@
         "uzupelnione": 2076,
         "udzial_uzupelnionych": 0.0291,
         "mediana_obserwowanych": 0.04,
-        "mediana_uzupelnionych": 0.0554,
-        "ks_uzupelnione_vs_obserwowane": 0.5364
+        "mediana_uzupelnionych": 0.0555,
+        "ks_uzupelnione_vs_obserwowane": 0.5954
       },
       "neuro": {
         "uzupelnione": 1803,
         "udzial_uzupelnionych": 0.2711,
         "mediana_obserwowanych": 0.03,
-        "mediana_uzupelnionych": 0.0551,
-        "ks_uzupelnione_vs_obserwowane": 0.5268
+        "mediana_uzupelnionych": 0.0553,
+        "ks_uzupelnione_vs_obserwowane": 0.5567
       },
       "odch_std_cechy": 0.2434
     },
@@ -318,15 +318,15 @@
         "uzupelnione": 12568,
         "udzial_uzupelnionych": 0.176,
         "mediana_obserwowanych": 0.875,
-        "mediana_uzupelnionych": 2.5677,
-        "ks_uzupelnione_vs_obserwowane": 0.4755
+        "mediana_uzupelnionych": 2.2714,
+        "ks_uzupelnione_vs_obserwowane": 0.4633
       },
       "neuro": {
         "uzupelnione": 1790,
         "udzial_uzupelnionych": 0.2691,
         "mediana_obserwowanych": 0.79,
-        "mediana_uzupelnionych": 0.905,
-        "ks_uzupelnione_vs_obserwowane": 0.2806
+        "mediana_uzupelnionych": 0.9083,
+        "ks_uzupelnione_vs_obserwowane": 0.2855
       },
       "odch_std_cechy": 1.6432
     },
@@ -335,17 +335,17 @@
         "uzupelnione": 12294,
         "udzial_uzupelnionych": 0.1722,
         "mediana_obserwowanych": 83.0,
-        "mediana_uzupelnionych": 69.5533,
-        "ks_uzupelnione_vs_obserwowane": 0.4018
+        "mediana_uzupelnionych": 69.1503,
+        "ks_uzupelnione_vs_obserwowane": 0.4015
       },
       "neuro": {
         "uzupelnione": 2783,
         "udzial_uzupelnionych": 0.4184,
         "mediana_obserwowanych": 87.5,
-        "mediana_uzupelnionych": 84.4024,
-        "ks_uzupelnione_vs_obserwowane": 0.4623
+        "mediana_uzupelnionych": 84.2864,
+        "ks_uzupelnione_vs_obserwowane": 0.4628
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.69,
+      "neuro_polozenie_0_neuro_1_kor": 0.71,
       "odch_std_cechy": 23.68
     },
     "PLT": {
@@ -353,15 +353,15 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 239.0,
-        "mediana_uzupelnionych": 268.7711,
-        "ks_uzupelnione_vs_obserwowane": 0.5559
+        "mediana_uzupelnionych": 272.3004,
+        "ks_uzupelnione_vs_obserwowane": 0.5605
       },
       "neuro": {
         "uzupelnione": 841,
         "udzial_uzupelnionych": 0.1264,
         "mediana_obserwowanych": 241.0,
-        "mediana_uzupelnionych": 271.1345,
-        "ks_uzupelnione_vs_obserwowane": 0.5619
+        "mediana_uzupelnionych": 273.5095,
+        "ks_uzupelnione_vs_obserwowane": 0.5625
       },
       "odch_std_cechy": 110.8451
     },
@@ -370,15 +370,15 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 37.3,
-        "mediana_uzupelnionych": 37.5098,
-        "ks_uzupelnione_vs_obserwowane": 0.4715
+        "mediana_uzupelnionych": 37.3209,
+        "ks_uzupelnione_vs_obserwowane": 0.4619
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 36.9,
-        "mediana_uzupelnionych": 37.5079,
-        "ks_uzupelnione_vs_obserwowane": 0.5059
+        "mediana_uzupelnionych": 37.3628,
+        "ks_uzupelnione_vs_obserwowane": 0.4938
       },
       "odch_std_cechy": 6.399
     },
@@ -387,15 +387,15 @@
         "uzupelnione": 1825,
         "udzial_uzupelnionych": 0.0256,
         "mediana_obserwowanych": 0.0,
-        "mediana_uzupelnionych": 0.1005,
-        "ks_uzupelnione_vs_obserwowane": 0.8553
+        "mediana_uzupelnionych": 0.1017,
+        "ks_uzupelnione_vs_obserwowane": 0.8556
       },
       "neuro": {
         "uzupelnione": 3171,
         "udzial_uzupelnionych": 0.4768,
         "mediana_obserwowanych": 0.0,
-        "mediana_uzupelnionych": 0.1072,
-        "ks_uzupelnione_vs_obserwowane": 0.8813
+        "mediana_uzupelnionych": 0.1078,
+        "ks_uzupelnione_vs_obserwowane": 0.8798
       },
       "odch_std_cechy": 0.7537
     },
@@ -404,15 +404,15 @@
         "uzupelnione": 1827,
         "udzial_uzupelnionych": 0.0256,
         "mediana_obserwowanych": 0.0,
-        "mediana_uzupelnionych": 0.0093,
-        "ks_uzupelnione_vs_obserwowane": 0.8624
+        "mediana_uzupelnionych": 0.0092,
+        "ks_uzupelnione_vs_obserwowane": 0.8632
       },
       "neuro": {
         "uzupelnione": 3171,
         "udzial_uzupelnionych": 0.4768,
         "mediana_obserwowanych": 0.0,
-        "mediana_uzupelnionych": 0.0095,
-        "ks_uzupelnione_vs_obserwowane": 0.8807
+        "mediana_uzupelnionych": 0.0094,
+        "ks_uzupelnione_vs_obserwowane": 0.8804
       },
       "odch_std_cechy": 0.0811
     },
@@ -421,17 +421,17 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 33.8,
-        "mediana_uzupelnionych": 33.8478,
-        "ks_uzupelnione_vs_obserwowane": 0.4201
+        "mediana_uzupelnionych": 33.8543,
+        "ks_uzupelnione_vs_obserwowane": 0.4157
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 33.6,
-        "mediana_uzupelnionych": 33.8546,
-        "ks_uzupelnione_vs_obserwowane": 0.5164
+        "mediana_uzupelnionych": 33.8412,
+        "ks_uzupelnione_vs_obserwowane": 0.5018
       },
-      "neuro_polozenie_0_neuro_1_kor": 1.27,
+      "neuro_polozenie_0_neuro_1_kor": 1.21,
       "odch_std_cechy": 1.4692
     },
     "Na": {
@@ -439,15 +439,15 @@
         "uzupelnione": 10995,
         "udzial_uzupelnionych": 0.154,
         "mediana_obserwowanych": 139.6667,
-        "mediana_uzupelnionych": 139.1016,
-        "ks_uzupelnione_vs_obserwowane": 0.3861
+        "mediana_uzupelnionych": 139.0928,
+        "ks_uzupelnione_vs_obserwowane": 0.3886
       },
       "neuro": {
         "uzupelnione": 1511,
         "udzial_uzupelnionych": 0.2272,
         "mediana_obserwowanych": 139.6667,
-        "mediana_uzupelnionych": 139.7127,
-        "ks_uzupelnione_vs_obserwowane": 0.3213
+        "mediana_uzupelnionych": 139.7121,
+        "ks_uzupelnione_vs_obserwowane": 0.3259
       },
       "odch_std_cechy": 4.1675
     },
@@ -456,17 +456,17 @@
         "uzupelnione": 34543,
         "udzial_uzupelnionych": 0.4838,
         "mediana_obserwowanych": 97.0,
-        "mediana_uzupelnionych": 93.2011,
-        "ks_uzupelnione_vs_obserwowane": 0.5982
+        "mediana_uzupelnionych": 93.3283,
+        "ks_uzupelnione_vs_obserwowane": 0.5987
       },
       "neuro": {
         "uzupelnione": 3584,
         "udzial_uzupelnionych": 0.5389,
         "mediana_obserwowanych": 101.0,
-        "mediana_uzupelnionych": 93.393,
-        "ks_uzupelnione_vs_obserwowane": 0.7725
+        "mediana_uzupelnionych": 93.5481,
+        "ks_uzupelnione_vs_obserwowane": 0.7773
       },
-      "neuro_polozenie_0_neuro_1_kor": 1.9,
+      "neuro_polozenie_0_neuro_1_kor": 1.86,
       "odch_std_cechy": 15.6735
     },
     "%NEUT": {
@@ -474,17 +474,17 @@
         "uzupelnione": 2075,
         "udzial_uzupelnionych": 0.0291,
         "mediana_obserwowanych": 70.7,
-        "mediana_uzupelnionych": 68.1811,
-        "ks_uzupelnione_vs_obserwowane": 0.508
+        "mediana_uzupelnionych": 68.2086,
+        "ks_uzupelnione_vs_obserwowane": 0.5031
       },
       "neuro": {
         "uzupelnione": 2812,
         "udzial_uzupelnionych": 0.4228,
         "mediana_obserwowanych": 67.2,
-        "mediana_uzupelnionych": 68.1191,
-        "ks_uzupelnione_vs_obserwowane": 0.1627
+        "mediana_uzupelnionych": 68.2262,
+        "ks_uzupelnione_vs_obserwowane": 0.1471
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.26,
+      "neuro_polozenie_0_neuro_1_kor": 0.29,
       "odch_std_cechy": 12.94
     },
     "eGFR-MDRD": {
@@ -492,14 +492,14 @@
         "uzupelnione": 12289,
         "udzial_uzupelnionych": 0.1721,
         "mediana_obserwowanych": 60.0,
-        "mediana_uzupelnionych": 58.5973,
+        "mediana_uzupelnionych": 58.5111,
         "ks_uzupelnione_vs_obserwowane": 0.6877
       },
       "neuro": {
         "uzupelnione": 2770,
         "udzial_uzupelnionych": 0.4165,
         "mediana_obserwowanych": 60.0,
-        "mediana_uzupelnionych": 59.9943,
+        "mediana_uzupelnionych": 59.9949,
         "ks_uzupelnione_vs_obserwowane": 0.772
       },
       "odch_std_cechy": 12.8398
@@ -509,15 +509,15 @@
         "uzupelnione": 1823,
         "udzial_uzupelnionych": 0.0255,
         "mediana_obserwowanych": 30.15,
-        "mediana_uzupelnionych": 30.3528,
-        "ks_uzupelnione_vs_obserwowane": 0.423
+        "mediana_uzupelnionych": 30.1673,
+        "ks_uzupelnione_vs_obserwowane": 0.4103
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 30.2571,
-        "mediana_uzupelnionych": 30.3675,
-        "ks_uzupelnione_vs_obserwowane": 0.4065
+        "mediana_uzupelnionych": 30.1643,
+        "ks_uzupelnione_vs_obserwowane": 0.4175
       },
       "odch_std_cechy": 2.4926
     },
@@ -526,15 +526,15 @@
         "uzupelnione": 1884,
         "udzial_uzupelnionych": 0.0264,
         "mediana_obserwowanych": 13.6,
-        "mediana_uzupelnionych": 13.6143,
-        "ks_uzupelnione_vs_obserwowane": 0.3268
+        "mediana_uzupelnionych": 13.6203,
+        "ks_uzupelnione_vs_obserwowane": 0.3262
       },
       "neuro": {
         "uzupelnione": 818,
         "udzial_uzupelnionych": 0.123,
         "mediana_obserwowanych": 13.6,
-        "mediana_uzupelnionych": 13.578,
-        "ks_uzupelnione_vs_obserwowane": 0.3404
+        "mediana_uzupelnionych": 13.5954,
+        "ks_uzupelnione_vs_obserwowane": 0.3424
       },
       "odch_std_cechy": 2.4061
     },
@@ -543,17 +543,17 @@
         "uzupelnione": 11243,
         "udzial_uzupelnionych": 0.1575,
         "mediana_obserwowanych": 4.3,
-        "mediana_uzupelnionych": 4.1963,
-        "ks_uzupelnione_vs_obserwowane": 0.3497
+        "mediana_uzupelnionych": 4.2026,
+        "ks_uzupelnione_vs_obserwowane": 0.3481
       },
       "neuro": {
         "uzupelnione": 1519,
         "udzial_uzupelnionych": 0.2284,
         "mediana_obserwowanych": 4.1,
-        "mediana_uzupelnionych": 4.239,
-        "ks_uzupelnione_vs_obserwowane": 0.4137
+        "mediana_uzupelnionych": 4.2346,
+        "ks_uzupelnione_vs_obserwowane": 0.4176
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.7,
+      "neuro_polozenie_0_neuro_1_kor": 0.67,
       "odch_std_cechy": 0.5809
     },
     "NEUT": {
@@ -561,17 +561,17 @@
         "uzupelnione": 2075,
         "udzial_uzupelnionych": 0.0291,
         "mediana_obserwowanych": 6.06,
-        "mediana_uzupelnionych": 6.6447,
-        "ks_uzupelnione_vs_obserwowane": 0.5172
+        "mediana_uzupelnionych": 6.6746,
+        "ks_uzupelnione_vs_obserwowane": 0.4876
       },
       "neuro": {
         "uzupelnione": 2812,
         "udzial_uzupelnionych": 0.4228,
         "mediana_obserwowanych": 5.505,
-        "mediana_uzupelnionych": 6.4975,
-        "ks_uzupelnione_vs_obserwowane": 0.1824
+        "mediana_uzupelnionych": 6.391,
+        "ks_uzupelnione_vs_obserwowane": 0.1776
       },
-      "neuro_polozenie_0_neuro_1_kor": 1.79,
+      "neuro_polozenie_0_neuro_1_kor": 1.6,
       "odch_std_cechy": 3.978
     },
     "LYMPH": {
@@ -579,15 +579,15 @@
         "uzupelnione": 2083,
         "udzial_uzupelnionych": 0.0292,
         "mediana_obserwowanych": 1.57,
-        "mediana_uzupelnionych": 2.0012,
-        "ks_uzupelnione_vs_obserwowane": 0.6136
+        "mediana_uzupelnionych": 1.9822,
+        "ks_uzupelnione_vs_obserwowane": 0.631
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 1.6642,
-        "mediana_uzupelnionych": 2.0012,
-        "ks_uzupelnione_vs_obserwowane": 0.5681
+        "mediana_uzupelnionych": 1.9809,
+        "ks_uzupelnione_vs_obserwowane": 0.6003
       },
       "odch_std_cechy": 1.3012
     },
@@ -596,17 +596,17 @@
         "uzupelnione": 35119,
         "udzial_uzupelnionych": 0.4919,
         "mediana_obserwowanych": 0.97,
-        "mediana_uzupelnionych": 1.0303,
-        "ks_uzupelnione_vs_obserwowane": 0.6162
+        "mediana_uzupelnionych": 1.0274,
+        "ks_uzupelnione_vs_obserwowane": 0.6084
       },
       "neuro": {
         "uzupelnione": 3586,
         "udzial_uzupelnionych": 0.5392,
         "mediana_obserwowanych": 1.01,
-        "mediana_uzupelnionych": 1.0288,
-        "ks_uzupelnione_vs_obserwowane": 0.5144
+        "mediana_uzupelnionych": 1.0253,
+        "ks_uzupelnione_vs_obserwowane": 0.511
       },
-      "neuro_polozenie_0_neuro_1_kor": -0.47,
+      "neuro_polozenie_0_neuro_1_kor": -0.38,
       "odch_std_cechy": 0.3967
     },
     "%LYMPH": {
@@ -614,17 +614,17 @@
         "uzupelnione": 2083,
         "udzial_uzupelnionych": 0.0292,
         "mediana_obserwowanych": 18.55,
-        "mediana_uzupelnionych": 20.9692,
-        "ks_uzupelnione_vs_obserwowane": 0.5085
+        "mediana_uzupelnionych": 20.9265,
+        "ks_uzupelnione_vs_obserwowane": 0.4926
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 21.1,
-        "mediana_uzupelnionych": 21.0914,
-        "ks_uzupelnione_vs_obserwowane": 0.4775
+        "mediana_uzupelnionych": 21.1466,
+        "ks_uzupelnione_vs_obserwowane": 0.4361
       },
-      "neuro_polozenie_0_neuro_1_kor": 0.0,
+      "neuro_polozenie_0_neuro_1_kor": -0.02,
       "odch_std_cechy": 10.846
     },
     "WAPTT": {
@@ -632,17 +632,17 @@
         "uzupelnione": 36792,
         "udzial_uzupelnionych": 0.5153,
         "mediana_obserwowanych": 0.92,
-        "mediana_uzupelnionych": 0.9877,
-        "ks_uzupelnione_vs_obserwowane": 0.5902
+        "mediana_uzupelnionych": 0.993,
+        "ks_uzupelnione_vs_obserwowane": 0.6301
       },
       "neuro": {
         "uzupelnione": 3724,
         "udzial_uzupelnionych": 0.5599,
         "mediana_obserwowanych": 0.88,
-        "mediana_uzupelnionych": 0.9853,
-        "ks_uzupelnione_vs_obserwowane": 0.7293
+        "mediana_uzupelnionych": 0.9909,
+        "ks_uzupelnione_vs_obserwowane": 0.7641
       },
-      "neuro_polozenie_0_neuro_1_kor": 2.63,
+      "neuro_polozenie_0_neuro_1_kor": 2.77,
       "odch_std_cechy": 0.2628
     },
     "%MONO": {
@@ -650,15 +650,15 @@
         "uzupelnione": 2086,
         "udzial_uzupelnionych": 0.0292,
         "mediana_obserwowanych": 7.9,
-        "mediana_uzupelnionych": 8.7607,
-        "ks_uzupelnione_vs_obserwowane": 0.5152
+        "mediana_uzupelnionych": 8.6334,
+        "ks_uzupelnione_vs_obserwowane": 0.5052
       },
       "neuro": {
         "uzupelnione": 823,
         "udzial_uzupelnionych": 0.1237,
         "mediana_obserwowanych": 8.1,
-        "mediana_uzupelnionych": 8.5734,
-        "ks_uzupelnione_vs_obserwowane": 0.505
+        "mediana_uzupelnionych": 8.5842,
+        "ks_uzupelnione_vs_obserwowane": 0.4817
       },
       "odch_std_cechy": 3.4512
     }
@@ -668,48 +668,48 @@
       "opis": "NEURO vs KOR, 38 cech po imputacji",
       "auc_rekordy_srednia": 0.906,
       "auc_rekordy_min_max": [
-        0.891,
-        0.916
+        0.892,
+        0.915
       ],
-      "auc_pacjenci_srednia": 0.928,
+      "auc_pacjenci_srednia": 0.927,
       "auc_pacjenci_min_max": [
         0.92,
-        0.932
+        0.94
       ]
     },
     "B2_neuro_vs_kor_wzorzec_brakow": {
       "opis": "NEURO vs KOR, tylko wskaźniki braków (0/1)",
-      "auc_rekordy_srednia": 0.819,
+      "auc_rekordy_srednia": 0.818,
       "auc_rekordy_min_max": [
-        0.813,
-        0.833
+        0.789,
+        0.835
       ],
       "auc_pacjenci_srednia": 0.823,
       "auc_pacjenci_min_max": [
-        0.814,
-        0.834
+        0.799,
+        0.839
       ]
     },
     "B3_neuro_vs_kor_wspolne_okno": {
       "opis": "NEURO vs KOR, tylko rekordy ze wspólnego okna dat",
-      "auc_rekordy_srednia": 0.793,
+      "auc_rekordy_srednia": 0.782,
       "auc_rekordy_min_max": [
-        0.741,
-        0.837
+        0.756,
+        0.856
       ],
-      "auc_pacjenci_srednia": 0.801,
+      "auc_pacjenci_srednia": 0.782,
       "auc_pacjenci_min_max": [
-        0.766,
-        0.84
+        0.735,
+        0.857
       ],
       "uwaga": "okno wybierane po imputacji: scaler i MICE dopasowano na całym treningu foldu (wszystkie okresy), a nie tylko na rekordach z okna"
     },
     "B4_neuro_epoka": {
       "opis": "NEURO z okna dat KOR vs NEURO spoza okna (rekordy)",
-      "auc_rekordy_srednia": 0.832,
+      "auc_rekordy_srednia": 0.831,
       "auc_rekordy_min_max": [
-        0.807,
-        0.854
+        0.815,
+        0.861
       ]
     }
   },
@@ -821,159 +821,159 @@
     "APTT": {
       "kor": {
         "mediany_per_fold": [
-          31.982,
-          33.172,
-          32.661,
-          32.905,
-          32.559
+          32.544,
+          33.055,
+          32.724,
+          33.246,
+          32.585
         ],
-        "rozstep": 1.19
+        "rozstep": 0.702
       },
       "neuro": {
         "mediany_per_fold": [
-          31.957,
-          33.093,
-          32.608,
-          32.818,
+          32.532,
+          32.999,
+          32.666,
+          33.231,
           32.557
         ],
-        "rozstep": 1.135
+        "rozstep": 0.699
       }
     },
     "WAPTT": {
       "kor": {
         "mediany_per_fold": [
-          0.967,
-          1.0,
-          0.987,
-          0.996,
-          0.984
+          0.985,
+          0.999,
+          0.986,
+          1.007,
+          0.987
         ],
-        "rozstep": 0.033
+        "rozstep": 0.022
       },
       "neuro": {
         "mediany_per_fold": [
-          0.966,
-          0.998,
           0.985,
-          0.993,
-          0.984
+          0.995,
+          0.986,
+          1.007,
+          0.987
         ],
-        "rozstep": 0.032
+        "rozstep": 0.022
       }
     },
     "GLU": {
       "kor": {
         "mediany_per_fold": [
-          121.185,
-          120.636,
-          119.929,
-          122.052,
-          121.339
+          121.534,
+          121.192,
+          121.492,
+          121.181,
+          120.015
         ],
-        "rozstep": 2.122
+        "rozstep": 1.519
       },
       "neuro": {
         "mediany_per_fold": [
-          118.928,
-          119.367,
-          118.269,
-          119.573,
-          118.813
+          119.638,
+          119.057,
+          118.647,
+          118.935,
+          118.463
         ],
-        "rozstep": 1.304
+        "rozstep": 1.174
       }
     },
     "PT": {
       "kor": {
         "mediany_per_fold": [
-          12.162,
-          12.245,
-          12.193,
-          12.245,
-          12.241
+          12.118,
+          12.227,
+          12.234,
+          12.258,
+          12.166
         ],
-        "rozstep": 0.084
+        "rozstep": 0.14
       },
       "neuro": {
         "mediany_per_fold": [
-          12.149,
-          12.232,
-          12.175,
-          12.238,
-          12.2
+          12.106,
+          12.219,
+          12.216,
+          12.204,
+          12.165
         ],
-        "rozstep": 0.089
+        "rozstep": 0.113
       }
     },
     "INR": {
       "kor": {
         "mediany_per_fold": [
-          1.023,
-          1.034,
+          1.017,
+          1.029,
           1.028,
           1.033,
-          1.03
+          1.025
         ],
-        "rozstep": 0.01
+        "rozstep": 0.015
       },
       "neuro": {
         "mediany_per_fold": [
-          1.022,
-          1.034,
-          1.025,
-          1.033,
-          1.029
+          1.017,
+          1.027,
+          1.026,
+          1.028,
+          1.025
         ],
-        "rozstep": 0.012
+        "rozstep": 0.011
       }
     },
     "WPT": {
       "kor": {
         "mediany_per_fold": [
-          93.958,
-          92.93,
-          93.237,
-          93.097,
-          93.136
+          93.932,
+          93.302,
+          93.381,
+          92.847,
+          93.205
         ],
-        "rozstep": 1.029
+        "rozstep": 1.085
       },
       "neuro": {
         "mediany_per_fold": [
-          94.153,
-          93.12,
-          93.53,
-          93.118,
-          93.339
+          94.122,
+          93.445,
+          93.564,
+          93.472,
+          93.287
         ],
-        "rozstep": 1.034
+        "rozstep": 0.835
       }
     }
   },
   "E_slad_imputacji_nrbc": {
     "zmierzone_dokladne_zera": 0.7757,
     "uzupelnione_dokladne_zera": 0.0,
-    "uzupelnione_w_przedziale_0_0_05": 0.9952,
+    "uzupelnione_w_przedziale_0_0_05": 0.9958,
     "neuro_wsrod_wszystkich_rekordow": 0.0852,
     "neuro_wsrod_uzupelnionych": 0.6345,
     "neuro_wsrod_zmierzonych": 0.0476,
     "neuro_gdy_nrbc_rowne_0": 0.0499,
     "neuro_gdy_nrbc_ponad_0": 0.1789,
-    "neuro_gdy_nrbc_w_przedziale_0_0_05": 0.193,
-    "rekordy_nrbc_w_przedziale_0_0_05": 19469,
+    "neuro_gdy_nrbc_w_przedziale_0_0_05": 0.1931,
+    "rekordy_nrbc_w_przedziale_0_0_05": 19472,
     "auc_tylko_nrbc_po_imputacji": {
       "auc_rekordy_srednia": 0.728,
       "auc_rekordy_min_max": [
-        0.72,
-        0.735
+        0.697,
+        0.75
       ]
     },
     "auc_tylko_wskaznik_braku_nrbc": {
       "auc_rekordy_srednia": 0.726,
       "auc_rekordy_min_max": [
-        0.717,
-        0.733
+        0.69,
+        0.748
       ]
     }
   },

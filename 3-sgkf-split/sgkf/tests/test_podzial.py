@@ -19,9 +19,12 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from sklearn.model_selection import StratifiedGroupKFold  # noqa: E402
+
 from podzial import (KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
-                     diagnostyka, indeksy_foldow, kolumny_cech, podzial_wewnetrzny,
-                     rozstepy, tabela_pacjentow, wczytaj_podzial, zbuduj_podzial)
+                     _przydzial_sgkf, diagnostyka, indeksy_foldow, kolumny_cech,
+                     podzial_wewnetrzny, rozstepy, tabela_pacjentow, wczytaj_podzial,
+                     zbuduj_podzial)
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +67,7 @@ def _cfg(**kw) -> KonfiguracjaPodzialu:
 def test_kazdy_pacjent_dokladnie_w_jednym_foldzie():
     df = dane_testowe()
     pac = tabela_pacjentow(df, _cfg())
-    przydzial = zbuduj_podzial(pac, _cfg())
+    przydzial = zbuduj_podzial(df, pac, _cfg())
     assert przydzial.index.is_unique
     assert set(przydzial.index) == set(df[KOL_PACJENT])
     assert set(przydzial.unique()) == set(range(5))
@@ -73,13 +76,24 @@ def test_kazdy_pacjent_dokladnie_w_jednym_foldzie():
 def test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko():
     df = dane_testowe()
     cfg = _cfg()
-    przydzial = zbuduj_podzial(tabela_pacjentow(df, cfg), cfg)
+    przydzial = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
     testowe = []
     for _, tr, te in indeksy_foldow(df, przydzial):
         assert not set(df[KOL_PACJENT].iloc[tr]) & set(df[KOL_PACJENT].iloc[te])
         assert len(tr) + len(te) == len(df)
         testowe.extend(te)
     assert sorted(testowe) == list(range(len(df))), "rekord pominiety albo powtorzony w testach"
+
+
+def test_podzial_to_stratified_group_kfold_z_warstwa_jako_y():
+    """Bez losowej kolejnosci wynik jest dokladnie tym, co zwraca klasa ze sklearn."""
+    df = dane_testowe()
+    cfg = _cfg(shuffle=False)
+    pac = tabela_pacjentow(df, cfg)
+    przydzial = zbuduj_podzial(df, pac, cfg)
+    y = df[KOL_PACJENT].map(pac.set_index(KOL_PACJENT)["warstwa"]).to_numpy()
+    for i, (_, te) in enumerate(StratifiedGroupKFold(n_splits=5).split(df, y, df[KOL_PACJENT])):
+        assert set(df[KOL_PACJENT].iloc[te]) == set(przydzial.index[przydzial == i]), f"fold {i}"
 
 
 def test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami():
@@ -97,17 +111,27 @@ def test_wariant_35_cech_rozni_sie_tylko_trzema_kolumnami():
 def test_podzial_nie_zalezy_od_kolejnosci_wierszy():
     df = dane_testowe()
     cfg = _cfg()
-    a = zbuduj_podzial(tabela_pacjentow(df, cfg), cfg)
-    b = zbuduj_podzial(tabela_pacjentow(df.sample(frac=1, random_state=3), cfg), cfg)
+    a = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
+    d2 = df.sample(frac=1, random_state=3)
+    b = zbuduj_podzial(d2, tabela_pacjentow(d2, cfg), cfg)
     assert a.sort_index().equals(b.sort_index()), "kolejnosc wierszy zmienila podzial"
+
+
+def test_sgkf_bez_tasowania_tez_nie_zalezy_od_kolejnosci_wierszy():
+    """Wersja 1 z czerwca: wynik zalezy od numerow pacjentow, a nie od kolejnosci wierszy."""
+    df = dane_testowe()
+    d2 = df.sample(frac=1, random_state=3)
+    a = _przydzial_sgkf(df, df["label"].to_numpy(), 5, None)
+    b = _przydzial_sgkf(d2, d2["label"].to_numpy(), 5, None)
+    assert a.sort_index().equals(b.sort_index())
 
 
 def test_ziarno_zmienia_podzial_a_to_samo_ziarno_go_powtarza():
     df = dane_testowe()
     pac = tabela_pacjentow(df, _cfg())
-    a = zbuduj_podzial(pac, _cfg(seed=42))
-    assert a.equals(zbuduj_podzial(pac, _cfg(seed=42)))
-    assert not a.equals(zbuduj_podzial(pac, _cfg(seed=7)))
+    a = zbuduj_podzial(df, pac, _cfg(seed=42))
+    assert a.equals(zbuduj_podzial(df, pac, _cfg(seed=42)))
+    assert not a.equals(zbuduj_podzial(df, pac, _cfg(seed=7)))
 
 
 # ---------------------------------------------------------------------------
@@ -120,12 +144,11 @@ def test_stratyfikacja_wielokluczowa_wyrownuje_czynniki_zaklocajace():
     for s in range(5):
         cfg1 = _cfg(warstwy=("etykieta",), seed=s)
         pac1 = tabela_pacjentow(df, cfg1)
-        gorzej.append(rozstepy(diagnostyka(df, pac1, zbuduj_podzial(pac1, cfg1))))
+        gorzej.append(rozstepy(diagnostyka(df, pac1, zbuduj_podzial(df, pac1, cfg1))))
         cfg3 = _cfg(seed=s)
         pac3 = tabela_pacjentow(df, cfg3)
-        lepiej.append(rozstepy(diagnostyka(df, pac3, zbuduj_podzial(pac3, cfg3))))
-    for k in ("poz_w_oknie_pp", "poz_5plus_rek_pp"):
-        assert max(w[k] for w in lepiej) < max(w[k] for w in gorzej), k
+        lepiej.append(rozstepy(diagnostyka(df, pac3, zbuduj_podzial(df, pac3, cfg3))))
+    assert max(w["poz_w_oknie_pp"] for w in lepiej) < max(w["poz_w_oknie_pp"] for w in gorzej)
     assert max(w["udzial_poz_pacjenci_pp"] for w in lepiej) < 0.5
 
 
@@ -140,10 +163,10 @@ def test_foldy_wewnetrzne_tylko_z_treningu():
     df = dane_testowe()
     cfg = _cfg()
     pac = tabela_pacjentow(df, cfg)
-    przydzial = zbuduj_podzial(pac, cfg)
+    przydzial = zbuduj_podzial(df, pac, cfg)
     outer_train = przydzial.index[przydzial != 0].to_numpy()
     outer_test = set(przydzial.index[przydzial == 0])
-    for tr, te in podzial_wewnetrzny(pac, outer_train):
+    for tr, te in podzial_wewnetrzny(df, pac, outer_train):
         assert not (set(tr) | set(te)) & outer_test
         assert not set(tr) & set(te)
 

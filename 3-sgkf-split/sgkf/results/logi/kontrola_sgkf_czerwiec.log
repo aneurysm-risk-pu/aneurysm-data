@@ -1,0 +1,6 @@
+1. Potasowane wiersze: ten sam fold u 100.00% pacjentów
+2. Przemieszane numery pacjentów: ten sam fold u 20.19% pacjentów
+3. bez_tasowania: tu 0.0907 pp, zapis z drugiego komputera 0.0907 pp, zgodne: True
+3. shuffle_True_seed_42: tu 0.8021 pp, zapis z drugiego komputera 0.1097 pp, zgodne: False
+
+Wynik -> 3-sgkf-split/sgkf/results/kontrola_sgkf_czerwiec.json

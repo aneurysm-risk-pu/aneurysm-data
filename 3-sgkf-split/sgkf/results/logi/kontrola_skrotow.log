@@ -1,4 +1,7 @@
+Python(14091) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
 Odzyskiwanie ukrytych pozytywnych przez modele kontrolne ...
+Python(14094) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(14095) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
   ziarno 0: gotowe
   ziarno 1: gotowe
   ziarno 2: gotowe
@@ -8,15 +11,15 @@ B3 bez imputacji ...
 
 RecallHidden@q, 40% ukrytych, 25 przebiegów na model (średnio 145.8 ukrytych na fold):
   model                                                q=  1%  q=  5%  q= 10%
-  losowy ranking pacjentów                              0.011   0.049   0.099
-  losowy wynik rekordów, mediana do pacjenta            0.006   0.028   0.062
-  wiek i płeć                                           0.025   0.136   0.240
-  sam wzorzec braków (0/1)                              0.382   0.516   0.615
-  38 cech, braki jako NaN (bez imputacji)               0.441   0.698   0.796
-  38 cech po imputacji MICE (zapisane foldy)            0.427   0.661   0.758
-  profil pacjenta: udział braków każdej cechy           0.432   0.564   0.644
-  profil pacjenta: mediana 38 cech (NaN)                0.435   0.686   0.775
+  losowy ranking pacjentów                              0.008   0.042   0.094
+  losowy wynik rekordów, mediana do pacjenta            0.004   0.032   0.067
+  wiek i płeć                                           0.022   0.122   0.232
+  sam wzorzec braków (0/1)                              0.384   0.517   0.613
+  38 cech, braki jako NaN (bez imputacji)               0.445   0.692   0.788
+  38 cech po imputacji MICE (zapisane foldy)            0.425   0.659   0.756
+  profil pacjenta: udział braków każdej cechy           0.432   0.561   0.642
+  profil pacjenta: mediana 38 cech (NaN)                0.438   0.685   0.774
 
-B3 bez imputacji: AUC rekordy 0.824, pacjenci 0.831 [0.791, 0.865]
+B3 bez imputacji: AUC rekordy 0.819, pacjenci 0.825 [0.794, 0.869]
 
 Zapisano -> 3-sgkf-split/sgkf/results/kontrola_skrotow.json

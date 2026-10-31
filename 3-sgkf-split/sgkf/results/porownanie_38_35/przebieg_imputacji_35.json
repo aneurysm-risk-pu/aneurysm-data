@@ -40,7 +40,7 @@
     },
     "wartosci_na_brak_lacznie": 752
   },
-  "odcisk_danych_sha256": "4179b1596019915b",
+  "odcisk_danych_sha256": "5b822c09ebc03011",
   "podzial": {
     "seed": 42,
     "n_splits": 5,
@@ -96,76 +96,76 @@
   "foldy": [
     {
       "fold": 0,
-      "rekordy_train": 62330,
-      "rekordy_test": 15722,
+      "rekordy_train": 62443,
+      "rekordy_test": 15609,
       "pacjenci_test": 8185,
-      "udzial_poz_rekordy_test": 0.09184582114234831,
-      "imputowane_train_kor": 0.1270206396722861,
-      "imputowane_train_neuro": 0.25814151279870506,
-      "imputowane_test_kor": 0.12493546515118163,
-      "imputowane_test_neuro": 0.27590027700831027,
-      "czas_imputacji_s": 160.3,
-      "odcisk_wyniku": "4bca56a49c41190d"
+      "udzial_poz_rekordy_test": 0.08539944903581267,
+      "imputowane_train_kor": 0.12677861831822446,
+      "imputowane_train_neuro": 0.2619620695213023,
+      "imputowane_test_kor": 0.12590361445783133,
+      "imputowane_test_neuro": 0.2621369628121316,
+      "czas_imputacji_s": 168.8,
+      "odcisk_wyniku": "224793259531ef19"
     },
     {
       "fold": 1,
-      "rekordy_train": 62512,
-      "rekordy_test": 15540,
+      "rekordy_train": 62442,
+      "rekordy_test": 15610,
       "pacjenci_test": 8185,
-      "udzial_poz_rekordy_test": 0.0806949806949807,
-      "imputowane_train_kor": 0.1267067695501557,
-      "imputowane_train_neuro": 0.26299796183064666,
-      "imputowane_test_kor": 0.1261914761704766,
-      "imputowane_test_neuro": 0.2576896787423103,
-      "czas_imputacji_s": 161.4,
-      "odcisk_wyniku": "8ddbc0502f56df90"
+      "udzial_poz_rekordy_test": 0.08507367072389493,
+      "imputowane_train_kor": 0.12639076814570083,
+      "imputowane_train_neuro": 0.26684200638737554,
+      "imputowane_test_kor": 0.12745513833596736,
+      "imputowane_test_neuro": 0.2425774526678141,
+      "czas_imputacji_s": 221.6,
+      "odcisk_wyniku": "5ff278259504d413"
     },
     {
       "fold": 2,
-      "rekordy_train": 62451,
-      "rekordy_test": 15601,
+      "rekordy_train": 62442,
+      "rekordy_test": 15610,
       "pacjenci_test": 8185,
-      "udzial_poz_rekordy_test": 0.08211012114608038,
-      "imputowane_train_kor": 0.12666961986350225,
-      "imputowane_train_neuro": 0.26236233040702317,
-      "imputowane_test_kor": 0.12634078212290503,
-      "imputowane_test_neuro": 0.2604661536745846,
-      "czas_imputacji_s": 161.8,
-      "odcisk_wyniku": "71c526a0b57d2e4a"
+      "udzial_poz_rekordy_test": 0.08532991672005125,
+      "imputowane_train_kor": 0.1265879893262909,
+      "imputowane_train_neuro": 0.25894770767867215,
+      "imputowane_test_kor": 0.1266663998559222,
+      "imputowane_test_neuro": 0.27417417417417417,
+      "czas_imputacji_s": 208.4,
+      "odcisk_wyniku": "c67eb7d21779c11b"
     },
     {
       "fold": 3,
-      "rekordy_train": 62444,
-      "rekordy_test": 15608,
+      "rekordy_train": 62441,
+      "rekordy_test": 15611,
       "pacjenci_test": 8185,
-      "udzial_poz_rekordy_test": 0.08700666324961558,
-      "imputowane_train_kor": 0.12653146926562964,
-      "imputowane_train_neuro": 0.26369058864807965,
-      "imputowane_test_kor": 0.12689323308270678,
-      "imputowane_test_neuro": 0.25539659162634126,
-      "czas_imputacji_s": 161.5,
-      "odcisk_wyniku": "3e71be677d83e5a3"
+      "udzial_poz_rekordy_test": 0.08506822112612901,
+      "imputowane_train_kor": 0.12674563435094266,
+      "imputowane_train_neuro": 0.2599822871098468,
+      "imputowane_test_kor": 0.1260359468298977,
+      "imputowane_test_neuro": 0.27007314974182445,
+      "czas_imputacji_s": 165.9,
+      "odcisk_wyniku": "2ef6a68a5e4bba49"
     },
     {
       "fold": 4,
-      "rekordy_train": 62471,
-      "rekordy_test": 15581,
+      "rekordy_train": 62440,
+      "rekordy_test": 15612,
       "pacjenci_test": 8184,
-      "udzial_poz_rekordy_test": 0.08433348308837688,
-      "imputowane_train_kor": 0.1260900439568133,
-      "imputowane_train_neuro": 0.2626997510640006,
-      "imputowane_test_kor": 0.1286605453143618,
-      "imputowane_test_neuro": 0.25914329202000436,
-      "czas_imputacji_s": 162.1,
-      "odcisk_wyniku": "1c6921b291412afa"
+      "udzial_poz_rekordy_test": 0.08519087881117089,
+      "imputowane_train_kor": 0.12651532014616101,
+      "imputowane_train_neuro": 0.2622493086691546,
+      "imputowane_test_kor": 0.1269570088222938,
+      "imputowane_test_neuro": 0.26098818474758323,
+      "czas_imputacji_s": 164.8,
+      "odcisk_wyniku": "bcbd28bb6598edd3"
     }
   ],
-  "czas_laczny_min": 13.5,
+  "czas_laczny_min": 15.5,
   "wersje": {
     "python": "3.9.6",
     "sklearn": "1.6.1",
     "pandas": "2.3.3",
     "numpy": "2.0.2"
   },
-  "utworzono": "2026-10-04T15:50:10"
+  "utworzono": "2026-10-31T10:09:00"
 }

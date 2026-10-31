@@ -16,8 +16,8 @@ Parametry MICE (finalne, z 2-imputation/RAPORT_IMPUTACJA.md):
   min_value=0.0, max_value=1.0 (dane są w [0,1] po skalowaniu)
 
 Zmiany w wersji 2 (04.10.2026), uzasadnienie w RAPORT_SGKF_MICE.md:
-  - foldy nie są liczone w locie przez StratifiedGroupKFold(shuffle=False),
-    tylko wczytywane z zapisanego przydziału pacjent -> fold (podzial.py)
+  - foldy nie są liczone w locie, tylko wczytywane z zapisanego przydziału
+    pacjent -> fold (podzial.py: StratifiedGroupKFold, y = warstwa pacjenta)
   - dane czytane przez podzial.wczytaj_rekordy() z pliku przygotowanego
     w części A (data/processed/aneurysm_sgkf_input.csv); zmiana tego pliku
     od zapisu podziału przerywa przebieg (odcisk w results/podzial_meta.json)

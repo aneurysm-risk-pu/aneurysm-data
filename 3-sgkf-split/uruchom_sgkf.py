@@ -13,7 +13,7 @@ CZĘŚĆ A — przygotowanie danych do SGKF (3-sgkf-split/przygotowanie/)
   A4  analiza_selekcji_cech.py        dlaczego 38 cech (odtworzenie selekcji z etapu 1)
 
 CZĘŚĆ B — podział i imputacja w foldach (3-sgkf-split/sgkf/)
-  B1  podzial.py --porownanie         zamrożony przydział pacjent -> fold + porównanie strategii
+  B1  podzial.py --porownanie         StratifiedGroupKFold: zamrożony przydział pacjent -> fold + porównanie strategii
   B2  tests/test_podzial.py           testy podziału
   B3  aneurysm_sgkf_mice_pipeline.py  MICE w foldach, 38 cech
   B4  ocena_imputacji.py              jakość imputacji protokołem z etapu 2 (maski na kompletnych wierszach)
@@ -21,7 +21,8 @@ CZĘŚĆ B — podział i imputacja w foldach (3-sgkf-split/sgkf/)
 
 Jednorazowa analiza porównawcza 38 vs 35 cech (podkładka pod decyzję, wyniki
 w sgkf/results/porownanie_38_35/) nie jest częścią tego przebiegu — polecenia
-w sgkf/porownanie_cech.py.
+w sgkf/porownanie_cech.py. Osobno uruchamia się też kontrole: sgkf/kontrola_epoki.py,
+sgkf/kontrola_skrotow.py i sgkf/kontrola_sgkf_czerwiec.py.
 
 Uruchomienie:
     python 3-sgkf-split/uruchom_sgkf.py                 # całość (~35 min na M-series)

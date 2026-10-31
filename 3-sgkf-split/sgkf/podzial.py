@@ -2,38 +2,49 @@
 podzial.py
 ==========
 
-CZESC B etapu 3 — zamrozony podzial pacjentow na foldy (wersja 2 SGKF).
+CZESC B etapu 3 — zamrozony podzial na foldy metoda StratifiedGroupKFold (SGKF).
 
-Co zmienia wzgledem wersji z 11.06.2026 (pierwotny `aneurysm_sgkf_mice_pipeline.py`):
+Co robi, krok po kroku:
 
-  1. Podzial powstaje na tabeli pacjentow (jeden wiersz = jedna osoba).
-     Warunek "Group" z StratifiedGroupKFold jest wiec spelniony z konstrukcji,
-     a stratyfikacja wyrownuje proporcje PACJENTOW, nie rekordow.
+  1. wczytaj_rekordy()   czyta data/processed/aneurysm_sgkf_input.csv: polaczone
+                         KOR i NEURO po przygotowaniu z czesci A, przed imputacja.
+  2. tabela_pacjentow()  dla kazdego pacjenta wyznacza warstwe: etykieta x okno
+                         czasowe x klasa liczby rekordow (12 warstw). Warstwa
+                         mowi, w jakim pacjent jest "typie"; nikogo nie usuwa.
+  3. zbuduj_podzial()    uruchamia StratifiedGroupKFold na rekordach:
+                         y = warstwa pacjenta, groups = pacjent. SGKF trzyma
+                         wszystkie rekordy pacjenta w jednym foldzie i wyrownuje
+                         udzial kazdej warstwy miedzy foldami.
+  4. zapisz_podzial()    zapisuje przydzial pacjent -> fold razem z odciskiem
+                         pliku danych i wersjami bibliotek.
 
-  2. Stratyfikacja jest wielokluczowa: etykieta x okno czasowe KOR x liczba
-     rekordow pacjenta. StratifiedGroupKFold przyjmuje tylko jedna zmienna
-     stratyfikujaca. Sama etykieta zostawiala miedzy foldami do 5 pp rozjazdu
-     w udziale NEURO z okna czasowego KOR i do 8 pp w udziale pacjentow z 5+
-     rekordami — a oba czynniki sa znanymi zrodlami falszywego sygnalu
-     (1026_REALIZACJA_DO_SGKF.md, sekcja 6).
+Od tej pory zrodlem prawdy jest plik `results/pacjent_fold.csv`, a nie przepis na
+podzial. Kazdy kolejny etap czyta go przez `wczytaj_podzial()`.
 
-  3. Tasowanie naprawde dziala (shuffle=True, ziarno w konfiguracji),
-     a przydzial pacjent -> fold jest zapisany na dysk razem z odciskiem
-     danych i wersjami bibliotek. Pierwotny podzial mial shuffle=False,
-     wiec zalezal od kolejnosci wierszy w CSV, a RANDOM_STATE nie mial na
-     niego wplywu. Dodatkowo SGKF z shuffle=True daje rozne podzialy w
-     sklearn 1.6 i 1.8 — StratifiedKFold na pacjentach daje identyczny.
+Co zmienia wzgledem wersji 1 z czerwca (to tez byl SGKF, z y = etykieta):
 
-  4. (04.10.2026) Podzial czyta WYLACZNIE plik przygotowany w czesci A
-     (3-sgkf-split/przygotowanie/przygotuj_dane.py ->
-     data/processed/aneurysm_sgkf_input.csv): bez rekordow KOR 63 pacjentow
-     obecnych tez w NEURO i bez wartosci niemozliwych. Zestaw cech: 38 (jeden
-     wariant; wariant 35 tylko w jednorazowej analizie porownawczej).
-     Meta przechowuje odcisk tego pliku; kazda zmiana przygotowania danych
-     zmienia plik, a wiec uniewaznia zapisany podzial.
+  a. y to warstwa zamiast samej etykiety. Sama etykieta zostawiala miedzy foldami
+     okolo 4 pp rozjazdu w udziale NEURO z okna czasowego KOR, a to znane zrodlo
+     falszywego sygnalu (1026_REALIZACJA_DO_SGKF.md, sekcja 6).
 
-Od tej pory zrodlem prawdy jest plik `results/pacjent_fold.csv`, a nie
-przepis na podzial. Kazdy kolejny etap czyta go przez `wczytaj_podzial()`.
+  b. Losowa kolejnosc pacjentow, sterowana ziarnem. SGKF bez tasowania przetwarza
+     pacjentow wedlug numerow: nie zalezy od kolejnosci wierszy w CSV, ale ziarno
+     nie ma na niego wplywu, wiec nie da sie sprawdzic, czy wynik nie jest
+     przypadkowy.
+
+  c. Przydzial jest zapisany z odciskiem danych. Zmiana pliku danych uniewaznia
+     zapisany podzial, zamiast po cichu liczyc foldy od nowa.
+
+Dlaczego kolejnosc mieszamy sami, a nie przez StratifiedGroupKFold(shuffle=True):
+w sklearn 1.6 shuffle=True miesza tabele liczebnosci, ale gubi informacje, ktory
+wiersz nalezy do ktorego pacjenta, wiec wyrownanie sie psuje. W sklearn 1.8 jest
+to naprawione, a wiec ta sama konfiguracja daje na tych wersjach inne foldy.
+Przemieszanie numerow pacjentow przed wywolaniem daje poprawne tasowanie bez tej
+opcji, wiec wynik nie zalezy od tego bledu.
+
+Wariant testowany i odrzucony: StratifiedKFold na tabeli pacjentow (jeden wiersz
+= jeden pacjent). Na pacjentach wyrownuje foldy praktycznie tak samo, na rekordach
+gorzej (porownaj_strategie, results/podzial_porownanie_strategii.csv).
 
 Uruchomienie:
     python 3-sgkf-split/sgkf/podzial.py               # buduje, sprawdza i zapisuje podzial
@@ -84,7 +95,7 @@ class KonfiguracjaPodzialu:
 
     # 0.6 — konfiguracja podzialu
     n_splits: int = 5
-    shuffle: bool = True
+    shuffle: bool = True     # True: losowa kolejnosc pacjentow sterowana ziarnem (patrz _przydzial_sgkf)
     seed: int = 42
 
     # Zmienne stratyfikujace, w tej kolejnosci laczone w jeden klucz.
@@ -92,7 +103,7 @@ class KonfiguracjaPodzialu:
     warstwy: tuple = ("etykieta", "okno", "n_rek")
 
     # Warstwa mniejsza niz `min_warstwa` jest doklejana do warstwy
-    # "<etykieta>_inne", zeby StratifiedKFold nie ostrzegal o zbyt malych klasach.
+    # "<etykieta>_inne", zeby kazda warstwa dala sie rozlozyc na wszystkie foldy.
     min_warstwa: int = 20
 
     @property
@@ -176,28 +187,47 @@ def _warstwy(pac: pd.DataFrame, cfg: KonfiguracjaPodzialu) -> pd.Series:
 # Podzial
 # ---------------------------------------------------------------------------
 
-def zbuduj_podzial(pac: pd.DataFrame, cfg: KonfiguracjaPodzialu) -> pd.Series:
-    """patient_id -> numer foldu testowego (0 .. n_splits-1)."""
-    kw = dict(n_splits=cfg.n_splits, shuffle=cfg.shuffle)
-    if cfg.shuffle:
-        kw["random_state"] = cfg.seed
-    ids = pac[KOL_PACJENT].to_numpy()
+def _przydzial_sgkf(df: pd.DataFrame, y: np.ndarray, n_splits: int, seed: Optional[int]) -> pd.Series:
+    """StratifiedGroupKFold na rekordach: patient_id -> numer foldu (0 .. n_splits-1).
+
+    SGKF przetwarza pacjentow wedlug wartosci `groups`. Przy seed=None sa to numery
+    pacjentow. Przy podanym ziarnie kazdy pacjent dostaje losowy numer roboczy, co
+    daje losowa kolejnosc. RandomState, bo jego strumien jest stabilny miedzy
+    wersjami NumPy; wbudowanego shuffle=True nie uzywamy (naglowek pliku).
+    """
+    pacjenci = df[KOL_PACJENT].to_numpy()
+    ids = np.unique(pacjenci)
+    grupy = pacjenci
+    if seed is not None:
+        numer_roboczy = np.random.RandomState(seed).permutation(len(ids))
+        grupy = numer_roboczy[np.searchsorted(ids, pacjenci)]
     przydzial = pd.Series(-1, index=ids, name="fold")
-    for i, (_, te) in enumerate(StratifiedKFold(**kw).split(ids, pac["warstwa"])):
-        przydzial.iloc[te] = i
     przydzial.index.name = KOL_PACJENT
+    for i, (_, te) in enumerate(StratifiedGroupKFold(n_splits=n_splits).split(pacjenci, y, grupy)):
+        przydzial.loc[np.unique(pacjenci[te])] = i
+    return przydzial
+
+
+def _warstwa_rekordu(df: pd.DataFrame, pac: pd.DataFrame) -> np.ndarray:
+    """Kazdy rekord dostaje warstwe swojego pacjenta."""
+    return df[KOL_PACJENT].map(pac.set_index(KOL_PACJENT)["warstwa"]).to_numpy()
+
+
+def zbuduj_podzial(df: pd.DataFrame, pac: pd.DataFrame, cfg: KonfiguracjaPodzialu) -> pd.Series:
+    """patient_id -> numer foldu testowego: SGKF z y = warstwa, groups = pacjent."""
+    przydzial = _przydzial_sgkf(df, _warstwa_rekordu(df, pac), cfg.n_splits,
+                                cfg.seed if cfg.shuffle else None)
     sprawdz_podzial(pac, przydzial, cfg.n_splits)
     return przydzial
 
 
-def podzial_wewnetrzny(pac: pd.DataFrame, pacjenci_train: np.ndarray,
+def podzial_wewnetrzny(df: pd.DataFrame, pac: pd.DataFrame, pacjenci_train: np.ndarray,
                        n_splits: int = 3, seed: int = 42) -> Iterator[tuple[np.ndarray, np.ndarray]]:
-    """Foldy do strojenia, wewnatrz treningu foldu zewnetrznego, z ta sama stratyfikacja."""
-    p = pac[pac[KOL_PACJENT].isin(set(pacjenci_train))]
-    ids = p[KOL_PACJENT].to_numpy()
-    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=seed)
-    for tr, te in skf.split(ids, p["warstwa"]):
-        yield ids[tr], ids[te]
+    """Foldy do strojenia, wewnatrz treningu foldu zewnetrznego: ta sama metoda i te same warstwy."""
+    d = df[df[KOL_PACJENT].isin(set(pacjenci_train))]
+    przydzial = _przydzial_sgkf(d, _warstwa_rekordu(d, pac), n_splits, seed)
+    for i in range(n_splits):
+        yield przydzial.index[przydzial != i].to_numpy(), przydzial.index[przydzial == i].to_numpy()
 
 
 def sprawdz_podzial(pac: pd.DataFrame, przydzial: pd.Series, n_splits: int) -> None:
@@ -266,37 +296,43 @@ def rozstepy(diag: pd.DataFrame) -> dict:
 # Porownanie strategii — uzasadnienie wyboru do raportu
 # ---------------------------------------------------------------------------
 
-def _przydzial_sgkf_rekordowy(df: pd.DataFrame, pac: pd.DataFrame, n_splits: int,
-                              shuffle: bool, seed: Optional[int]) -> pd.Series:
-    """Pierwotne podejscie: SGKF na rekordach, stratyfikacja po etykiecie rekordu."""
-    d = df[df[KOL_PACJENT].isin(set(pac[KOL_PACJENT]))]
-    kw = dict(n_splits=n_splits, shuffle=shuffle)
-    if shuffle:
-        kw["random_state"] = seed
-    przydzial = {}
-    for i, (_, te) in enumerate(StratifiedGroupKFold(**kw).split(d, d[KOL_ETYKIETA], d[KOL_PACJENT])):
-        przydzial.update(dict.fromkeys(d[KOL_PACJENT].iloc[te].unique(), i))
-    return pd.Series(przydzial, name="fold")
+def _przydzial_sgkf_wbudowane_tasowanie(df: pd.DataFrame, n_splits: int, seed: int) -> pd.Series:
+    """SGKF z y = etykieta i shuffle=True. Wynik zalezy od wersji sklearn (naglowek pliku)."""
+    pacjenci = df[KOL_PACJENT].to_numpy()
+    przydzial = pd.Series(-1, index=np.unique(pacjenci), name="fold")
+    przydzial.index.name = KOL_PACJENT
+    sgkf = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+    for i, (_, te) in enumerate(sgkf.split(pacjenci, df[KOL_ETYKIETA].to_numpy(), pacjenci)):
+        przydzial.loc[np.unique(pacjenci[te])] = i
+    return przydzial
+
+
+def _przydzial_skf_pacjenci(pac: pd.DataFrame, n_splits: int, seed: int) -> pd.Series:
+    """Wariant testowany: StratifiedKFold na tabeli pacjentow (jeden wiersz = jeden pacjent)."""
+    ids = pac[KOL_PACJENT].to_numpy()
+    przydzial = pd.Series(-1, index=ids, name="fold")
+    przydzial.index.name = KOL_PACJENT
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=seed)
+    for i, (_, te) in enumerate(skf.split(ids, pac["warstwa"])):
+        przydzial.iloc[te] = i
+    return przydzial
 
 
 def porownaj_strategie(df: pd.DataFrame, cfg: KonfiguracjaPodzialu,
                        ziarna=(42, 7, 13, 101, 2024)) -> pd.DataFrame:
-    """Te same miary dla czterech strategii; dla tasowanych — najgorszy z 5 ziaren."""
+    """Te same miary dla czterech strategii; dla losowych — najgorszy z 5 ziaren."""
     pac = tabela_pacjentow(df, cfg)
-    tylko_etykieta = tabela_pacjentow(df, KonfiguracjaPodzialu(
-        **{**asdict(cfg), "warstwy": ("etykieta",)}))
+    etykieta = df[KOL_ETYKIETA].to_numpy()
 
     strategie = {
-        "SGKF rekordowy, shuffle=False (v1)":
-            [lambda: _przydzial_sgkf_rekordowy(df, pac, cfg.n_splits, False, None)],
-        "SGKF rekordowy, shuffle=True":
-            [lambda s=s: _przydzial_sgkf_rekordowy(df, pac, cfg.n_splits, True, s) for s in ziarna],
-        "pacjenci, stratyfikacja: etykieta":
-            [lambda s=s: zbuduj_podzial(tylko_etykieta, KonfiguracjaPodzialu(
-                **{**asdict(cfg), "warstwy": ("etykieta",), "seed": s})) for s in ziarna],
-        "pacjenci, stratyfikacja: etykieta x okno x n_rek (v2)":
-            [lambda s=s: zbuduj_podzial(pac, KonfiguracjaPodzialu(
-                **{**asdict(cfg), "seed": s})) for s in ziarna],
+        "SGKF, y = etykieta, bez tasowania (wersja 1)":
+            [lambda: _przydzial_sgkf(df, etykieta, cfg.n_splits, None)],
+        "SGKF, y = etykieta, wbudowane shuffle=True":
+            [lambda s=s: _przydzial_sgkf_wbudowane_tasowanie(df, cfg.n_splits, s) for s in ziarna],
+        "StratifiedKFold na tabeli pacjentow, 12 warstw (wariant testowany)":
+            [lambda s=s: _przydzial_skf_pacjenci(pac, cfg.n_splits, s) for s in ziarna],
+        "SGKF, y = 12 warstw, losowa kolejnosc pacjentow (wersja 2, wybrana)":
+            [lambda s=s: _przydzial_sgkf(df, _warstwa_rekordu(df, pac), cfg.n_splits, s) for s in ziarna],
     }
     wiersze = []
     for nazwa, budowniczowie in strategie.items():
@@ -330,6 +366,8 @@ def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
     diag.to_csv(katalog / "podzial_diagnostyka.csv", index=False)
 
     meta = {
+        "metoda": "StratifiedGroupKFold na rekordach: y = warstwa pacjenta, groups = pacjent, "
+                  "losowa kolejnosc pacjentow sterowana ziarnem",
         "konfiguracja": {**asdict(cfg), "warstwy": list(cfg.warstwy)},
         "plik_danych": str(cfg.sciezka_danych.relative_to(BASE_DIR)).replace("\\", "/"),
         "odcisk_danych_sha256": odcisk_pliku(cfg.sciezka_danych),
@@ -401,14 +439,14 @@ def main(argv=None) -> None:
     print(f"    warstw stratyfikacji: {pac['warstwa'].nunique()} "
           f"(najmniejsza: {pac['warstwa'].value_counts().min()} pacjentow)")
 
-    print(f"\n[2] Podzial: {cfg.n_splits} foldow, shuffle={cfg.shuffle}, seed={cfg.seed}, "
-          f"warstwy={'+'.join(cfg.warstwy)}\n")
-    przydzial = zbuduj_podzial(pac, cfg)
+    print(f"\n[2] Podzial StratifiedGroupKFold: {cfg.n_splits} foldow, losowa kolejnosc={cfg.shuffle}, "
+          f"seed={cfg.seed}, warstwy={'+'.join(cfg.warstwy)}\n")
+    przydzial = zbuduj_podzial(df, pac, cfg)
     diag = diagnostyka(df, pac, przydzial)
     _drukuj(diag)
 
     if args.porownanie:
-        print("\n[3] Porownanie strategii (dla tasowanych: najgorszy z 5 ziaren)\n")
+        print("\n[3] Porownanie strategii (dla losowych: najgorszy z 5 ziaren)\n")
         por = porownaj_strategie(df, cfg)
         print(por.to_string(index=False, float_format=lambda v: f"{v:.3f}"))
         WYNIKI.mkdir(parents=True, exist_ok=True)
