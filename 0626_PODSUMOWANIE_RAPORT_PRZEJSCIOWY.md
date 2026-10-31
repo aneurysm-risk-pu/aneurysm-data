@@ -85,7 +85,7 @@ Zaimplementowano **StratifiedGroupKFold** na 5 foldach: mechanizm *Group* pilnuj
 
 Podział zintegrowano z imputacją tak, aby MICE działał **wewnątrz** foldu: scaler dopasowywany wyłącznie na kompletnych obserwacjach z części treningowej, imputer uczony tylko na treningu, walidacja jedynie transformowana, na końcu odwrotna transformacja skalera. Dzięki temu żadna informacja ze zbioru walidacyjnego nie wpływa ani na skalowanie, ani na uzupełnianie braków.
 
-Ten podział nie jest jeszcze zamrożonym protokołem modelowania. Aktualna implementacja używa `shuffle=False`, więc foldy zależą od kolejności wierszy, nie zapisuje przydziału pacjentów na dysk i nie rozwiązuje 63 pacjentów z obiema etykietami. Są to zadania etapu 0. **Rozwiązane 04.10.2026 w wersji 2 podziału**: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
+Ten podział nie jest jeszcze zamrożonym protokołem modelowania. Aktualna implementacja używa `shuffle=False`, więc seed nie ma wpływu na foldy (sprostowanie z 31.10.2026: foldy zależą od numerów pacjentów, a nie od kolejności wierszy), nie zapisuje przydziału pacjentów na dysk i nie rozwiązuje 63 pacjentów z obiema etykietami. Są to zadania etapu 0. **Rozwiązane 04.10.2026 w wersji 2 podziału**: `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 6.
 
 ## 5. Stan danych na koniec etapu
 

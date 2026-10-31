@@ -19,10 +19,10 @@ Liczby dotyczą plików surowych. Po czyszczeniu (etap 1) i przygotowaniu danych
 
 | Grupa | Cechy |
 |---|---|
-| morfologia | HGB, RBC, HCT, MCV, MCH, MCHC, RDW, PLT, MPV, WPT |
+| morfologia | HGB, RBC, HCT, MCV, MCH, MCHC, RDW, PLT, MPV |
 | rozmaz | WBC, NEUT, %NEUT, LYMPH, %LYMPH, MONO, %MONO, EO, %EO, BAZO, %BAZO, IG, %IG, NRBC, %NRBC |
 | biochemia | KREA, eGFR-MDRD, eGFRCKD, Na, K, GLU, CRP |
-| koagulologia | PT, INR, APTT, WAPTT |
+| koagulologia | PT, INR, WPT (wskaźnik protrombinowy), APTT, WAPTT |
 | demografia | patient_age, patient_sex |
 
 Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CRP, MONO i %MONO, została cofnięta (`3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 2.6). Kolumny meta (nie są cechami): `patient_id`, `custom_id`, `examination_date`, `label`.
@@ -33,7 +33,7 @@ Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CR
 |---|---|
 | 1. Przygotowanie danych | `1-data-preparation/` |
 | 2. Imputacja (benchmark metod) | `2-imputation/` (`RAPORT_IMPUTACJA.md`) |
-| 3. Przygotowanie danych do SGKF (A), podział z imputacją w foldach, ocena imputacji i diagnostyka (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
+| 3. Przygotowanie danych do SGKF (A), podział `StratifiedGroupKFold` z imputacją w foldach, ocena imputacji i diagnostyka (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
 | 4. Plan modelowania PU | `4-pu-setup/PLAN_MODELOWANIA.md` |
 | Materiał do raportu przejściowego (06.2026, historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
 | **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `1026_REALIZACJA_DO_SGKF.md` |
@@ -44,5 +44,5 @@ Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CR
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install scikit-learn pandas numpy scipy pyarrow
-.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # szybkie sprawdzenie etapu 3 (~40 s)
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # szybkie sprawdzenie etapu 3 (~1 min)
 ```
