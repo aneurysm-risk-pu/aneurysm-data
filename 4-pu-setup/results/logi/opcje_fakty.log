@@ -1,0 +1,87 @@
+aneurysm_sgkf_input.csv: 78,052 rekordow, 40,924 pacjentow, 38 cech (36 laboratoryjnych)
+
+==============================================================================
+  A. Liczba rekordow na pacjenta
+==============================================================================
+  KOR  : 1 rekord 60.0%, 2-3 30.4%, >=4 9.6%, mediana 1, maks. 11
+  NEURO: 1 rekord 33.4%, 2-3 39.6%, >=4 27.0%, mediana 2, maks. 38
+
+==============================================================================
+  B. Udzial brakujacych komorek cech laboratoryjnych wedlug reprezentacji
+==============================================================================
+  wszystkie_rekordy                  KOR 13.0%  NEURO 27.5%
+  pierwszy_rekord_pacjenta           KOR 10.7%  NEURO 16.3%
+  mediana_pacjenta_przed_imputacja   KOR 8.7%  NEURO 8.9%
+
+==============================================================================
+  C. Wzorce brakow: czy wzorce NEURO wystepuja w KOR
+==============================================================================
+  rekordy, dokladny wzorzec 36 cech: 566 wzorcow; rekordy NEURO ze wzorcem nieobecnym w KOR: 35.6%
+  rekordy, wzorzec 8 blokow: 116 wzorcow; NEURO ze wzorcem obecnym u >= 50 KOR: 82.7%; nieobecnym w KOR: 14.7%
+    wazenie KOR do rozkladu wzorcow NEURO: efektywna liczebnosc 24,222 z 71,401
+    kolejnosc blokow we wzorcu: morfologia, rozmaz_podstawowy, rozmaz_rozszerzony, nerki, elektrolity, GLU, CRP, koagulologia
+    11111111: KOR 32.4%  NEURO 16.1%
+    11111101: KOR 1.9%  NEURO 9.2%
+    11111010: KOR 13.5%  NEURO 8.0%
+    11111011: KOR 13.3%  NEURO 5.3%
+    11111110: KOR 12.8%  NEURO 4.7%
+    11111000: KOR 2.8%  NEURO 4.3%
+  pacjenci, wzorzec 8 blokow: 87 wzorcow; NEURO ze wzorcem obecnym u >= 50 KOR: 85.5%; nieobecnym w KOR: 12.3%
+    wazenie KOR do rozkladu wzorcow NEURO: efektywna liczebnosc 17,556 z 39,101
+    kolejnosc blokow we wzorcu: morfologia, rozmaz_podstawowy, rozmaz_rozszerzony, nerki, elektrolity, GLU, CRP, koagulologia
+    11111111: KOR 49.7%  NEURO 50.8%
+    11111101: KOR 1.9%  NEURO 12.4%
+    11111011: KOR 11.9%  NEURO 9.3%
+    11011111: KOR 0.0%  NEURO 5.0%
+    11011101: KOR 0.0%  NEURO 4.1%
+    11111110: KOR 12.0%  NEURO 3.2%
+
+==============================================================================
+  D. Pacjenci z kompletnym panelem (mediana pacjenta, bez imputacji)
+==============================================================================
+  morfologia                           (10 cech): KOR 99.0%  NEURO 99.0%
+  + nerki i elektrolity                (15 cech): KOR 81.9%  NEURO 73.9%
+  + rozmaz podstawowy                  (23 cech): KOR 81.7%  NEURO 73.8%
+  + CRP                                (24 cech): KOR 78.1%  NEURO 60.3%
+  + GLU                                (25 cech): KOR 60.6%  NEURO 50.2%
+  wszystkie 36 cech laboratoryjnych    (36 cech): KOR 46.0%  NEURO 40.9%
+
+==============================================================================
+  E. Pacjenci NEURO wedlug okresu badan
+==============================================================================
+  pierwszy_rekord_przed_oknem: 1048
+  pierwszy_rekord_w_oknie: 134
+  pierwszy_rekord_po_oknie: 641
+  co_najmniej_jeden_rekord_w_oknie: 271
+  okno: ['2019-12-29', '2021-12-26']
+
+==============================================================================
+  F. Ukryci chorzy w treningowej puli U (wartosci oczekiwane, srednio na fold)
+==============================================================================
+  ukrywanie 20%: widoczni P 1,167, ukryci w puli U 292 wsrod 31,572 (udzial 0.92%)
+  ukrywanie 40%: widoczni P 875, ukryci w puli U 583 wsrod 31,864 (udzial 1.83%)
+  ukrywanie 60%: widoczni P 583, ukryci w puli U 875 wsrod 32,156 (udzial 2.72%)
+
+==============================================================================
+  G. Cechy wyliczalne z innych cech i slad kalibracji PT -> INR
+==============================================================================
+  MCV = 10 * HCT / RBC                             mediana bledu wzglednego 0.03%
+  MCH = 10 * HGB / RBC                             mediana bledu wzglednego 0.07%
+  MCHC = 100 * HGB / HCT                           mediana bledu wzglednego 0.07%
+  NEUT = WBC * %NEUT / 100                         mediana bledu wzglednego 0.09%
+  LYMPH = WBC * %LYMPH / 100                       mediana bledu wzglednego 0.19%
+  MONO = WBC * %MONO / 100                         mediana bledu wzglednego 0.40%
+  EO = WBC * %EO / 100                             mediana bledu wzglednego 2.47%
+  BAZO = WBC * %BAZO / 100                         mediana bledu wzglednego 5.00%
+  IG = WBC * %IG / 100                             mediana bledu wzglednego 4.38%
+  NRBC = WBC * %NRBC / 100                         mediana bledu wzglednego 13.50%
+  eGFR-MDRD = MDRD(KREA, wiek, plec), ponizej 59   mediana bledu wzglednego 0.93%
+  suma 5 procentow rozmazu: srednia 99.995, odch. std. 0.11
+  APTT / WAPTT: mediana 33.33, 5-95%: [32.61, 33.73]
+  cenzurowanie: eGFR-MDRD = 60 w 69.3% zmierzonych, eGFRCKD = 90 w 40.5%
+  PT 11,5-12,5 s, KOR                (n= 9485): mediana INR 1.00, mediana WPT 96
+  PT 11,5-12,5 s, NEURO w oknie      (n=   48): mediana INR 0.99, mediana WPT 95
+  PT 11,5-12,5 s, NEURO przed oknem  (n=  741): mediana INR 1.04, mediana WPT 99
+  PT 11,5-12,5 s, NEURO po oknie     (n=  286): mediana INR 1.07, mediana WPT 99
+
+Zapisano 4-pu-setup/results/opcje_fakty.json

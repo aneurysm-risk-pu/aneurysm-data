@@ -1,0 +1,311 @@
+{
+  "wejscie": "aneurysm_sgkf_input.csv",
+  "bloki_brakow": {
+    "morfologia": [
+      "HGB",
+      "RBC",
+      "HCT",
+      "MCV",
+      "MCH",
+      "MCHC",
+      "RDW",
+      "PLT",
+      "WBC",
+      "MPV"
+    ],
+    "rozmaz_podstawowy": [
+      "LYMPH",
+      "%LYMPH",
+      "MONO",
+      "%MONO",
+      "EO",
+      "%EO",
+      "BAZO",
+      "%BAZO"
+    ],
+    "rozmaz_rozszerzony": [
+      "NEUT",
+      "%NEUT",
+      "NRBC",
+      "%NRBC",
+      "IG",
+      "%IG"
+    ],
+    "nerki": [
+      "KREA",
+      "eGFR-MDRD",
+      "eGFRCKD"
+    ],
+    "elektrolity": [
+      "Na",
+      "K"
+    ],
+    "GLU": [
+      "GLU"
+    ],
+    "CRP": [
+      "CRP"
+    ],
+    "koagulologia": [
+      "PT",
+      "INR",
+      "WPT",
+      "APTT",
+      "WAPTT"
+    ]
+  },
+  "A_rekordy_na_pacjenta": {
+    "KOR": {
+      "pacjenci": 39101,
+      "udzial_1_rekord": 0.6,
+      "udzial_2_3_rekordy": 0.3045,
+      "udzial_4_i_wiecej": 0.0955,
+      "mediana": 1.0,
+      "maksimum": 11
+    },
+    "NEURO": {
+      "pacjenci": 1823,
+      "udzial_1_rekord": 0.3335,
+      "udzial_2_3_rekordy": 0.3961,
+      "udzial_4_i_wiecej": 0.2704,
+      "mediana": 2.0,
+      "maksimum": 38
+    }
+  },
+  "B_braki_wedlug_reprezentacji": {
+    "wszystkie_rekordy": {
+      "KOR": 0.1299,
+      "NEURO": 0.2748
+    },
+    "pierwszy_rekord_pacjenta": {
+      "KOR": 0.1065,
+      "NEURO": 0.1628
+    },
+    "mediana_pacjenta_przed_imputacja": {
+      "KOR": 0.0874,
+      "NEURO": 0.0891
+    }
+  },
+  "C_wzorce_brakow": {
+    "rekordy_dokladny_wzorzec_36": {
+      "liczba_wzorcow": 566,
+      "rekordy_NEURO_ze_wzorcem_nieobecnym_w_KOR": 0.3563
+    },
+    "rekordy_wzorzec_blokow": {
+      "liczba_wzorcow": 116,
+      "NEURO_ze_wzorcem_w_co_najmniej_50_KOR": 0.8268,
+      "NEURO_ze_wzorcem_nieobecnym_w_KOR": 0.1473,
+      "efektywna_liczebnosc_KOR_po_wazeniu": 24222,
+      "liczebnosc_KOR": 71401,
+      "najczestsze_wzorce_NEURO": {
+        "11111111": {
+          "KOR": 0.3242,
+          "NEURO": 0.1607
+        },
+        "11111101": {
+          "KOR": 0.0194,
+          "NEURO": 0.0917
+        },
+        "11111010": {
+          "KOR": 0.1353,
+          "NEURO": 0.08
+        },
+        "11111011": {
+          "KOR": 0.1328,
+          "NEURO": 0.0529
+        },
+        "11111110": {
+          "KOR": 0.1284,
+          "NEURO": 0.0466
+        },
+        "11111000": {
+          "KOR": 0.0276,
+          "NEURO": 0.0429
+        }
+      }
+    },
+    "pacjenci_wzorzec_blokow": {
+      "liczba_wzorcow": 87,
+      "NEURO_ze_wzorcem_w_co_najmniej_50_KOR": 0.8552,
+      "NEURO_ze_wzorcem_nieobecnym_w_KOR": 0.1234,
+      "efektywna_liczebnosc_KOR_po_wazeniu": 17556,
+      "liczebnosc_KOR": 39101,
+      "najczestsze_wzorce_NEURO": {
+        "11111111": {
+          "KOR": 0.4973,
+          "NEURO": 0.508
+        },
+        "11111101": {
+          "KOR": 0.0192,
+          "NEURO": 0.124
+        },
+        "11111011": {
+          "KOR": 0.1195,
+          "NEURO": 0.0927
+        },
+        "11011111": {
+          "KOR": 0.0,
+          "NEURO": 0.0499
+        },
+        "11011101": {
+          "KOR": 0.0,
+          "NEURO": 0.0411
+        },
+        "11111110": {
+          "KOR": 0.1203,
+          "NEURO": 0.0318
+        }
+      }
+    }
+  },
+  "D_kompletne_panele_pacjenci": {
+    "morfologia": {
+      "liczba_cech": 10,
+      "KOR": 0.9895,
+      "NEURO": 0.9901
+    },
+    "+ nerki i elektrolity": {
+      "liczba_cech": 15,
+      "KOR": 0.8189,
+      "NEURO": 0.7389
+    },
+    "+ rozmaz podstawowy": {
+      "liczba_cech": 23,
+      "KOR": 0.8172,
+      "NEURO": 0.7383
+    },
+    "+ CRP": {
+      "liczba_cech": 24,
+      "KOR": 0.7806,
+      "NEURO": 0.6034
+    },
+    "+ GLU": {
+      "liczba_cech": 25,
+      "KOR": 0.606,
+      "NEURO": 0.5025
+    },
+    "wszystkie 36 cech laboratoryjnych": {
+      "liczba_cech": 36,
+      "KOR": 0.4603,
+      "NEURO": 0.4092
+    }
+  },
+  "E_NEURO_wedlug_okresu": {
+    "pierwszy_rekord_przed_oknem": 1048,
+    "pierwszy_rekord_w_oknie": 134,
+    "pierwszy_rekord_po_oknie": 641,
+    "co_najmniej_jeden_rekord_w_oknie": 271,
+    "okno": [
+      "2019-12-29",
+      "2021-12-26"
+    ]
+  },
+  "F_ukryci_w_treningu": {
+    "20%": {
+      "P_w_treningu": 1458,
+      "KOR_w_treningu": 31281,
+      "ukryci_w_treningu": 292,
+      "widoczni_P": 1167,
+      "udzial_ukrytych_w_puli_U": 0.0092
+    },
+    "40%": {
+      "P_w_treningu": 1458,
+      "KOR_w_treningu": 31281,
+      "ukryci_w_treningu": 583,
+      "widoczni_P": 875,
+      "udzial_ukrytych_w_puli_U": 0.0183
+    },
+    "60%": {
+      "P_w_treningu": 1458,
+      "KOR_w_treningu": 31281,
+      "ukryci_w_treningu": 875,
+      "widoczni_P": 583,
+      "udzial_ukrytych_w_puli_U": 0.0272
+    }
+  },
+  "G_cechy_wyliczalne": {
+    "wzory": {
+      "MCV = 10 * HCT / RBC": {
+        "mediana_bledu_wzglednego": 0.0003,
+        "rekordy": 75411
+      },
+      "MCH = 10 * HGB / RBC": {
+        "mediana_bledu_wzglednego": 0.0007,
+        "rekordy": 75411
+      },
+      "MCHC = 100 * HGB / HCT": {
+        "mediana_bledu_wzglednego": 0.0007,
+        "rekordy": 75411
+      },
+      "NEUT = WBC * %NEUT / 100": {
+        "mediana_bledu_wzglednego": 0.0009,
+        "rekordy": 73165
+      },
+      "LYMPH = WBC * %LYMPH / 100": {
+        "mediana_bledu_wzglednego": 0.0019,
+        "rekordy": 75146
+      },
+      "MONO = WBC * %MONO / 100": {
+        "mediana_bledu_wzglednego": 0.004,
+        "rekordy": 75143
+      },
+      "EO = WBC * %EO / 100": {
+        "mediana_bledu_wzglednego": 0.0247,
+        "rekordy": 70515
+      },
+      "BAZO = WBC * %BAZO / 100": {
+        "mediana_bledu_wzglednego": 0.05,
+        "rekordy": 74316
+      },
+      "IG = WBC * %IG / 100": {
+        "mediana_bledu_wzglednego": 0.0438,
+        "rekordy": 73642
+      },
+      "NRBC = WBC * %NRBC / 100": {
+        "mediana_bledu_wzglednego": 0.135,
+        "rekordy": 16383
+      },
+      "eGFR-MDRD = MDRD(KREA, wiek, plec), ponizej 59": {
+        "mediana_bledu_wzglednego": 0.0093,
+        "rekordy": 18130
+      }
+    },
+    "suma_5_procentow_rozmazu": {
+      "srednia": 99.995,
+      "odch_std": 0.11
+    },
+    "APTT_przez_WAPTT": {
+      "mediana": 33.33,
+      "kwantyle_5_95": [
+        32.61,
+        33.73
+      ]
+    },
+    "cenzurowanie_eGFR": {
+      "eGFR-MDRD_rowne_60": 0.6929,
+      "eGFRCKD_rowne_90": 0.4052
+    },
+    "INR_i_WPT_przy_PT_11.5_12.5": {
+      "KOR": {
+        "rekordy": 9485,
+        "mediana_INR": 1.0,
+        "mediana_WPT": 96.0
+      },
+      "NEURO w oknie": {
+        "rekordy": 48,
+        "mediana_INR": 0.99,
+        "mediana_WPT": 95.0
+      },
+      "NEURO przed oknem": {
+        "rekordy": 741,
+        "mediana_INR": 1.04,
+        "mediana_WPT": 99.0
+      },
+      "NEURO po oknie": {
+        "rekordy": 286,
+        "mediana_INR": 1.07,
+        "mediana_WPT": 99.0
+      }
+    }
+  }
+}
