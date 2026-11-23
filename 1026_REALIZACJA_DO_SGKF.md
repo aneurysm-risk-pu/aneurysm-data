@@ -476,7 +476,7 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 | jeden branch roboczy (`pu-modeling-setup-lk`) zamiast pięciu; plany z dawnego `pu-pipeline-1-5-lk` streszczone w `4-pu-setup/PLAN_MODELOWANIA.md` | **zrobione** (04.10) |
 | dokumenty nazwane datą (`0626_`, `1026_`), jeden dokument w `4-pu-setup/` | **zrobione** |
 | etap 3 podzielony na część A (przygotowanie) i B (SGKF), cały etap jednym poleceniem, logi z każdego kroku | **zrobione** |
-| `master` nie zawiera prac z września i października | do zrobienia: po akceptacji zmergować `pu-modeling-setup-lk` do `master` |
+| `master` nie zawiera prac z września i października | **zrobione** (23.11): `pu-modeling-setup-lk` scalony do `master` (PR #52) |
 | `1-data-preparation/scripts-lf/aneurysm_data_analysis.ipynb` to zapisana strona HTML z GitHuba, a nie notebook; prawdziwy to `aneurysm_data_analysis (1).ipynb` | do zrobienia: zastąpić plik notebookiem |
 | notebooki czytają dane z `/content/…` (Colab) | do zrobienia: ścieżki względne |
 | kopie i wersje pośrednie tych samych plików w kilku miejscach (`data/interim/`, `2-imputation/knn-am/`), nie zawsze identyczne: `data/interim/cleaned/neuro_shortend.csv` ma 6 616 rekordów, a obowiązujący `data/imputation-inputs/neuro_shortend.csv` 6 651 | do zrobienia: jedna kopia w `data/`, wersje historyczne wyraźnie oznaczone |

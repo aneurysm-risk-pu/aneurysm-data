@@ -38,7 +38,14 @@
 | `narzedzia/dane_syntetyczne/` | generator danych syntetycznych |
 | `1026_REALIZACJA_DO_SGKF.md` | główny opis etapów 1–3: co zrobiono i dlaczego |
 
-Cała praca jest na gałęzi `pu-modeling-setup-lk`.
+Cała praca jest na gałęzi `master` (od 23.11, PR #52). Przed rozpoczęciem pracy:
+
+```bash
+git checkout master
+git pull
+```
+
+Kto pracował na starej `master`, zobaczy nową strukturę folderów (`data/`, `3-sgkf-split/`, `4-pu-setup/` itd.). Własne zmiany można robić na osobnej gałęzi od `master` i scalać przez PR, ale nie jest to obowiązkowe. Gałąź `pu-modeling-setup-lk` zostaje jako archiwum i nie trzeba na niej pracować.
 
 ## Dane syntetyczne
 
