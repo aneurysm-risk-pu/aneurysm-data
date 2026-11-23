@@ -2,7 +2,15 @@
 
 **Cel:** zanim zaczniemy modelowanie, sprawdzić to, o co pytał prowadzący, i ustalić zasady trenowania i oceny modeli. Wyniki każdej osoby omawiamy na spotkaniu w czwartek 26.11.
 
-**Zadania na GitHubie:** kamień milowy „Sprint 6”, issues #29–#51.
+**Zadania na GitHubie:** kamień milowy „Sprint 6”, issues #29–#51, tablica „aneurysm-risk-pu PROJECT” (widok SPRINT).
+
+## Jak pracujemy w tym sprincie
+
+- **Priorytety na tablicy.** P0: bez tego nie zaczniemy modelowania (#29, #33, #34, #35, #36, #38, #39, #47). P1: odpowiedzi dla prowadzącego. P2: jeśli starczy czasu. Najpierw P0.
+- **Każde zadanie ma „Gotowe, gdy”.** Zadanie zamykamy, kiedy ten warunek jest spełniony, a nie wtedy, gdy „coś zostało zrobione”.
+- **Zależności.** Część zadań czeka na inne (na GitHubie „Blocked by”, w treści „Zależy od”): #47 ← #38, #39 ← #29, #33 ← #39, #31 ← #41, #29 ← #30 i #49. Jeśli Twoje zadanie blokuje kogoś, zrób je w pierwszej kolejności.
+- **Przed spotkaniem w czwartek** każdy dopisuje w swoich zadaniach krótki komentarz: co wyszło, co blokuje, co przechodzi na następny sprint. Spotkanie idzie po tablicy, od P0.
+- **Przegląd.** Zmianę w kodzie przegląda druga osoba, zanim trafi do wspólnej gałęzi.
 
 **Pliki w tym folderze:**
 - `README.md` (ten plik): zadania z uzasadnieniem, dla zespołu,
