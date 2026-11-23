@@ -1,0 +1,69 @@
+{
+  "metoda": "StratifiedGroupKFold na rekordach: y = warstwa pacjenta, groups = pacjent, losowa kolejnosc pacjentow sterowana ziarnem",
+  "konfiguracja": {
+    "n_splits": 5,
+    "shuffle": true,
+    "seed": 42,
+    "warstwy": [
+      "etykieta",
+      "okno",
+      "n_rek"
+    ],
+    "min_warstwa": 20
+  },
+  "plik_danych": "data/processed/aneurysm_sgkf_input.csv",
+  "odcisk_danych_sha256": "5b822c09ebc03011",
+  "przygotowanie_danych": {
+    "plik_zrodlowy": "data/imputation-inputs/aneurysm_concatted.csv",
+    "plik_wynikowy": "data/processed/aneurysm_sgkf_input.csv",
+    "rekordy_przed": 78197,
+    "rekordy_po": 78052,
+    "pacjenci_przed": 40924,
+    "pacjenci_po": 40924,
+    "usuniete_rekordy_kor_mieszanych": 145,
+    "pacjenci_mieszani": 63,
+    "wartosci_na_brak": {
+      "KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)": {
+        "wartosci": 210,
+        "pacjenci": 197,
+        "kor": 195,
+        "neuro": 15
+      },
+      "KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)": {
+        "wartosci": 516,
+        "pacjenci": 471,
+        "kor": 478,
+        "neuro": 38
+      },
+      "K > 15 mmol/l (niezgodne z życiem)": {
+        "wartosci": 25,
+        "pacjenci": 24,
+        "kor": 25,
+        "neuro": 0
+      },
+      "Na < 80 mmol/l (niezgodne z życiem)": {
+        "wartosci": 1,
+        "pacjenci": 1,
+        "kor": 0,
+        "neuro": 1
+      }
+    },
+    "wartosci_na_brak_lacznie": 752
+  },
+  "pacjenci": 40924,
+  "pozytywni": 1823,
+  "rozstepy": {
+    "udzial_poz_pacjenci_pp": 0.024434941967012985,
+    "udzial_poz_rekordy_pp": 0.03312279096836651,
+    "rekordy_wzgl_proc": 0.019217957259263056,
+    "poz_w_oknie_pp": 0.5246123739274424,
+    "poz_5plus_rek_pp": 0.2747252747252765
+  },
+  "wersje": {
+    "python": "3.9.6",
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2"
+  },
+  "utworzono": "2026-10-31T09:12:12"
+}

@@ -1,0 +1,2154 @@
+{
+  "protokol": {
+    "maska_etap2": "losowe 10% komórek, seed 42 (create_mask z etapu 2)",
+    "maska_wzorce": "wzorce braków niekompletnych wierszy tej samej kohorty z treningu foldu, seed 42",
+    "imputer": {
+      "max_iter": 7,
+      "n_estimators": 78,
+      "max_depth": 10,
+      "random_state": 42
+    },
+    "ocena": "out-of-fold: kompletne wiersze części testowej, metryki w skali [0,1]"
+  },
+  "odniesienie_etap2": {
+    "kor": {
+      "rmse": 0.0861,
+      "mae": 0.0315,
+      "kl": 0.0037
+    },
+    "neuro": {
+      "rmse": 0.0984,
+      "mae": 0.043,
+      "kl": 0.011
+    }
+  },
+  "podsumowanie": {
+    "etap2": {
+      "kor": {
+        "rmse": {
+          "srednia": 0.0832,
+          "odch_std": 0.0009,
+          "min_max": [
+            0.0816,
+            0.0839
+          ]
+        },
+        "mae": {
+          "srednia": 0.0311,
+          "odch_std": 0.0003,
+          "min_max": [
+            0.0305,
+            0.0313
+          ]
+        },
+        "kl_mean": {
+          "srednia": 0.0051,
+          "odch_std": 0.0005,
+          "min_max": [
+            0.0046,
+            0.0058
+          ]
+        },
+        "rmse_srednia_z_treningu": {
+          "srednia": 0.1351,
+          "odch_std": 0.0012,
+          "min_max": [
+            0.1337,
+            0.1369
+          ]
+        },
+        "rmse_wzgledem_sredniej": {
+          "srednia": 0.6162,
+          "odch_std": 0.0084,
+          "min_max": [
+            0.6042,
+            0.6263
+          ]
+        },
+        "udzial_zamaskowanych": {
+          "srednia": 0.0991,
+          "odch_std": 0.0,
+          "min_max": [
+            0.0991,
+            0.0991
+          ]
+        },
+        "udzial_demografii_w_sse": {
+          "srednia": 0.7464,
+          "odch_std": 0.0077,
+          "min_max": [
+            0.7342,
+            0.7563
+          ]
+        },
+        "rmse_bez_demografii": {
+          "srednia": 0.043,
+          "odch_std": 0.0005,
+          "min_max": [
+            0.0426,
+            0.044
+          ]
+        },
+        "rmse_wzgledem_sredniej_bez_demografii": {
+          "srednia": 0.4113,
+          "odch_std": 0.0076,
+          "min_max": [
+            0.3988,
+            0.418
+          ]
+        },
+        "rozrzut_uzupelnien_wzgledem_prawdy": {
+          "srednia": 0.884,
+          "odch_std": 0.0044,
+          "min_max": [
+            0.8755,
+            0.8873
+          ]
+        }
+      },
+      "neuro": {
+        "rmse": {
+          "srednia": 0.0827,
+          "odch_std": 0.0102,
+          "min_max": [
+            0.0683,
+            0.0952
+          ]
+        },
+        "mae": {
+          "srednia": 0.0323,
+          "odch_std": 0.0037,
+          "min_max": [
+            0.0269,
+            0.0368
+          ]
+        },
+        "kl_mean": {
+          "srednia": 0.0754,
+          "odch_std": 0.0264,
+          "min_max": [
+            0.0465,
+            0.1108
+          ]
+        },
+        "rmse_srednia_z_treningu": {
+          "srednia": 0.1256,
+          "odch_std": 0.0105,
+          "min_max": [
+            0.1071,
+            0.1368
+          ]
+        },
+        "rmse_wzgledem_sredniej": {
+          "srednia": 0.6568,
+          "odch_std": 0.0392,
+          "min_max": [
+            0.6025,
+            0.7218
+          ]
+        },
+        "udzial_zamaskowanych": {
+          "srednia": 0.1001,
+          "odch_std": 0.0008,
+          "min_max": [
+            0.099,
+            0.1009
+          ]
+        },
+        "udzial_demografii_w_sse": {
+          "srednia": 0.759,
+          "odch_std": 0.086,
+          "min_max": [
+            0.6281,
+            0.8385
+          ]
+        },
+        "rmse_bez_demografii": {
+          "srednia": 0.0404,
+          "odch_std": 0.0021,
+          "min_max": [
+            0.0367,
+            0.0428
+          ]
+        },
+        "rmse_wzgledem_sredniej_bez_demografii": {
+          "srednia": 0.4498,
+          "odch_std": 0.0292,
+          "min_max": [
+            0.4046,
+            0.4967
+          ]
+        },
+        "rozrzut_uzupelnien_wzgledem_prawdy": {
+          "srednia": 0.8541,
+          "odch_std": 0.0387,
+          "min_max": [
+            0.8215,
+            0.9276
+          ]
+        }
+      },
+      "neuro_najtrudniejsze_cechy": {
+        "patient_age": 0.147,
+        "MPV": 0.1239,
+        "CRP": 0.0912,
+        "eGFRCKD": 0.0607,
+        "Na": 0.057,
+        "WPT": 0.0478
+      }
+    },
+    "wzorce": {
+      "kor": {
+        "rmse": {
+          "srednia": 0.1068,
+          "odch_std": 0.0011,
+          "min_max": [
+            0.1056,
+            0.1082
+          ]
+        },
+        "mae": {
+          "srednia": 0.0593,
+          "odch_std": 0.001,
+          "min_max": [
+            0.0581,
+            0.0606
+          ]
+        },
+        "kl_mean": {
+          "srednia": 0.0964,
+          "odch_std": 0.0063,
+          "min_max": [
+            0.0905,
+            0.1082
+          ]
+        },
+        "rmse_srednia_z_treningu": {
+          "srednia": 0.1089,
+          "odch_std": 0.0015,
+          "min_max": [
+            0.1067,
+            0.1104
+          ]
+        },
+        "rmse_wzgledem_sredniej": {
+          "srednia": 0.981,
+          "odch_std": 0.0064,
+          "min_max": [
+            0.9701,
+            0.9899
+          ]
+        },
+        "udzial_zamaskowanych": {
+          "srednia": 0.1732,
+          "odch_std": 0.0009,
+          "min_max": [
+            0.1719,
+            0.1745
+          ]
+        },
+        "udzial_demografii_w_sse": {
+          "srednia": 0.0,
+          "odch_std": 0.0,
+          "min_max": [
+            0.0,
+            0.0
+          ]
+        },
+        "rmse_bez_demografii": {
+          "srednia": 0.1068,
+          "odch_std": 0.0011,
+          "min_max": [
+            0.1056,
+            0.1082
+          ]
+        },
+        "rmse_wzgledem_sredniej_bez_demografii": {
+          "srednia": 0.981,
+          "odch_std": 0.0064,
+          "min_max": [
+            0.9701,
+            0.9899
+          ]
+        },
+        "rozrzut_uzupelnien_wzgledem_prawdy": {
+          "srednia": 0.3411,
+          "odch_std": 0.0058,
+          "min_max": [
+            0.3354,
+            0.3497
+          ]
+        }
+      },
+      "neuro": {
+        "rmse": {
+          "srednia": 0.0827,
+          "odch_std": 0.0079,
+          "min_max": [
+            0.0714,
+            0.0952
+          ]
+        },
+        "mae": {
+          "srednia": 0.046,
+          "odch_std": 0.0026,
+          "min_max": [
+            0.0436,
+            0.0503
+          ]
+        },
+        "kl_mean": {
+          "srednia": 0.4846,
+          "odch_std": 0.05,
+          "min_max": [
+            0.4146,
+            0.5408
+          ]
+        },
+        "rmse_srednia_z_treningu": {
+          "srednia": 0.0925,
+          "odch_std": 0.0073,
+          "min_max": [
+            0.0818,
+            0.104
+          ]
+        },
+        "rmse_wzgledem_sredniej": {
+          "srednia": 0.8934,
+          "odch_std": 0.018,
+          "min_max": [
+            0.8728,
+            0.9159
+          ]
+        },
+        "udzial_zamaskowanych": {
+          "srednia": 0.2886,
+          "odch_std": 0.0231,
+          "min_max": [
+            0.2533,
+            0.3249
+          ]
+        },
+        "udzial_demografii_w_sse": {
+          "srednia": 0.0,
+          "odch_std": 0.0,
+          "min_max": [
+            0.0,
+            0.0
+          ]
+        },
+        "rmse_bez_demografii": {
+          "srednia": 0.0827,
+          "odch_std": 0.0079,
+          "min_max": [
+            0.0714,
+            0.0952
+          ]
+        },
+        "rmse_wzgledem_sredniej_bez_demografii": {
+          "srednia": 0.8934,
+          "odch_std": 0.018,
+          "min_max": [
+            0.8728,
+            0.9159
+          ]
+        },
+        "rozrzut_uzupelnien_wzgledem_prawdy": {
+          "srednia": 0.5159,
+          "odch_std": 0.0334,
+          "min_max": [
+            0.455,
+            0.5458
+          ]
+        }
+      },
+      "neuro_najtrudniejsze_cechy": {
+        "eGFRCKD": 0.1904,
+        "eGFR-MDRD": 0.1477,
+        "MPV": 0.1305,
+        "HGB": 0.1255,
+        "HCT": 0.1215,
+        "RBC": 0.1209
+      }
+    }
+  },
+  "foldy": [
+    {
+      "fold": 0,
+      "czas_dopasowania_s": 185.8,
+      "kompletne_wiersze_testu": {
+        "kor": 4032,
+        "neuro": 134
+      },
+      "etap2": {
+        "kor": {
+          "rmse": 0.08355841877900384,
+          "mae": 0.031195401126603326,
+          "kl_mean": 0.004632226878683551,
+          "rmse_srednia_z_treningu": 0.13370070345149576,
+          "rmse_wzgledem_sredniej": 0.6249661865789461,
+          "zamaskowane_komorki": 15184,
+          "udzial_zamaskowanych": 0.09910192147034252,
+          "udzial_demografii_w_sse": 0.7499152249318324,
+          "rmse_bez_demografii": 0.042913203364894494,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4180441024601594,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8858096687455161
+        },
+        "neuro": {
+          "rmse": 0.0894774672708432,
+          "mae": 0.03463662385696008,
+          "kl_mean": 0.10124794033044623,
+          "rmse_srednia_z_treningu": 0.13684486978061963,
+          "rmse_wzgledem_sredniej": 0.6538605898364138,
+          "zamaskowane_komorki": 504,
+          "udzial_zamaskowanych": 0.09897879025923016,
+          "udzial_demografii_w_sse": 0.806843283055406,
+          "rmse_bez_demografii": 0.04080946786413733,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4045735653629041,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.9276122167105382
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.008913766707726459,
+            "n": 21
+          },
+          "PT": {
+            "rmse": 0.06565569552232979,
+            "n": 11
+          },
+          "MCV": {
+            "rmse": 0.009491180764203407,
+            "n": 11
+          },
+          "GLU": {
+            "rmse": 0.03568646221204196,
+            "n": 14
+          },
+          "%IG": {
+            "rmse": 0.0049521224581989196,
+            "n": 13
+          },
+          "CRP": {
+            "rmse": 0.06942372526156944,
+            "n": 21
+          },
+          "MONO": {
+            "rmse": 0.010374358584350226,
+            "n": 15
+          },
+          "patient_age": {
+            "rmse": 0.11738802905787855,
+            "n": 19
+          },
+          "EO": {
+            "rmse": 0.005337059990803246,
+            "n": 13
+          },
+          "%EO": {
+            "rmse": 0.0227283564084491,
+            "n": 11
+          },
+          "APTT": {
+            "rmse": 0.005337517560224944,
+            "n": 12
+          },
+          "MPV": {
+            "rmse": 0.13763896470777753,
+            "n": 13
+          },
+          "RBC": {
+            "rmse": 0.008252208051418844,
+            "n": 10
+          },
+          "WBC": {
+            "rmse": 0.004313600807716855,
+            "n": 13
+          },
+          "BAZO": {
+            "rmse": 0.006947361685010436,
+            "n": 12
+          },
+          "patient_sex": {
+            "rmse": 0.4196568119534423,
+            "n": 17
+          },
+          "KREA": {
+            "rmse": 0.0023334631868620346,
+            "n": 16
+          },
+          "eGFRCKD": {
+            "rmse": 0.060920716585281025,
+            "n": 15
+          },
+          "PLT": {
+            "rmse": 0.05724690733254145,
+            "n": 10
+          },
+          "HCT": {
+            "rmse": 0.011279567157976556,
+            "n": 10
+          },
+          "%NRBC": {
+            "rmse": 0.00023348347272636675,
+            "n": 14
+          },
+          "NRBC": {
+            "rmse": 0.0005322544299299214,
+            "n": 12
+          },
+          "MCHC": {
+            "rmse": 0.033639649660235124,
+            "n": 16
+          },
+          "Na": {
+            "rmse": 0.0770807384865849,
+            "n": 16
+          },
+          "WPT": {
+            "rmse": 0.04538657024365603,
+            "n": 11
+          },
+          "%NEUT": {
+            "rmse": 0.008646379852162907,
+            "n": 16
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.012179591087054069,
+            "n": 15
+          },
+          "MCH": {
+            "rmse": 0.013077545875906435,
+            "n": 12
+          },
+          "RDW": {
+            "rmse": 0.06083910102913591,
+            "n": 15
+          },
+          "K": {
+            "rmse": 0.03685935795130533,
+            "n": 12
+          },
+          "NEUT": {
+            "rmse": 0.005018982536801381,
+            "n": 15
+          },
+          "INR": {
+            "rmse": 0.055300262648961686,
+            "n": 14
+          },
+          "%LYMPH": {
+            "rmse": 0.014647722205770377,
+            "n": 11
+          },
+          "WAPTT": {
+            "rmse": 0.0055326991477848255,
+            "n": 13
+          },
+          "%MONO": {
+            "rmse": 0.016706578889027424,
+            "n": 11
+          }
+        }
+      },
+      "wzorce": {
+        "kor": {
+          "rmse": 0.1056293984795872,
+          "mae": 0.05832065110941872,
+          "kl_mean": 0.09046332353560631,
+          "rmse_srednia_z_treningu": 0.10670872571223997,
+          "rmse_wzgledem_sredniej": 0.9898852954578112,
+          "zamaskowane_komorki": 26731,
+          "udzial_zamaskowanych": 0.17446611319966582,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.1056293984795872,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9898852954578112,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.3354097075851655
+        },
+        "neuro": {
+          "rmse": 0.09522512052405661,
+          "mae": 0.050313087257945546,
+          "kl_mean": 0.5342946454288356,
+          "rmse_srednia_z_treningu": 0.1039711403234545,
+          "rmse_wzgledem_sredniej": 0.9158803128234527,
+          "zamaskowane_komorki": 1506,
+          "udzial_zamaskowanych": 0.295758051846033,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.09522512052405661,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9158803128234527,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.4549979235255561
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.11886556804740538,
+            "n": 17
+          },
+          "PT": {
+            "rmse": 0.06397630831781195,
+            "n": 88
+          },
+          "MCV": {
+            "rmse": 0.09466559205672298,
+            "n": 17
+          },
+          "GLU": {
+            "rmse": 0.038987738141467804,
+            "n": 83
+          },
+          "%IG": {
+            "rmse": 0.026265238630526523,
+            "n": 35
+          },
+          "CRP": {
+            "rmse": 0.09597629382224304,
+            "n": 77
+          },
+          "MONO": {
+            "rmse": 0.020848581869833932,
+            "n": 17
+          },
+          "EO": {
+            "rmse": 0.03548083502322713,
+            "n": 17
+          },
+          "%EO": {
+            "rmse": 0.05366001288046939,
+            "n": 17
+          },
+          "APTT": {
+            "rmse": 0.10191976615409463,
+            "n": 89
+          },
+          "%BAZO": {
+            "rmse": 0.06769555785112473,
+            "n": 17
+          },
+          "MPV": {
+            "rmse": 0.1906207761835939,
+            "n": 17
+          },
+          "RBC": {
+            "rmse": 0.11075612774847379,
+            "n": 17
+          },
+          "WBC": {
+            "rmse": 0.04645008363648542,
+            "n": 17
+          },
+          "BAZO": {
+            "rmse": 0.04818327924339551,
+            "n": 17
+          },
+          "IG": {
+            "rmse": 0.027323527105653656,
+            "n": 35
+          },
+          "KREA": {
+            "rmse": 0.024805645166818154,
+            "n": 44
+          },
+          "eGFRCKD": {
+            "rmse": 0.2177459877179301,
+            "n": 70
+          },
+          "PLT": {
+            "rmse": 0.05917229802084829,
+            "n": 18
+          },
+          "HCT": {
+            "rmse": 0.10839825863910295,
+            "n": 17
+          },
+          "%NRBC": {
+            "rmse": 0.004349663471272376,
+            "n": 70
+          },
+          "NRBC": {
+            "rmse": 0.003612867635976448,
+            "n": 70
+          },
+          "MCHC": {
+            "rmse": 0.09954558713304151,
+            "n": 17
+          },
+          "Na": {
+            "rmse": 0.06593702637278069,
+            "n": 42
+          },
+          "WPT": {
+            "rmse": 0.10827967904070934,
+            "n": 88
+          },
+          "%NEUT": {
+            "rmse": 0.07225091404416249,
+            "n": 60
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.2018003521247937,
+            "n": 69
+          },
+          "MCH": {
+            "rmse": 0.07807147406615451,
+            "n": 17
+          },
+          "RDW": {
+            "rmse": 0.08962521878401551,
+            "n": 17
+          },
+          "K": {
+            "rmse": 0.038491363905809324,
+            "n": 42
+          },
+          "NEUT": {
+            "rmse": 0.049538991628778506,
+            "n": 60
+          },
+          "LYMPH": {
+            "rmse": 0.013087283754339223,
+            "n": 17
+          },
+          "INR": {
+            "rmse": 0.05987437672529679,
+            "n": 88
+          },
+          "%LYMPH": {
+            "rmse": 0.09968009473905774,
+            "n": 17
+          },
+          "WAPTT": {
+            "rmse": 0.10253496593833163,
+            "n": 89
+          },
+          "%MONO": {
+            "rmse": 0.0517621812084179,
+            "n": 17
+          }
+        }
+      }
+    },
+    {
+      "fold": 1,
+      "czas_dopasowania_s": 186.6,
+      "kompletne_wiersze_testu": {
+        "kor": 4058,
+        "neuro": 159
+      },
+      "etap2": {
+        "kor": {
+          "rmse": 0.08157496169574692,
+          "mae": 0.030549490927196547,
+          "kl_mean": 0.0048101025889293264,
+          "rmse_srednia_z_treningu": 0.13500897071831103,
+          "rmse_wzgledem_sredniej": 0.6042188253249385,
+          "zamaskowane_komorki": 15278,
+          "udzial_zamaskowanych": 0.09907654794946953,
+          "udzial_demografii_w_sse": 0.7416147608349692,
+          "rmse_bez_demografii": 0.04258579229859534,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.40625715185142686,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8846631734289389
+        },
+        "neuro": {
+          "rmse": 0.09518471172525687,
+          "mae": 0.03679702138202208,
+          "kl_mean": 0.11077558282838833,
+          "rmse_srednia_z_treningu": 0.13187798354271182,
+          "rmse_wzgledem_sredniej": 0.7217634753600023,
+          "zamaskowane_komorki": 608,
+          "udzial_zamaskowanych": 0.10062893081761007,
+          "udzial_demografii_w_sse": 0.8384949873220081,
+          "rmse_bez_demografii": 0.039646401620762405,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.44729421999512514,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8325028805142303
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.009759504201334493,
+            "n": 27
+          },
+          "PT": {
+            "rmse": 0.011039704527313758,
+            "n": 15
+          },
+          "MCV": {
+            "rmse": 0.014998248956318079,
+            "n": 12
+          },
+          "GLU": {
+            "rmse": 0.02387834077083413,
+            "n": 16
+          },
+          "%IG": {
+            "rmse": 0.013622908698800663,
+            "n": 12
+          },
+          "CRP": {
+            "rmse": 0.07747921649869287,
+            "n": 23
+          },
+          "MONO": {
+            "rmse": 0.003968147621815078,
+            "n": 18
+          },
+          "patient_age": {
+            "rmse": 0.20170849944775754,
+            "n": 23
+          },
+          "EO": {
+            "rmse": 0.005475285686174042,
+            "n": 17
+          },
+          "%EO": {
+            "rmse": 0.013014260687224706,
+            "n": 12
+          },
+          "APTT": {
+            "rmse": 0.002393895129714267,
+            "n": 11
+          },
+          "%BAZO": {
+            "rmse": 0.023718082045054278,
+            "n": 11
+          },
+          "MPV": {
+            "rmse": 0.13907666477485234,
+            "n": 19
+          },
+          "RBC": {
+            "rmse": 0.008001817410666304,
+            "n": 12
+          },
+          "WBC": {
+            "rmse": 0.0639695014236647,
+            "n": 18
+          },
+          "BAZO": {
+            "rmse": 0.014841073905394683,
+            "n": 20
+          },
+          "IG": {
+            "rmse": 0.000785267995971356,
+            "n": 12
+          },
+          "patient_sex": {
+            "rmse": 0.44028181632064173,
+            "n": 19
+          },
+          "KREA": {
+            "rmse": 0.0022303960594930723,
+            "n": 20
+          },
+          "eGFRCKD": {
+            "rmse": 0.048428592677000885,
+            "n": 16
+          },
+          "PLT": {
+            "rmse": 0.03944570302779949,
+            "n": 12
+          },
+          "HCT": {
+            "rmse": 0.01261801661589161,
+            "n": 12
+          },
+          "%NRBC": {
+            "rmse": 0.00017806454761368427,
+            "n": 16
+          },
+          "MCHC": {
+            "rmse": 0.04135620766753738,
+            "n": 17
+          },
+          "Na": {
+            "rmse": 0.05586165223531783,
+            "n": 23
+          },
+          "WPT": {
+            "rmse": 0.048255892202039505,
+            "n": 13
+          },
+          "%NEUT": {
+            "rmse": 0.017269287122617723,
+            "n": 17
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.00866293797761674,
+            "n": 18
+          },
+          "MCH": {
+            "rmse": 0.011666009558414554,
+            "n": 18
+          },
+          "RDW": {
+            "rmse": 0.05242004341919875,
+            "n": 18
+          },
+          "K": {
+            "rmse": 0.039044260497648815,
+            "n": 12
+          },
+          "NEUT": {
+            "rmse": 0.0052979031175800625,
+            "n": 12
+          },
+          "LYMPH": {
+            "rmse": 0.0022883657863457313,
+            "n": 13
+          },
+          "INR": {
+            "rmse": 0.013534488871883169,
+            "n": 22
+          },
+          "%LYMPH": {
+            "rmse": 0.013824123411979417,
+            "n": 14
+          },
+          "WAPTT": {
+            "rmse": 0.003960070336987716,
+            "n": 16
+          },
+          "%MONO": {
+            "rmse": 0.018413448876987086,
+            "n": 13
+          }
+        }
+      },
+      "wzorce": {
+        "kor": {
+          "rmse": 0.1079515856061953,
+          "mae": 0.059088088229742645,
+          "kl_mean": 0.09673983852600436,
+          "rmse_srednia_z_treningu": 0.10974853935570145,
+          "rmse_wzgledem_sredniej": 0.9836266271965396,
+          "zamaskowane_komorki": 26804,
+          "udzial_zamaskowanych": 0.17382169074732173,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.1079515856061953,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9836266271965396,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.33783448165131474
+        },
+        "neuro": {
+          "rmse": 0.08618178362341222,
+          "mae": 0.04491198755304684,
+          "kl_mean": 0.4406730877617601,
+          "rmse_srednia_z_treningu": 0.09455338133564564,
+          "rmse_wzgledem_sredniej": 0.9114616781126429,
+          "zamaskowane_komorki": 1704,
+          "udzial_zamaskowanych": 0.282025819265144,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.08618178362341222,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9114616781126429,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.5052985096561512
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.13826264015938505,
+            "n": 19
+          },
+          "PT": {
+            "rmse": 0.033158312502002026,
+            "n": 93
+          },
+          "MCV": {
+            "rmse": 0.09005534158698979,
+            "n": 19
+          },
+          "GLU": {
+            "rmse": 0.04207928061307976,
+            "n": 91
+          },
+          "%IG": {
+            "rmse": 0.02127904908802283,
+            "n": 50
+          },
+          "CRP": {
+            "rmse": 0.11053813471085056,
+            "n": 83
+          },
+          "MONO": {
+            "rmse": 0.015586359781507438,
+            "n": 19
+          },
+          "EO": {
+            "rmse": 0.02143744092314303,
+            "n": 19
+          },
+          "%EO": {
+            "rmse": 0.04214046240768048,
+            "n": 19
+          },
+          "APTT": {
+            "rmse": 0.06179204659085008,
+            "n": 98
+          },
+          "%BAZO": {
+            "rmse": 0.06211846281392503,
+            "n": 19
+          },
+          "MPV": {
+            "rmse": 0.12454902506916933,
+            "n": 20
+          },
+          "RBC": {
+            "rmse": 0.13180348585993462,
+            "n": 19
+          },
+          "WBC": {
+            "rmse": 0.03321547835482735,
+            "n": 19
+          },
+          "BAZO": {
+            "rmse": 0.04560747164247867,
+            "n": 19
+          },
+          "IG": {
+            "rmse": 0.0109538665634781,
+            "n": 50
+          },
+          "KREA": {
+            "rmse": 0.04563067648403295,
+            "n": 45
+          },
+          "eGFRCKD": {
+            "rmse": 0.21614076442504304,
+            "n": 72
+          },
+          "PLT": {
+            "rmse": 0.06230920026996461,
+            "n": 19
+          },
+          "HCT": {
+            "rmse": 0.1466392771398713,
+            "n": 19
+          },
+          "%NRBC": {
+            "rmse": 0.004714301592360933,
+            "n": 88
+          },
+          "NRBC": {
+            "rmse": 0.005008634685548203,
+            "n": 88
+          },
+          "MCHC": {
+            "rmse": 0.07910175661963134,
+            "n": 19
+          },
+          "Na": {
+            "rmse": 0.07176588163310742,
+            "n": 45
+          },
+          "WPT": {
+            "rmse": 0.09894970412444633,
+            "n": 93
+          },
+          "%NEUT": {
+            "rmse": 0.07465578469949646,
+            "n": 79
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.19974207579484737,
+            "n": 71
+          },
+          "MCH": {
+            "rmse": 0.06371371770557502,
+            "n": 19
+          },
+          "RDW": {
+            "rmse": 0.06275715601495518,
+            "n": 19
+          },
+          "K": {
+            "rmse": 0.03937296975186739,
+            "n": 45
+          },
+          "NEUT": {
+            "rmse": 0.031087744826072093,
+            "n": 79
+          },
+          "LYMPH": {
+            "rmse": 0.016202863813088043,
+            "n": 19
+          },
+          "INR": {
+            "rmse": 0.032079185039143907,
+            "n": 93
+          },
+          "%LYMPH": {
+            "rmse": 0.13782210723793206,
+            "n": 19
+          },
+          "WAPTT": {
+            "rmse": 0.06178829011033131,
+            "n": 98
+          },
+          "%MONO": {
+            "rmse": 0.03659126858219514,
+            "n": 19
+          }
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "czas_dopasowania_s": 221.8,
+      "kompletne_wiersze_testu": {
+        "kor": 4185,
+        "neuro": 144
+      },
+      "etap2": {
+        "kor": {
+          "rmse": 0.08393081878195036,
+          "mae": 0.031271202094718,
+          "kl_mean": 0.004567216951311188,
+          "rmse_srednia_z_treningu": 0.13400287625918977,
+          "rmse_wzgledem_sredniej": 0.6263359498314833,
+          "zamaskowane_komorki": 15765,
+          "udzial_zamaskowanych": 0.09913223920015092,
+          "udzial_demografii_w_sse": 0.7499641506795357,
+          "rmse_bez_demografii": 0.04311594381716219,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.41781331486834183,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8869056836253483
+        },
+        "neuro": {
+          "rmse": 0.06830646338196009,
+          "mae": 0.026863075453963423,
+          "kl_mean": 0.04869533480058643,
+          "rmse_srednia_z_treningu": 0.10712863158365601,
+          "rmse_wzgledem_sredniej": 0.637611648465985,
+          "zamaskowane_komorki": 552,
+          "udzial_zamaskowanych": 0.10087719298245613,
+          "udzial_demografii_w_sse": 0.6280986744594662,
+          "rmse_bez_demografii": 0.04275427619817521,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4967364964880724,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8307148131864474
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.007905798993099492,
+            "n": 16
+          },
+          "PT": {
+            "rmse": 0.008946892317984395,
+            "n": 22
+          },
+          "CRP": {
+            "rmse": 0.1297244544511494,
+            "n": 19
+          },
+          "MONO": {
+            "rmse": 0.004453647560299548,
+            "n": 21
+          },
+          "patient_age": {
+            "rmse": 0.1322483260697165,
+            "n": 21
+          },
+          "EO": {
+            "rmse": 0.0067790424598041035,
+            "n": 15
+          },
+          "%EO": {
+            "rmse": 0.022084787728848414,
+            "n": 12
+          },
+          "APTT": {
+            "rmse": 0.003698999835387615,
+            "n": 12
+          },
+          "%BAZO": {
+            "rmse": 0.032965615964969205,
+            "n": 12
+          },
+          "MPV": {
+            "rmse": 0.12356011843076406,
+            "n": 21
+          },
+          "RBC": {
+            "rmse": 0.004298959849051212,
+            "n": 12
+          },
+          "WBC": {
+            "rmse": 0.007848686732020023,
+            "n": 11
+          },
+          "BAZO": {
+            "rmse": 0.008676508673121643,
+            "n": 14
+          },
+          "IG": {
+            "rmse": 0.0012087038767139761,
+            "n": 16
+          },
+          "KREA": {
+            "rmse": 0.002401539728947472,
+            "n": 22
+          },
+          "eGFRCKD": {
+            "rmse": 0.08172402166264192,
+            "n": 17
+          },
+          "PLT": {
+            "rmse": 0.042944369164189526,
+            "n": 12
+          },
+          "HCT": {
+            "rmse": 0.009704404887287264,
+            "n": 14
+          },
+          "%NRBC": {
+            "rmse": 0.0011713025593366006,
+            "n": 20
+          },
+          "MCHC": {
+            "rmse": 0.024270432093158698,
+            "n": 17
+          },
+          "Na": {
+            "rmse": 0.03704701747684172,
+            "n": 16
+          },
+          "WPT": {
+            "rmse": 0.049186830502280704,
+            "n": 14
+          },
+          "%NEUT": {
+            "rmse": 0.012166713663076608,
+            "n": 15
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.015581611940340577,
+            "n": 15
+          },
+          "K": {
+            "rmse": 0.03866706769516363,
+            "n": 17
+          },
+          "NEUT": {
+            "rmse": 0.009155358346848864,
+            "n": 13
+          },
+          "LYMPH": {
+            "rmse": 0.0015911268575079318,
+            "n": 12
+          },
+          "INR": {
+            "rmse": 0.01895259816502523,
+            "n": 17
+          },
+          "%LYMPH": {
+            "rmse": 0.015661769245932232,
+            "n": 23
+          },
+          "WAPTT": {
+            "rmse": 0.003449573835527583,
+            "n": 16
+          },
+          "%MONO": {
+            "rmse": 0.018357985701176922,
+            "n": 11
+          }
+        }
+      },
+      "wzorce": {
+        "kor": {
+          "rmse": 0.10556085911186822,
+          "mae": 0.058124494872900015,
+          "kl_mean": 0.09379476395340676,
+          "rmse_srednia_z_treningu": 0.10758590465843135,
+          "rmse_wzgledem_sredniej": 0.9811774083882797,
+          "zamaskowane_komorki": 27431,
+          "udzial_zamaskowanych": 0.17248946739608878,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.10556085911186822,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9811774083882797,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.34635250056297595
+        },
+        "neuro": {
+          "rmse": 0.08134112301394446,
+          "mae": 0.04356237794357262,
+          "kl_mean": 0.4929052001055347,
+          "rmse_srednia_z_treningu": 0.09301942912043502,
+          "rmse_wzgledem_sredniej": 0.8744530447357367,
+          "zamaskowane_komorki": 1386,
+          "udzial_zamaskowanych": 0.2532894736842105,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.08134112301394446,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.8744530447357367,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.5339311957037801
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.09414595438243063,
+            "n": 11
+          },
+          "PT": {
+            "rmse": 0.04298046512512392,
+            "n": 88
+          },
+          "MCV": {
+            "rmse": 0.07720647797549611,
+            "n": 11
+          },
+          "GLU": {
+            "rmse": 0.03632794051297715,
+            "n": 85
+          },
+          "%IG": {
+            "rmse": 0.030517373746377467,
+            "n": 34
+          },
+          "CRP": {
+            "rmse": 0.08086974699779334,
+            "n": 69
+          },
+          "MONO": {
+            "rmse": 0.01658866839254145,
+            "n": 11
+          },
+          "EO": {
+            "rmse": 0.02432998640582389,
+            "n": 11
+          },
+          "%EO": {
+            "rmse": 0.03936436676093041,
+            "n": 11
+          },
+          "APTT": {
+            "rmse": 0.071083148923508,
+            "n": 89
+          },
+          "%BAZO": {
+            "rmse": 0.11338902019297202,
+            "n": 11
+          },
+          "MPV": {
+            "rmse": 0.08452686772098593,
+            "n": 11
+          },
+          "RBC": {
+            "rmse": 0.09300517051342379,
+            "n": 11
+          },
+          "WBC": {
+            "rmse": 0.042686771193093755,
+            "n": 11
+          },
+          "BAZO": {
+            "rmse": 0.05296484147758514,
+            "n": 11
+          },
+          "IG": {
+            "rmse": 0.014887709377611937,
+            "n": 34
+          },
+          "KREA": {
+            "rmse": 0.013913852080176021,
+            "n": 33
+          },
+          "eGFRCKD": {
+            "rmse": 0.20186360140319173,
+            "n": 60
+          },
+          "PLT": {
+            "rmse": 0.0699918849659289,
+            "n": 12
+          },
+          "HCT": {
+            "rmse": 0.1047636731092446,
+            "n": 11
+          },
+          "%NRBC": {
+            "rmse": 0.0052954889064615466,
+            "n": 81
+          },
+          "NRBC": {
+            "rmse": 0.00413603379741596,
+            "n": 81
+          },
+          "MCHC": {
+            "rmse": 0.08493833251555098,
+            "n": 11
+          },
+          "Na": {
+            "rmse": 0.08612189220193,
+            "n": 37
+          },
+          "WPT": {
+            "rmse": 0.11226195324808058,
+            "n": 87
+          },
+          "%NEUT": {
+            "rmse": 0.04534296282600983,
+            "n": 68
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.19242443866922165,
+            "n": 60
+          },
+          "MCH": {
+            "rmse": 0.06490496747045196,
+            "n": 11
+          },
+          "RDW": {
+            "rmse": 0.06403465278950571,
+            "n": 11
+          },
+          "K": {
+            "rmse": 0.03450043954276899,
+            "n": 37
+          },
+          "NEUT": {
+            "rmse": 0.030206202103726557,
+            "n": 68
+          },
+          "LYMPH": {
+            "rmse": 0.016186728932928208,
+            "n": 11
+          },
+          "INR": {
+            "rmse": 0.04623258664608508,
+            "n": 87
+          },
+          "%LYMPH": {
+            "rmse": 0.10016978433379128,
+            "n": 11
+          },
+          "WAPTT": {
+            "rmse": 0.07112757591020342,
+            "n": 89
+          },
+          "%MONO": {
+            "rmse": 0.024339051033983244,
+            "n": 11
+          }
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "czas_dopasowania_s": 223.8,
+      "kompletne_wiersze_testu": {
+        "kor": 4093,
+        "neuro": 170
+      },
+      "etap2": {
+        "kor": {
+          "rmse": 0.08392040113233032,
+          "mae": 0.031062727054790528,
+          "kl_mean": 0.0055013908719772605,
+          "rmse_srednia_z_treningu": 0.13687849853818676,
+          "rmse_wzgledem_sredniej": 0.6131014149670699,
+          "zamaskowane_komorki": 15411,
+          "udzial_zamaskowanych": 0.099084444558746,
+          "udzial_demografii_w_sse": 0.7562590550035582,
+          "rmse_bez_demografii": 0.04256094815785695,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.3988272744701167,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8873117499464156
+        },
+        "neuro": {
+          "rmse": 0.07307612612464523,
+          "mae": 0.029152688540051507,
+          "kl_mean": 0.0698323801162194,
+          "rmse_srednia_z_treningu": 0.12128863252398757,
+          "rmse_wzgledem_sredniej": 0.6024977329198,
+          "zamaskowane_komorki": 641,
+          "udzial_zamaskowanych": 0.09922600619195046,
+          "udzial_demografii_w_sse": 0.6859364157357462,
+          "rmse_bez_demografii": 0.04211889906549771,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4482231729254976,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8215463885981454
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.009144680247040597,
+            "n": 25
+          },
+          "PT": {
+            "rmse": 0.013499073332633003,
+            "n": 18
+          },
+          "MCV": {
+            "rmse": 0.04360535991102723,
+            "n": 11
+          },
+          "GLU": {
+            "rmse": 0.028731599780745642,
+            "n": 15
+          },
+          "%IG": {
+            "rmse": 0.004833791928323972,
+            "n": 10
+          },
+          "CRP": {
+            "rmse": 0.09186755705394668,
+            "n": 25
+          },
+          "MONO": {
+            "rmse": 0.004337464417746493,
+            "n": 20
+          },
+          "patient_age": {
+            "rmse": 0.13332281146321917,
+            "n": 21
+          },
+          "EO": {
+            "rmse": 0.003233892334113512,
+            "n": 17
+          },
+          "%EO": {
+            "rmse": 0.06578521518199106,
+            "n": 15
+          },
+          "APTT": {
+            "rmse": 0.003990402692074794,
+            "n": 12
+          },
+          "%BAZO": {
+            "rmse": 0.014155490662073146,
+            "n": 14
+          },
+          "MPV": {
+            "rmse": 0.10343008508830812,
+            "n": 22
+          },
+          "RBC": {
+            "rmse": 0.011912964196718853,
+            "n": 13
+          },
+          "WBC": {
+            "rmse": 0.0018059705305551682,
+            "n": 17
+          },
+          "BAZO": {
+            "rmse": 0.011404135426336968,
+            "n": 18
+          },
+          "IG": {
+            "rmse": 0.0028691272678022296,
+            "n": 17
+          },
+          "patient_sex": {
+            "rmse": 0.37556601435942516,
+            "n": 14
+          },
+          "KREA": {
+            "rmse": 0.007549274627140387,
+            "n": 24
+          },
+          "eGFRCKD": {
+            "rmse": 0.05050850476992393,
+            "n": 21
+          },
+          "PLT": {
+            "rmse": 0.03694943311400525,
+            "n": 12
+          },
+          "HCT": {
+            "rmse": 0.009798028569522737,
+            "n": 14
+          },
+          "%NRBC": {
+            "rmse": 0.00010586743244467308,
+            "n": 15
+          },
+          "NRBC": {
+            "rmse": 0.000165072640311273,
+            "n": 11
+          },
+          "MCHC": {
+            "rmse": 0.03219673773045584,
+            "n": 19
+          },
+          "Na": {
+            "rmse": 0.08496359694770408,
+            "n": 23
+          },
+          "WPT": {
+            "rmse": 0.04854004959018545,
+            "n": 13
+          },
+          "%NEUT": {
+            "rmse": 0.032069138859175575,
+            "n": 19
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.0047435070706397615,
+            "n": 18
+          },
+          "MCH": {
+            "rmse": 0.03359110142636801,
+            "n": 12
+          },
+          "RDW": {
+            "rmse": 0.0965661135395707,
+            "n": 16
+          },
+          "K": {
+            "rmse": 0.04226601293010525,
+            "n": 16
+          },
+          "NEUT": {
+            "rmse": 0.0075862347552836246,
+            "n": 14
+          },
+          "LYMPH": {
+            "rmse": 0.006033665694842597,
+            "n": 14
+          },
+          "INR": {
+            "rmse": 0.013259633343730865,
+            "n": 21
+          },
+          "%LYMPH": {
+            "rmse": 0.019635190704204095,
+            "n": 21
+          },
+          "WAPTT": {
+            "rmse": 0.0029823140009625133,
+            "n": 18
+          },
+          "%MONO": {
+            "rmse": 0.014562942347424964,
+            "n": 16
+          }
+        }
+      },
+      "wzorce": {
+        "kor": {
+          "rmse": 0.10820766895001518,
+          "mae": 0.060632153284573276,
+          "kl_mean": 0.09262750863393039,
+          "rmse_srednia_z_treningu": 0.11039002060668365,
+          "rmse_wzgledem_sredniej": 0.9802305349281153,
+          "zamaskowane_komorki": 26970,
+          "udzial_zamaskowanych": 0.17340260007458178,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.10820766895001518,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9802305349281153,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.34967220867846266
+        },
+        "neuro": {
+          "rmse": 0.07940276629537515,
+          "mae": 0.047478449947221585,
+          "kl_mean": 0.4146028651589969,
+          "rmse_srednia_z_treningu": 0.08898583495806103,
+          "rmse_wzgledem_sredniej": 0.892307931175761,
+          "zamaskowane_komorki": 1853,
+          "udzial_zamaskowanych": 0.2868421052631579,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.07940276629537515,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.892307931175761,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.5393356980833048
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.13713894404492757,
+            "n": 21
+          },
+          "PT": {
+            "rmse": 0.06354019909504173,
+            "n": 115
+          },
+          "MCV": {
+            "rmse": 0.10537759599819327,
+            "n": 21
+          },
+          "GLU": {
+            "rmse": 0.03703881961660665,
+            "n": 109
+          },
+          "%IG": {
+            "rmse": 0.04525619280588222,
+            "n": 47
+          },
+          "CRP": {
+            "rmse": 0.08570823938661146,
+            "n": 81
+          },
+          "MONO": {
+            "rmse": 0.01768026390067016,
+            "n": 21
+          },
+          "EO": {
+            "rmse": 0.0558027323323156,
+            "n": 21
+          },
+          "%EO": {
+            "rmse": 0.11162562731571758,
+            "n": 21
+          },
+          "APTT": {
+            "rmse": 0.08144058249665001,
+            "n": 116
+          },
+          "%BAZO": {
+            "rmse": 0.08704887060414676,
+            "n": 21
+          },
+          "MPV": {
+            "rmse": 0.11420266964712011,
+            "n": 22
+          },
+          "RBC": {
+            "rmse": 0.14269698495917307,
+            "n": 21
+          },
+          "WBC": {
+            "rmse": 0.05212740294295963,
+            "n": 21
+          },
+          "BAZO": {
+            "rmse": 0.06402315521012616,
+            "n": 21
+          },
+          "IG": {
+            "rmse": 0.024251433245269096,
+            "n": 47
+          },
+          "KREA": {
+            "rmse": 0.0201574053821474,
+            "n": 57
+          },
+          "eGFRCKD": {
+            "rmse": 0.16566015179812926,
+            "n": 78
+          },
+          "PLT": {
+            "rmse": 0.07651703607845683,
+            "n": 22
+          },
+          "HCT": {
+            "rmse": 0.11376524712324113,
+            "n": 21
+          },
+          "%NRBC": {
+            "rmse": 0.006883482634872418,
+            "n": 82
+          },
+          "NRBC": {
+            "rmse": 0.007443487240070172,
+            "n": 82
+          },
+          "MCHC": {
+            "rmse": 0.10544731219271004,
+            "n": 21
+          },
+          "Na": {
+            "rmse": 0.04895429784357735,
+            "n": 43
+          },
+          "WPT": {
+            "rmse": 0.12204790236500704,
+            "n": 115
+          },
+          "%NEUT": {
+            "rmse": 0.0756063228790889,
+            "n": 74
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.0798258961221131,
+            "n": 78
+          },
+          "MCH": {
+            "rmse": 0.08380434920948904,
+            "n": 21
+          },
+          "RDW": {
+            "rmse": 0.06710665429188951,
+            "n": 21
+          },
+          "K": {
+            "rmse": 0.036757364745072206,
+            "n": 44
+          },
+          "NEUT": {
+            "rmse": 0.0547484693798964,
+            "n": 74
+          },
+          "LYMPH": {
+            "rmse": 0.014132719522658384,
+            "n": 21
+          },
+          "INR": {
+            "rmse": 0.06291051600010675,
+            "n": 115
+          },
+          "%LYMPH": {
+            "rmse": 0.11121033312106905,
+            "n": 21
+          },
+          "WAPTT": {
+            "rmse": 0.08184333141609318,
+            "n": 116
+          },
+          "%MONO": {
+            "rmse": 0.04383699838847339,
+            "n": 21
+          }
+        }
+      }
+    },
+    {
+      "fold": 4,
+      "czas_dopasowania_s": 228.6,
+      "kompletne_wiersze_testu": {
+        "kor": 4015,
+        "neuro": 165
+      },
+      "etap2": {
+        "kor": {
+          "rmse": 0.08307089169488883,
+          "mae": 0.03131127380226003,
+          "kl_mean": 0.005760736840588303,
+          "rmse_srednia_z_treningu": 0.13570518569284262,
+          "rmse_wzgledem_sredniej": 0.612142353077891,
+          "zamaskowane_komorki": 15115,
+          "udzial_zamaskowanych": 0.09906927967490332,
+          "udzial_demografii_w_sse": 0.7341871823379496,
+          "rmse_bez_demografii": 0.043981734962390905,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4156912713033309,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8755193167436598
+        },
+        "neuro": {
+          "rmse": 0.08746621542965662,
+          "mae": 0.03404250535454624,
+          "kl_mean": 0.04654563357609645,
+          "rmse_srednia_z_treningu": 0.1308463283858191,
+          "rmse_wzgledem_sredniej": 0.6684651874353705,
+          "zamaskowane_komorki": 632,
+          "udzial_zamaskowanych": 0.10079744816586922,
+          "udzial_demografii_w_sse": 0.8357785173486525,
+          "rmse_bez_demografii": 0.03674727978283683,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.4520765589836133,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.8579911487186991
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.006983594457734187,
+            "n": 24
+          },
+          "PT": {
+            "rmse": 0.007102518405899403,
+            "n": 13
+          },
+          "MCV": {
+            "rmse": 0.018814363111027077,
+            "n": 12
+          },
+          "GLU": {
+            "rmse": 0.03698005719841977,
+            "n": 17
+          },
+          "%IG": {
+            "rmse": 0.005455497354548137,
+            "n": 18
+          },
+          "CRP": {
+            "rmse": 0.0873921263319993,
+            "n": 25
+          },
+          "MONO": {
+            "rmse": 0.005300531828795953,
+            "n": 17
+          },
+          "patient_age": {
+            "rmse": 0.1503688536654934,
+            "n": 22
+          },
+          "EO": {
+            "rmse": 0.005734847446546896,
+            "n": 17
+          },
+          "%EO": {
+            "rmse": 0.009106036997409413,
+            "n": 16
+          },
+          "APTT": {
+            "rmse": 0.011671065921817035,
+            "n": 15
+          },
+          "%BAZO": {
+            "rmse": 0.01078593602427799,
+            "n": 11
+          },
+          "MPV": {
+            "rmse": 0.1158876008086158,
+            "n": 16
+          },
+          "RBC": {
+            "rmse": 0.01081136585174441,
+            "n": 13
+          },
+          "WBC": {
+            "rmse": 0.0049680484077106,
+            "n": 16
+          },
+          "BAZO": {
+            "rmse": 0.012736733286096258,
+            "n": 17
+          },
+          "IG": {
+            "rmse": 0.002431582629941923,
+            "n": 11
+          },
+          "patient_sex": {
+            "rmse": 0.40133660371079877,
+            "n": 22
+          },
+          "KREA": {
+            "rmse": 0.00339085345361665,
+            "n": 20
+          },
+          "eGFRCKD": {
+            "rmse": 0.06200509224518143,
+            "n": 20
+          },
+          "PLT": {
+            "rmse": 0.041032706688115865,
+            "n": 11
+          },
+          "HCT": {
+            "rmse": 0.008689277808085687,
+            "n": 16
+          },
+          "%NRBC": {
+            "rmse": 0.001000851352478733,
+            "n": 16
+          },
+          "NRBC": {
+            "rmse": 0.0010226937460398541,
+            "n": 16
+          },
+          "MCHC": {
+            "rmse": 0.03394482723260906,
+            "n": 22
+          },
+          "Na": {
+            "rmse": 0.030291931843091573,
+            "n": 19
+          },
+          "WPT": {
+            "rmse": 0.047865297738870695,
+            "n": 12
+          },
+          "%NEUT": {
+            "rmse": 0.015604457241949081,
+            "n": 18
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.007280848984416863,
+            "n": 19
+          },
+          "MCH": {
+            "rmse": 0.004715438471752432,
+            "n": 16
+          },
+          "RDW": {
+            "rmse": 0.08889074899094691,
+            "n": 17
+          },
+          "K": {
+            "rmse": 0.041911331130090525,
+            "n": 14
+          },
+          "NEUT": {
+            "rmse": 0.003092244997992784,
+            "n": 17
+          },
+          "LYMPH": {
+            "rmse": 0.00226971591752121,
+            "n": 13
+          },
+          "INR": {
+            "rmse": 0.016269295365954933,
+            "n": 21
+          },
+          "%LYMPH": {
+            "rmse": 0.013229783960303769,
+            "n": 13
+          },
+          "WAPTT": {
+            "rmse": 0.012435142759900129,
+            "n": 15
+          },
+          "%MONO": {
+            "rmse": 0.019510909503487633,
+            "n": 15
+          }
+        }
+      },
+      "wzorce": {
+        "kor": {
+          "rmse": 0.10673743110606417,
+          "mae": 0.06020746092321634,
+          "kl_mean": 0.10823335865246402,
+          "rmse_srednia_z_treningu": 0.11002753924712572,
+          "rmse_wzgledem_sredniej": 0.9700974123062786,
+          "zamaskowane_komorki": 26222,
+          "udzial_zamaskowanych": 0.1718686504555286,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.10673743110606417,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.9700974123062786,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.3364154072606846
+        },
+        "neuro": {
+          "rmse": 0.07139223317636262,
+          "mae": 0.043797236902089955,
+          "kl_mean": 0.5407698592771186,
+          "rmse_srednia_z_treningu": 0.08180068989617395,
+          "rmse_wzgledem_sredniej": 0.8727583259625031,
+          "zamaskowane_komorki": 2037,
+          "udzial_zamaskowanych": 0.3248803827751196,
+          "udzial_demografii_w_sse": 0.0,
+          "rmse_bez_demografii": 0.07139223317636262,
+          "rmse_wzgledem_sredniej_bez_demografii": 0.8727583259625031,
+          "rozrzut_uzupelnien_wzgledem_prawdy": 0.5457535845994587
+        },
+        "neuro_per_cecha": {
+          "HGB": {
+            "rmse": 0.13884973784813412,
+            "n": 28
+          },
+          "PT": {
+            "rmse": 0.034735187736881244,
+            "n": 111
+          },
+          "MCV": {
+            "rmse": 0.09206386332907321,
+            "n": 28
+          },
+          "GLU": {
+            "rmse": 0.044863559385646505,
+            "n": 106
+          },
+          "%IG": {
+            "rmse": 0.013983730510496447,
+            "n": 56
+          },
+          "CRP": {
+            "rmse": 0.10983207852457287,
+            "n": 90
+          },
+          "MONO": {
+            "rmse": 0.01899295644940971,
+            "n": 29
+          },
+          "EO": {
+            "rmse": 0.0220648692377916,
+            "n": 29
+          },
+          "%EO": {
+            "rmse": 0.042152787732804925,
+            "n": 29
+          },
+          "APTT": {
+            "rmse": 0.06238501610765057,
+            "n": 112
+          },
+          "%BAZO": {
+            "rmse": 0.0663781308806205,
+            "n": 29
+          },
+          "MPV": {
+            "rmse": 0.13841677047543835,
+            "n": 28
+          },
+          "RBC": {
+            "rmse": 0.1264051309950788,
+            "n": 28
+          },
+          "WBC": {
+            "rmse": 0.05036789004012235,
+            "n": 28
+          },
+          "BAZO": {
+            "rmse": 0.04815750504481919,
+            "n": 29
+          },
+          "IG": {
+            "rmse": 0.007296983134269188,
+            "n": 56
+          },
+          "KREA": {
+            "rmse": 0.0384951115063338,
+            "n": 58
+          },
+          "eGFRCKD": {
+            "rmse": 0.15059466404100433,
+            "n": 80
+          },
+          "PLT": {
+            "rmse": 0.0721180061175457,
+            "n": 28
+          },
+          "HCT": {
+            "rmse": 0.13412959249328582,
+            "n": 28
+          },
+          "%NRBC": {
+            "rmse": 0.004270017603471289,
+            "n": 90
+          },
+          "NRBC": {
+            "rmse": 0.005810451044445725,
+            "n": 90
+          },
+          "MCHC": {
+            "rmse": 0.08426175734736485,
+            "n": 28
+          },
+          "Na": {
+            "rmse": 0.06873051785677649,
+            "n": 48
+          },
+          "WPT": {
+            "rmse": 0.08926840329445324,
+            "n": 111
+          },
+          "%NEUT": {
+            "rmse": 0.07817410670409099,
+            "n": 83
+          },
+          "eGFR-MDRD": {
+            "rmse": 0.06468535105154481,
+            "n": 80
+          },
+          "MCH": {
+            "rmse": 0.08371415640643491,
+            "n": 28
+          },
+          "RDW": {
+            "rmse": 0.06406864433558364,
+            "n": 28
+          },
+          "K": {
+            "rmse": 0.05663954653606933,
+            "n": 48
+          },
+          "NEUT": {
+            "rmse": 0.03840984603185361,
+            "n": 83
+          },
+          "LYMPH": {
+            "rmse": 0.01578043734604121,
+            "n": 29
+          },
+          "INR": {
+            "rmse": 0.03736017425811691,
+            "n": 111
+          },
+          "%LYMPH": {
+            "rmse": 0.12403327284533217,
+            "n": 29
+          },
+          "WAPTT": {
+            "rmse": 0.06295473634548968,
+            "n": 112
+          },
+          "%MONO": {
+            "rmse": 0.04161006981787343,
+            "n": 29
+          }
+        }
+      }
+    }
+  ],
+  "odcisk_danych": "5b822c09ebc03011"
+}

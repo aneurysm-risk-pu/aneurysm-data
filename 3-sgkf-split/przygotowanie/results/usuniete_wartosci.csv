@@ -1,0 +1,753 @@
+patient_id,custom_id,label,cecha,wartosc,regula
+39421,39421-2021-W5,0,KREA,90.125,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+75438,75438-2020-W22,0,KREA,114.52,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+82273,82273-2021-W43,0,KREA,143.43,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+92296,92296-2020-W11,0,KREA,71.53999999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+93602,93602-2021-W24,0,KREA,109.67,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+102144,102144-2020-W43,0,KREA,76.69,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+102507,102507-2021-W1,0,KREA,78.03,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+122198,122198-2020-W10,0,KREA,55.18,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+125479,125479-2020-W50,0,KREA,53.54,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+144225,144225-2021-W19,0,KREA,53.995,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+147836,147836-2021-W46,0,KREA,71.705,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+149381,149381-2020-W41,0,KREA,81.37333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+153013,153013-2021-W12,0,KREA,55.305,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+156980,156980-2021-W45,0,KREA,70.87,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+160281,160281-2021-W32,0,KREA,76.075,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+164183,164183-2021-W48,0,KREA,52.16666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+164544,164544-2021-W47,0,KREA,101.19,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+175080,175080-2021-W22,0,KREA,66.155,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+181155,181155-2021-W30,0,KREA,82.43,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+187460,187460-2021-W19,0,KREA,64.015,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+194218,194218-2020-W47,0,KREA,81.72333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+202967,202967-2021-W25,0,KREA,88.22,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+205088,205088-2021-W26,0,KREA,63.55,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+217592,217592-2021-W8,0,KREA,96.205,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+299482,299482-2021-W51,0,KREA,77.78,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+305953,305953-2021-W17,0,KREA,63.373333333333335,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+311986,311986-2021-W11,0,KREA,59.8625,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+322875,322875-2020-W51,0,KREA,71.59666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+358761,358761-2021-W34,0,KREA,55.65,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+366266,366266-2021-W49,0,KREA,112.81,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+602551,602551-2020-W25,0,KREA,99.615,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+603207,603207-2021-W35,0,KREA,128.54,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+624779,624779-2020-W50,0,KREA,55.02333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+624912,624912-2020-W25,0,KREA,95.79,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+650649,650649-2020-W4,0,KREA,97.375,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+670253,670253-2021-W41,0,KREA,69.61666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+711221,711221-2020-W24,0,KREA,58.2,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+735123,735123-2021-W11,0,KREA,53.62599999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+744929,744929-2021-W44,0,KREA,88.845,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+780073,780073-2020-W5,0,KREA,85.68333333333334,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+785726,785726-2021-W27,0,KREA,56.8,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+788079,788079-2020-W37,0,KREA,173.34,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+788188,788188-2021-W23,0,KREA,77.39999999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+810022,810022-2021-W47,0,KREA,74.71,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+821830,821830-2021-W33,0,KREA,89.54666666666668,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+836362,836362-2021-W44,0,KREA,65.785,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+845773,845773-2021-W41,0,KREA,55.87,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+852266,852266-2021-W51,0,KREA,105.05,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+874337,874337-2021-W28,0,KREA,74.01,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+881269,881269-2021-W23,0,KREA,71.31,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+885136,885136-2020-W34,0,KREA,54.555,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+922463,922463-2021-W9,0,KREA,140.04666666666665,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1024645,1024645-2021-W49,0,KREA,137.82000000000002,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1026477,1026477-2020-W30,0,KREA,90.87,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1033139,1033139-2021-W1,0,KREA,64.63000000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1046760,1046760-2020-W40,0,KREA,59.255,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1172811,1172811-2020-W23,0,KREA,50.548,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1184976,1184976-2020-W5,0,KREA,52.32,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1198549,1198549-2021-W9,0,KREA,56.18,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1216732,1216732-2020-W6,0,KREA,50.76666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1248363,1248363-2021-W7,0,KREA,107.865,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1271391,1271391-2020-W23,0,KREA,51.275,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1271391,1271391-2020-W26,0,KREA,72.05,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1272356,1272356-2021-W33,0,KREA,55.93333333333334,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1274995,1274995-2021-W24,0,KREA,54.52,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1348878,1348878-2021-W35,0,KREA,112.81666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1348878,1348878-2021-W36,0,KREA,63.4675,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1348878,1348878-2021-W39,0,KREA,147.01,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1349820,1349820-2021-W37,0,KREA,97.95,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1353646,1353646-2021-W25,0,KREA,90.295,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1365726,1365726-2021-W12,0,KREA,50.665,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1365726,1365726-2021-W42,0,KREA,102.27,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1389840,1389840-2021-W12,0,KREA,168.26,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1398221,1398221-2021-W38,0,KREA,148.915,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1448210,1448210-2021-W45,0,KREA,177.32,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1463472,1463472-2021-W46,0,KREA,58.845,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1487013,1487013-2021-W9,0,KREA,55.42,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1497590,1497590-2021-W33,0,KREA,79.946,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1499664,1499664-2021-W9,0,KREA,51.66666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1510705,1510705-2020-W52,0,KREA,100.24,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1525567,1525567-2020-W13,0,KREA,51.635,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1560064,1560064-2021-W40,0,KREA,50.88,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1568691,1568691-2021-W41,0,KREA,54.02,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1596455,1596455-2021-W25,0,KREA,147.56,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1604452,1604452-2020-W30,0,KREA,128.09,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1612436,1612436-2021-W44,0,KREA,75.17999999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1615725,1615725-2020-W49,0,KREA,62.14333333333334,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1621972,1621972-2020-W6,0,KREA,156.105,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1651365,1651365-2021-W38,0,KREA,85.99,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1663544,1663544-2021-W43,0,KREA,95.0,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1674251,1674251-2021-W39,0,KREA,61.62,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1682300,1682300-2021-W24,0,KREA,67.775,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1712766,1712766-2020-W25,0,KREA,87.785,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1766229,1766229-2021-W41,0,KREA,58.373333333333335,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1772137,1772137-2021-W22,0,KREA,63.06,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1773420,1773420-2021-W3,0,KREA,83.5,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1831226,1831226-2021-W15,0,KREA,69.5725,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1844036,1844036-2020-W10,0,KREA,66.72500000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1862494,1862494-2021-W22,0,KREA,85.174,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1872444,1872444-2021-W44,0,KREA,51.00999999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1873222,1873222-2020-W28,0,KREA,57.73,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1884524,1884524-2020-W38,0,KREA,50.656,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1889211,1889211-2021-W8,0,KREA,74.2,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1892632,1892632-2020-W40,0,KREA,100.555,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1893823,1893823-2021-W26,0,KREA,191.935,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1895188,1895188-2020-W32,0,KREA,69.73,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1898085,1898085-2021-W6,0,KREA,70.93,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1902184,1902184-2021-W12,0,KREA,70.76,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1912418,1912418-2020-W5,0,KREA,52.47666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1912418,1912418-2020-W6,0,KREA,60.845,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1917583,1917583-2021-W47,0,KREA,54.12,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1921001,1921001-2021-W22,0,KREA,90.165,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1986731,1986731-2021-W53,0,KREA,51.995,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1988337,1988337-2021-W47,0,KREA,148.535,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1989582,1989582-2020-W46,0,KREA,67.67,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1991548,1991548-2020-W39,0,KREA,64.30333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1999321,1999321-2021-W5,0,KREA,58.86,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2006282,2006282-2021-W45,0,KREA,54.38,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2008183,2008183-2021-W51,0,KREA,54.1925,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2008567,2008567-2020-W41,0,KREA,53.26,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2019723,2019723-2021-W42,0,KREA,52.095,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2033082,2033082-2021-W5,0,KREA,69.55666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2071260,2071260-2020-W20,0,KREA,120.08,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2071260,2071260-2020-W21,0,KREA,103.48333333333332,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2072452,2072452-2021-W20,0,KREA,183.385,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2077137,2077137-2020-W1,0,KREA,63.445,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2092792,2092792-2020-W41,0,KREA,63.502500000000005,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2094261,2094261-2020-W30,0,KREA,54.34,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2101673,2101673-2020-W36,0,KREA,76.7,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2105192,2105192-2021-W46,0,KREA,75.02,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2114208,2114208-2020-W12,0,KREA,65.43666666666665,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2115222,2115222-2020-W15,0,KREA,67.33500000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2115656,2115656-2020-W17,0,KREA,57.065,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2116882,2116882-2020-W17,0,KREA,64.34,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2120334,2120334-2020-W21,0,KREA,58.96666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2124674,2124674-2020-W25,0,KREA,76.92666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2130172,2130172-2020-W30,0,KREA,121.45,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2132667,2132667-2020-W33,0,KREA,116.04,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2138329,2138329-2021-W46,0,KREA,89.82,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2139068,2139068-2020-W36,0,KREA,69.08,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2140174,2140174-2021-W41,0,KREA,66.25,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2147036,2147036-2021-W29,0,KREA,101.02333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2148715,2148715-2020-W42,0,KREA,51.54333333333333,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2153218,2153218-2020-W46,0,KREA,66.25,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2156539,2156539-2020-W48,0,KREA,111.92,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2156560,2156560-2021-W14,0,KREA,141.49,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2157936,2157936-2021-W14,0,KREA,68.46666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2164808,2164808-2021-W5,0,KREA,65.87,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2167589,2167589-2021-W4,0,KREA,89.09,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2167902,2167902-2021-W5,0,KREA,169.35500000000002,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2168776,2168776-2021-W7,0,KREA,75.36000000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2171918,2171918-2021-W7,0,KREA,69.21,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2172897,2172897-2021-W38,0,KREA,78.02250000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2179848,2179848-2021-W12,0,KREA,91.93,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2180852,2180852-2021-W12,0,KREA,89.50500000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2185057,2185057-2021-W18,0,KREA,126.39,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2185968,2185968-2021-W16,0,KREA,57.085,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2187391,2187391-2021-W16,0,KREA,71.025,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2193605,2193605-2021-W21,0,KREA,116.98,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2193864,2193864-2021-W27,0,KREA,70.63000000000001,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2196474,2196474-2021-W40,0,KREA,55.275000000000006,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2196528,2196528-2021-W22,0,KREA,93.85333333333334,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2196881,2196881-2021-W45,0,KREA,69.974,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2196881,2196881-2021-W46,0,KREA,52.625,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2196881,2196881-2021-W49,0,KREA,196.15,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2201344,2201344-2021-W28,0,KREA,160.4,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2201449,2201449-2021-W25,0,KREA,64.57666666666667,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2203519,2203519-2021-W44,0,KREA,67.02,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2203519,2203519-2021-W48,0,KREA,51.22,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2206179,2206179-2021-W28,0,KREA,117.79,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2209244,2209244-2021-W42,0,KREA,71.45,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2209540,2209540-2021-W29,0,KREA,97.4,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2210251,2210251-2021-W37,0,KREA,68.37,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2210251,2210251-2021-W38,0,KREA,54.685,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2211932,2211932-2021-W40,0,KREA,66.73,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2211932,2211932-2021-W45,0,KREA,73.085,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2215466,2215466-2021-W51,0,KREA,122.08333333333331,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2216869,2216869-2021-W46,0,KREA,53.625,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2219053,2219053-2021-W35,0,KREA,51.42,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2220329,2220329-2021-W42,0,KREA,61.223333333333336,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2220412,2220412-2021-W36,0,KREA,94.38,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2222796,2222796-2021-W38,0,KREA,87.84,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2223537,2223537-2021-W38,0,KREA,70.75666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2226608,2226608-2021-W40,0,KREA,66.315,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2228946,2228946-2021-W41,0,KREA,169.925,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2230284,2230284-2021-W42,0,KREA,162.98,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2230623,2230623-2021-W42,0,KREA,55.74,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2232103,2232103-2021-W43,0,KREA,56.583333333333336,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2236563,2236563-2021-W50,0,KREA,58.24,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2237828,2237828-2021-W46,0,KREA,69.51,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2238408,2238408-2021-W46,0,KREA,66.76,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2238408,2238408-2021-W48,0,KREA,60.26,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2238408,2238408-2021-W49,0,KREA,65.33,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2243839,2243839-2021-W51,0,KREA,84.26,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2245067,2245067-2021-W51,0,KREA,129.70666666666668,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+12989,12989-2021-W38,1,KREA,69.51,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+84661,84661-2015-W21,1,KREA,70.9,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+97347,97347-2019-W27,1,KREA,50.195,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+241844,241844-2021-W27,1,KREA,55.0,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+279504,279504-2014-W9,1,KREA,76.05499999999999,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+279733,279733-2013-W18,1,KREA,63.845,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+544751,544751-2017-W6,1,KREA,51.825,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+877380,877380-2016-W33,1,KREA,71.575,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1524757,1524757-2011-W42,1,KREA,66.35,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1615742,1615742-2014-W20,1,KREA,53.72666666666666,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+1647122,1647122-2019-W31,1,KREA,57.17,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2024333,2024333-2024-W4,1,KREA,51.67333333333334,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2115096,2115096-2023-W18,1,KREA,63.7425,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2280895,2280895-2022-W20,1,KREA,73.23,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+2441596,2441596-2024-W28,1,KREA,59.275,"KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)"
+14813,14813-2020-W45,0,KREA,21.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+16300,16300-2021-W2,0,KREA,26.896666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+18667,18667-2021-W6,0,KREA,19.766,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+42661,42661-2021-W20,0,KREA,12.2,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+50561,50561-2021-W36,0,KREA,29.295,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+51994,51994-2020-W8,0,KREA,15.78,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+57415,57415-2020-W16,0,KREA,24.7775,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+64935,64935-2020-W37,0,KREA,30.2,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+73876,73876-2021-W48,0,KREA,12.79,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+83298,83298-2021-W40,0,KREA,10.36,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+84777,84777-2021-W16,0,KREA,18.25,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+87763,87763-2021-W2,0,KREA,33.01166666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+88536,88536-2021-W1,0,KREA,13.755,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+89238,89238-2020-W35,0,KREA,28.29,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+92423,92423-2020-W20,0,KREA,21.22,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+92480,92480-2021-W3,0,KREA,37.715,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+93702,93702-2021-W34,0,KREA,22.48,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+94903,94903-2021-W19,0,KREA,15.96,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+94906,94906-2020-W15,0,KREA,15.355,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+96831,96831-2021-W39,0,KREA,45.68,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+97487,97487-2020-W31,0,KREA,10.4525,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+98546,98546-2020-W28,0,KREA,10.3625,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+100428,100428-2021-W42,0,KREA,31.12666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+101625,101625-2020-W20,0,KREA,23.91333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+103627,103627-2020-W9,0,KREA,32.87,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+103627,103627-2021-W2,0,KREA,34.803333333333335,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+104290,104290-2020-W46,0,KREA,31.945,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+115631,115631-2021-W4,0,KREA,22.76333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+121457,121457-2020-W48,0,KREA,26.73,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+122730,122730-2021-W33,0,KREA,37.870000000000005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+127459,127459-2021-W2,0,KREA,12.7225,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+138527,138527-2021-W19,0,KREA,23.2225,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+140732,140732-2020-W37,0,KREA,11.425999999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+153013,153013-2021-W11,0,KREA,24.7775,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+160396,160396-2021-W31,0,KREA,25.506666666666664,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+168154,168154-2020-W17,0,KREA,19.49,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+175080,175080-2021-W21,0,KREA,34.89333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+179304,179304-2021-W2,0,KREA,39.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+180261,180261-2020-W40,0,KREA,22.05666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+181155,181155-2021-W10,0,KREA,37.54,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+185736,185736-2020-W20,0,KREA,40.42,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+187682,187682-2020-W15,0,KREA,18.38,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+189651,189651-2021-W40,0,KREA,38.635000000000005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+195823,195823-2021-W27,0,KREA,17.784000000000002,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+202662,202662-2021-W18,0,KREA,24.295,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+213054,213054-2021-W31,0,KREA,21.67,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+216828,216828-2020-W4,0,KREA,18.6675,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+225832,225832-2020-W35,0,KREA,20.6425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+232288,232288-2020-W43,0,KREA,23.6925,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+258322,258322-2020-W47,0,KREA,21.885,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+270504,270504-2021-W23,0,KREA,22.93,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+272876,272876-2021-W13,0,KREA,24.53,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+277288,277288-2020-W6,0,KREA,34.39,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+297728,297728-2021-W15,0,KREA,15.623333333333331,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+303572,303572-2021-W5,0,KREA,45.596,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+304116,304116-2021-W23,0,KREA,28.132,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+305936,305936-2020-W50,0,KREA,21.290000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+308151,308151-2021-W26,0,KREA,13.406,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+322115,322115-2021-W18,0,KREA,17.126666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+333581,333581-2021-W51,0,KREA,42.3625,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+333772,333772-2020-W40,0,KREA,16.805,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+341309,341309-2020-W51,0,KREA,29.97,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+345011,345011-2020-W48,0,KREA,14.934,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+348862,348862-2020-W26,0,KREA,42.98,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+348862,348862-2020-W27,0,KREA,21.765,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+348862,348862-2020-W28,0,KREA,23.715,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+360018,360018-2020-W38,0,KREA,28.87,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+373113,373113-2020-W28,0,KREA,24.796666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+373113,373113-2020-W29,0,KREA,17.526666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+373113,373113-2020-W30,0,KREA,24.626,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+387457,387457-2021-W29,0,KREA,13.844,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+455075,455075-2021-W13,0,KREA,10.9975,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544215,544215-2021-W21,0,KREA,19.885,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+548896,548896-2021-W1,0,KREA,36.175,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+560058,560058-2021-W18,0,KREA,19.05333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+601134,601134-2021-W24,0,KREA,36.695,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+616553,616553-2021-W6,0,KREA,40.77666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+617333,617333-2020-W6,0,KREA,22.696,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+617333,617333-2020-W7,0,KREA,22.2225,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+618881,618881-2020-W48,0,KREA,26.3,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+619724,619724-2021-W39,0,KREA,14.148333333333332,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+624912,624912-2020-W24,0,KREA,45.485,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+627247,627247-2020-W37,0,KREA,17.400000000000002,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+645228,645228-2020-W48,0,KREA,33.74333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+647775,647775-2020-W42,0,KREA,18.33333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+649545,649545-2021-W5,0,KREA,40.62499999999999,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+654237,654237-2020-W41,0,KREA,19.49,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+661810,661810-2020-W46,0,KREA,34.92,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+671989,671989-2021-W25,0,KREA,28.05,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+674371,674371-2021-W29,0,KREA,25.26,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+677026,677026-2020-W1,0,KREA,16.6775,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+682272,682272-2021-W16,0,KREA,36.6925,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+684305,684305-2020-W42,0,KREA,13.73,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+687893,687893-2020-W2,0,KREA,40.744,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+689722,689722-2020-W49,0,KREA,13.21,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+691581,691581-2021-W22,0,KREA,10.93,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+693643,693643-2020-W8,0,KREA,24.85,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+696843,696843-2021-W41,0,KREA,32.89666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+704837,704837-2020-W3,0,KREA,13.325,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+704837,704837-2020-W4,0,KREA,14.340000000000002,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+705046,705046-2021-W14,0,KREA,18.31,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+710926,710926-2021-W37,0,KREA,28.41,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+718279,718279-2020-W43,0,KREA,26.742,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+723019,723019-2021-W11,0,KREA,19.73,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+734756,734756-2021-W42,0,KREA,18.2575,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+748173,748173-2021-W12,0,KREA,18.8975,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+758089,758089-2020-W18,0,KREA,48.535,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+785603,785603-2021-W11,0,KREA,24.02,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+790090,790090-2021-W38,0,KREA,24.53,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+796038,796038-2021-W17,0,KREA,12.275,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+812665,812665-2020-W50,0,KREA,10.043333333333331,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+815077,815077-2021-W48,0,KREA,31.5775,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+816769,816769-2021-W45,0,KREA,31.835,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+819324,819324-2020-W7,0,KREA,21.4375,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+819389,819389-2021-W8,0,KREA,41.97666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+828300,828300-2020-W7,0,KREA,48.0,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+828300,828300-2020-W39,0,KREA,16.736666666666668,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+832269,832269-2021-W1,0,KREA,41.935,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+835124,835124-2020-W27,0,KREA,18.575714285714287,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+841722,841722-2020-W17,0,KREA,19.343333333333337,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+845595,845595-2020-W12,0,KREA,21.626666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+848627,848627-2020-W30,0,KREA,16.846,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+848951,848951-2021-W35,0,KREA,32.00333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+849015,849015-2021-W5,0,KREA,25.665000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+860653,860653-2021-W26,0,KREA,24.69,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+861218,861218-2020-W40,0,KREA,10.59,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+862164,862164-2020-W3,0,KREA,31.425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+864057,864057-2021-W14,0,KREA,13.405,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+870496,870496-2021-W36,0,KREA,10.115,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+874107,874107-2021-W45,0,KREA,15.0425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+878095,878095-2020-W18,0,KREA,10.13,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+880293,880293-2021-W15,0,KREA,32.2,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+883198,883198-2020-W27,0,KREA,32.92,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+883198,883198-2021-W44,0,KREA,49.306,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+887419,887419-2020-W44,0,KREA,32.84,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+891790,891790-2021-W45,0,KREA,17.576666666666668,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+892775,892775-2021-W35,0,KREA,44.03666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+895707,895707-2020-W26,0,KREA,41.005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+903778,903778-2021-W42,0,KREA,41.336666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+907553,907553-2021-W18,0,KREA,41.54,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+908236,908236-2020-W27,0,KREA,15.4825,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+911997,911997-2020-W47,0,KREA,26.826,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+917235,917235-2021-W9,0,KREA,19.52,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+919054,919054-2021-W19,0,KREA,18.8,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+919778,919778-2021-W26,0,KREA,34.013333333333335,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+919983,919983-2021-W4,0,KREA,40.07666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+920341,920341-2021-W30,0,KREA,16.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+920797,920797-2021-W48,0,KREA,13.35,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+922463,922463-2021-W39,0,KREA,10.786666666666669,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1017690,1017690-2021-W16,0,KREA,33.49,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1025638,1025638-2020-W36,0,KREA,13.244,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1039703,1039703-2020-W3,0,KREA,37.42,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1039703,1039703-2020-W4,0,KREA,22.1625,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1096173,1096173-2021-W18,0,KREA,27.142000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1098184,1098184-2020-W34,0,KREA,39.34,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1098184,1098184-2020-W35,0,KREA,23.63,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1099600,1099600-2020-W33,0,KREA,48.935,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1175368,1175368-2020-W17,0,KREA,13.95,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1176435,1176435-2020-W4,0,KREA,24.210000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1194632,1194632-2021-W1,0,KREA,16.048,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1195306,1195306-2020-W19,0,KREA,21.536666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1195306,1195306-2020-W20,0,KREA,25.040000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1197118,1197118-2021-W18,0,KREA,14.345999999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1198362,1198362-2021-W51,0,KREA,11.203333333333331,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1200422,1200422-2020-W14,0,KREA,24.896666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1220370,1220370-2020-W35,0,KREA,46.56,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1222266,1222266-2020-W47,0,KREA,16.87,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1235866,1235866-2021-W40,0,KREA,22.71333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1238199,1238199-2021-W7,0,KREA,22.88,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1240158,1240158-2021-W22,0,KREA,13.346666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1241158,1241158-2020-W27,0,KREA,13.1675,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1248363,1248363-2021-W14,0,KREA,38.57,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1250086,1250086-2021-W47,0,KREA,15.936666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1250748,1250748-2020-W51,0,KREA,29.8,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1253311,1253311-2021-W9,0,KREA,12.758,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1253498,1253498-2021-W47,0,KREA,37.865,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1259950,1259950-2020-W50,0,KREA,28.42,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1267956,1267956-2021-W51,0,KREA,30.03333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1274066,1274066-2021-W10,0,KREA,12.506666666666668,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1290400,1290400-2020-W37,0,KREA,39.99428571428571,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1303148,1303148-2020-W7,0,KREA,14.495,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1325814,1325814-2021-W7,0,KREA,23.345,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1332939,1332939-2021-W45,0,KREA,10.314999999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1354299,1354299-2021-W21,0,KREA,16.52,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1360105,1360105-2021-W7,0,KREA,24.128,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1362684,1362684-2020-W3,0,KREA,14.196666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1365739,1365739-2021-W27,0,KREA,25.98333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1365739,1365739-2021-W28,0,KREA,36.620000000000005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1367655,1367655-2021-W2,0,KREA,12.9725,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1368208,1368208-2020-W33,0,KREA,16.223999999999997,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1368466,1368466-2021-W6,0,KREA,25.046666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1371801,1371801-2021-W2,0,KREA,28.03333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1374842,1374842-2020-W49,0,KREA,19.09,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1374842,1374842-2021-W29,0,KREA,12.835,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1376646,1376646-2021-W44,0,KREA,26.474,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1377226,1377226-2021-W53,0,KREA,26.403333333333336,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1384835,1384835-2021-W22,0,KREA,12.865,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1393158,1393158-2021-W31,0,KREA,45.583333333333336,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1398993,1398993-2021-W35,0,KREA,16.396666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1405321,1405321-2021-W1,0,KREA,28.1275,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1406628,1406628-2021-W29,0,KREA,14.25,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1408512,1408512-2020-W27,0,KREA,28.47,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1415105,1415105-2021-W23,0,KREA,40.84666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1437495,1437495-2020-W44,0,KREA,38.8375,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1437495,1437495-2020-W45,0,KREA,17.49,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1440247,1440247-2021-W45,0,KREA,33.806666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1445253,1445253-2021-W24,0,KREA,44.06999999999999,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1447983,1447983-2020-W43,0,KREA,16.753999999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1448534,1448534-2021-W12,0,KREA,24.49333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1454422,1454422-2020-W27,0,KREA,22.1925,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1462016,1462016-2020-W48,0,KREA,11.8225,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1463472,1463472-2021-W49,0,KREA,13.255,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1468123,1468123-2020-W12,0,KREA,24.843333333333337,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1469466,1469466-2021-W51,0,KREA,25.21333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1475239,1475239-2020-W30,0,KREA,32.49333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1475542,1475542-2021-W33,0,KREA,28.68,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1477505,1477505-2021-W13,0,KREA,20.01833333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1488421,1488421-2021-W3,0,KREA,26.65,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1494333,1494333-2020-W28,0,KREA,26.4475,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1499214,1499214-2020-W37,0,KREA,34.735,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1504215,1504215-2021-W2,0,KREA,26.81,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1509371,1509371-2021-W48,0,KREA,34.38,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1510840,1510840-2020-W7,0,KREA,27.276666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1523682,1523682-2021-W1,0,KREA,32.906666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1533497,1533497-2021-W8,0,KREA,12.052499999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1535270,1535270-2021-W42,0,KREA,12.24,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1551533,1551533-2021-W31,0,KREA,32.64,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1552166,1552166-2020-W23,0,KREA,18.99,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1552371,1552371-2021-W43,0,KREA,43.24666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1556110,1556110-2021-W12,0,KREA,33.69,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1559142,1559142-2020-W6,0,KREA,33.685,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1559583,1559583-2021-W49,0,KREA,26.6425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1572967,1572967-2020-W28,0,KREA,19.363333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1584337,1584337-2021-W32,0,KREA,21.19333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1585066,1585066-2021-W19,0,KREA,17.90666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1587215,1587215-2020-W21,0,KREA,30.78,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1596666,1596666-2021-W36,0,KREA,38.42666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1599171,1599171-2020-W24,0,KREA,49.29,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1611077,1611077-2021-W36,0,KREA,13.465,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1614043,1614043-2021-W43,0,KREA,25.58,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1616853,1616853-2021-W32,0,KREA,15.68,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1617550,1617550-2020-W45,0,KREA,46.41,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1628841,1628841-2021-W7,0,KREA,27.1925,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1632981,1632981-2020-W8,0,KREA,33.06,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1642135,1642135-2021-W26,0,KREA,27.210000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1642135,1642135-2021-W27,0,KREA,28.93,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1643443,1643443-2021-W28,0,KREA,19.66333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1646601,1646601-2021-W2,0,KREA,20.345,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1659381,1659381-2021-W34,0,KREA,23.98333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1660853,1660853-2021-W32,0,KREA,11.23,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1663544,1663544-2021-W45,0,KREA,49.215,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1669518,1669518-2020-W12,0,KREA,26.0475,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1673171,1673171-2021-W48,0,KREA,23.435,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1673171,1673171-2021-W51,0,KREA,46.63,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1676100,1676100-2021-W47,0,KREA,17.895,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1688068,1688068-2021-W19,0,KREA,32.29,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1705087,1705087-2021-W8,0,KREA,19.57,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1711155,1711155-2021-W8,0,KREA,19.425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1711807,1711807-2020-W27,0,KREA,26.5775,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1713735,1713735-2020-W35,0,KREA,21.46,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1716705,1716705-2021-W51,0,KREA,44.66,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1716985,1716985-2021-W8,0,KREA,27.928000000000008,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1718090,1718090-2021-W9,0,KREA,41.23,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1718358,1718358-2020-W36,0,KREA,29.15,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1719840,1719840-2020-W36,0,KREA,16.11,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1728793,1728793-2021-W39,0,KREA,22.135,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1729504,1729504-2020-W48,0,KREA,17.358333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1731487,1731487-2020-W19,0,KREA,16.835,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1731487,1731487-2020-W20,0,KREA,36.45,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1731487,1731487-2020-W21,0,KREA,22.29,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1753266,1753266-2021-W40,0,KREA,17.279999999999998,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1760978,1760978-2021-W21,0,KREA,24.163333333333338,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1781029,1781029-2021-W14,0,KREA,27.5,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1786297,1786297-2021-W6,0,KREA,17.076666666666664,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1786499,1786499-2021-W3,0,KREA,28.30333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1791750,1791750-2020-W46,0,KREA,49.34333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1796906,1796906-2021-W27,0,KREA,10.94,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1799750,1799750-2021-W50,0,KREA,11.0725,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1806339,1806339-2020-W52,0,KREA,15.466666666666669,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1811562,1811562-2020-W49,0,KREA,17.95,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1815263,1815263-2021-W6,0,KREA,35.105000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1815414,1815414-2021-W37,0,KREA,40.51,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1821435,1821435-2021-W37,0,KREA,11.7025,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1826543,1826543-2021-W21,0,KREA,11.473333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1839013,1839013-2020-W40,0,KREA,27.96333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1839013,1839013-2021-W45,0,KREA,27.89,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1841357,1841357-2021-W10,0,KREA,21.960000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1850154,1850154-2021-W7,0,KREA,13.148,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1851119,1851119-2021-W6,0,KREA,48.41,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1852811,1852811-2020-W34,0,KREA,24.51,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1854595,1854595-2020-W48,0,KREA,17.2575,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1854595,1854595-2020-W49,0,KREA,32.77,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1861355,1861355-2020-W43,0,KREA,22.62333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1862494,1862494-2021-W24,0,KREA,35.834,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1863734,1863734-2020-W7,0,KREA,37.14666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1871275,1871275-2021-W38,0,KREA,35.623333333333335,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1873708,1873708-2021-W28,0,KREA,14.266666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1876884,1876884-2021-W36,0,KREA,36.60666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1879481,1879481-2021-W45,0,KREA,36.3,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1891912,1891912-2021-W2,0,KREA,46.8275,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1895188,1895188-2020-W33,0,KREA,24.068,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1899106,1899106-2021-W39,0,KREA,15.76,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1902292,1902292-2020-W51,0,KREA,16.4975,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1904404,1904404-2021-W6,0,KREA,35.36,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1913260,1913260-2021-W3,0,KREA,13.636666666666663,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1916626,1916626-2021-W5,0,KREA,12.935,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1921035,1921035-2021-W14,0,KREA,43.7525,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1922219,1922219-2021-W9,0,KREA,10.2825,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1929050,1929050-2020-W40,0,KREA,44.675,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1929725,1929725-2021-W3,0,KREA,12.205,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1951076,1951076-2020-W51,0,KREA,47.225,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1969403,1969403-2020-W41,0,KREA,13.918,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1976141,1976141-2020-W52,0,KREA,22.31,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1976141,1976141-2021-W53,0,KREA,21.555,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1976157,1976157-2021-W3,0,KREA,24.486666666666668,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1980678,1980678-2021-W1,0,KREA,10.383333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1980830,1980830-2021-W48,0,KREA,28.993333333333336,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1983813,1983813-2020-W26,0,KREA,16.500000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1989582,1989582-2021-W46,0,KREA,12.963333333333331,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1991548,1991548-2020-W36,0,KREA,14.2,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1995260,1995260-2020-W9,0,KREA,31.198571428571427,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2000863,2000863-2021-W6,0,KREA,37.345,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2000920,2000920-2020-W29,0,KREA,15.34,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2001273,2001273-2021-W9,0,KREA,15.18,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2006282,2006282-2021-W46,0,KREA,44.44,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2006282,2006282-2021-W48,0,KREA,33.495000000000005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2008183,2008183-2021-W50,0,KREA,20.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2008567,2008567-2020-W42,0,KREA,49.148,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2013856,2013856-2021-W25,0,KREA,24.12,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2015971,2015971-2020-W24,0,KREA,15.738333333333332,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2020594,2020594-2020-W37,0,KREA,23.22333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2028633,2028633-2020-W42,0,KREA,18.236,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2028989,2028989-2020-W35,0,KREA,32.7325,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2034251,2034251-2020-W43,0,KREA,32.20333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2034284,2034284-2020-W25,0,KREA,11.525,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2034574,2034574-2020-W3,0,KREA,10.564,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2034574,2034574-2020-W4,0,KREA,38.84,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2034637,2034637-2020-W30,0,KREA,23.046666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2039956,2039956-2021-W53,0,KREA,32.046,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2044323,2044323-2021-W25,0,KREA,40.336666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2044323,2044323-2021-W26,0,KREA,25.69,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2045150,2045150-2020-W23,0,KREA,15.828,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2046301,2046301-2020-W6,0,KREA,39.19,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2051240,2051240-2020-W34,0,KREA,19.55,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2053415,2053415-2021-W19,0,KREA,16.847499999999997,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2053619,2053619-2021-W31,0,KREA,42.31,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2057945,2057945-2021-W50,0,KREA,35.275000000000006,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2084962,2084962-2020-W27,0,KREA,35.754999999999995,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2088328,2088328-2020-W28,0,KREA,41.475,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2091352,2091352-2020-W27,0,KREA,26.045,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2093674,2093674-2020-W7,0,KREA,49.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2094993,2094993-2021-W23,0,KREA,47.93333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2097483,2097483-2020-W7,0,KREA,15.08,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2097944,2097944-2021-W15,0,KREA,11.2375,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2098473,2098473-2020-W2,0,KREA,24.000000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2098495,2098495-2020-W3,0,KREA,36.105,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2099020,2099020-2020-W21,0,KREA,34.43,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2100543,2100543-2020-W6,0,KREA,21.32,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2100543,2100543-2020-W7,0,KREA,15.076666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2101147,2101147-2020-W3,0,KREA,10.71,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2102697,2102697-2020-W34,0,KREA,12.51,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2103859,2103859-2020-W40,0,KREA,27.36,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2104342,2104342-2020-W50,0,KREA,15.89,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2105943,2105943-2020-W8,0,KREA,33.294,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2107760,2107760-2021-W27,0,KREA,21.506666666666664,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2109046,2109046-2020-W8,0,KREA,20.89,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2110636,2110636-2020-W9,0,KREA,11.4,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2111922,2111922-2020-W11,0,KREA,13.77,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2112828,2112828-2021-W12,0,KREA,43.04,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2114600,2114600-2021-W9,0,KREA,16.146666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2114832,2114832-2020-W22,0,KREA,17.1,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2115222,2115222-2020-W14,0,KREA,16.71,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2116261,2116261-2020-W16,0,KREA,40.535,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2117230,2117230-2020-W17,0,KREA,49.70333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2117565,2117565-2020-W21,0,KREA,47.473333333333336,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2117662,2117662-2020-W18,0,KREA,30.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2117662,2117662-2021-W37,0,KREA,23.130000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2117662,2117662-2021-W38,0,KREA,34.660000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2121632,2121632-2021-W5,0,KREA,37.075,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2122219,2122219-2020-W23,0,KREA,18.11,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2125687,2125687-2021-W43,0,KREA,33.86,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2126988,2126988-2020-W40,0,KREA,13.26,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2130367,2130367-2020-W29,0,KREA,30.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2131308,2131308-2020-W38,0,KREA,32.345,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2133850,2133850-2020-W35,0,KREA,30.37,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2136898,2136898-2020-W34,0,KREA,16.44666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2137084,2137084-2021-W18,0,KREA,12.52,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2140560,2140560-2021-W14,0,KREA,22.266,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2141540,2141540-2020-W37,0,KREA,16.086666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2142501,2142501-2020-W49,0,KREA,13.795,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2143173,2143173-2021-W8,0,KREA,20.54,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2144843,2144843-2020-W41,0,KREA,21.86666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2145525,2145525-2021-W39,0,KREA,14.52,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2145525,2145525-2021-W40,0,KREA,20.705,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2150485,2150485-2020-W43,0,KREA,28.34,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2151455,2151455-2020-W45,0,KREA,13.59,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2152268,2152268-2020-W45,0,KREA,20.494,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2155423,2155423-2021-W4,0,KREA,20.89333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2156560,2156560-2021-W13,0,KREA,44.23333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2156675,2156675-2020-W49,0,KREA,24.15333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2158014,2158014-2020-W50,0,KREA,14.7825,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2158857,2158857-2020-W51,0,KREA,27.975,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2158874,2158874-2020-W51,0,KREA,32.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2158928,2158928-2020-W51,0,KREA,22.44,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2159661,2159661-2020-W51,0,KREA,47.18,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2160664,2160664-2020-W52,0,KREA,31.680000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2161961,2161961-2021-W53,0,KREA,48.54666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2163663,2163663-2021-W2,0,KREA,18.82,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2165083,2165083-2021-W3,0,KREA,27.35333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2165173,2165173-2021-W11,0,KREA,31.23,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2167108,2167108-2021-W19,0,KREA,23.62,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2167577,2167577-2021-W4,0,KREA,22.96333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2167891,2167891-2021-W4,0,KREA,29.295,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2167935,2167935-2021-W4,0,KREA,36.836666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2168214,2168214-2021-W5,0,KREA,15.306666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2168240,2168240-2021-W6,0,KREA,22.59,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2168611,2168611-2021-W5,0,KREA,44.25,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2169139,2169139-2021-W9,0,KREA,14.0125,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2169146,2169146-2021-W5,0,KREA,21.78333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2170204,2170204-2021-W6,0,KREA,27.57,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2171514,2171514-2021-W21,0,KREA,26.965,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2172233,2172233-2021-W20,0,KREA,10.745,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2172730,2172730-2021-W7,0,KREA,24.05,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2174909,2174909-2021-W21,0,KREA,11.966666666666669,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2174909,2174909-2021-W22,0,KREA,29.25,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2175373,2175373-2021-W9,0,KREA,42.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2175964,2175964-2021-W9,0,KREA,22.33,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2177930,2177930-2021-W10,0,KREA,24.06,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2178416,2178416-2021-W11,0,KREA,24.5675,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2178725,2178725-2021-W11,0,KREA,26.96,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2181422,2181422-2021-W13,0,KREA,16.072,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2181483,2181483-2021-W14,0,KREA,31.04,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2181646,2181646-2021-W14,0,KREA,39.59,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2181750,2181750-2021-W13,0,KREA,27.15,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2182945,2182945-2021-W14,0,KREA,36.38,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2183418,2183418-2021-W14,0,KREA,47.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2183509,2183509-2021-W15,0,KREA,29.77333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2183681,2183681-2021-W14,0,KREA,27.65,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2184100,2184100-2021-W15,0,KREA,19.790000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2185003,2185003-2021-W16,0,KREA,18.842,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2185173,2185173-2021-W46,0,KREA,33.075,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2186014,2186014-2021-W16,0,KREA,19.28,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2186968,2186968-2021-W16,0,KREA,11.81,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2187298,2187298-2021-W26,0,KREA,11.160000000000002,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2189087,2189087-2021-W17,0,KREA,28.175,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2191649,2191649-2021-W19,0,KREA,12.475,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2192638,2192638-2021-W20,0,KREA,28.865,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2194526,2194526-2021-W21,0,KREA,22.430000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2196159,2196159-2021-W25,0,KREA,25.646666666666672,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2196346,2196346-2021-W28,0,KREA,20.9175,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2196610,2196610-2021-W27,0,KREA,25.185,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2199230,2199230-2021-W46,0,KREA,10.79,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2201155,2201155-2021-W25,0,KREA,36.95,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2201155,2201155-2021-W45,0,KREA,18.45,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2202358,2202358-2021-W25,0,KREA,32.806666666666665,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2204987,2204987-2021-W28,0,KREA,46.92,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2210213,2210213-2021-W30,0,KREA,11.685,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2211932,2211932-2021-W44,0,KREA,27.425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2211932,2211932-2021-W46,0,KREA,30.87333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2216372,2216372-2021-W36,0,KREA,22.776666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2217470,2217470-2021-W34,0,KREA,29.290000000000003,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2217558,2217558-2021-W41,0,KREA,38.384,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2218646,2218646-2021-W38,0,KREA,45.17333333333334,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2218732,2218732-2021-W36,0,KREA,15.15,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2220071,2220071-2021-W36,0,KREA,17.275,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2224880,2224880-2021-W39,0,KREA,15.64,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2226635,2226635-2021-W40,0,KREA,27.114,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2226937,2226937-2021-W40,0,KREA,32.005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2227288,2227288-2021-W40,0,KREA,20.47,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2230392,2230392-2021-W49,0,KREA,23.89,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2230848,2230848-2021-W51,0,KREA,35.544,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2231993,2231993-2021-W43,0,KREA,28.555,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2232756,2232756-2021-W43,0,KREA,47.115,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2238408,2238408-2021-W47,0,KREA,13.375,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2239923,2239923-2021-W47,0,KREA,25.385,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2241416,2241416-2021-W49,0,KREA,20.28555555555556,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2242148,2242148-2021-W51,0,KREA,38.95,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2245379,2245379-2021-W51,0,KREA,21.793333333333333,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+84661,84661-2014-W31,1,KREA,24.95,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+84661,84661-2015-W15,1,KREA,29.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+84661,84661-2017-W24,1,KREA,31.155,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+84661,84661-2021-W50,1,KREA,19.96,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+144662,144662-2018-W37,1,KREA,21.105,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+144662,144662-2019-W41,1,KREA,35.745,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+144662,144662-2020-W27,1,KREA,48.18,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+144662,144662-2021-W28,1,KREA,45.425,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+150376,150376-2018-W17,1,KREA,14.634,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+338012,338012-2015-W26,1,KREA,27.9475,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+382609,382609-2019-W27,1,KREA,34.065,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+382609,382609-2020-W4,1,KREA,19.186666666666664,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+408266,408266-2022-W10,1,KREA,44.74,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+410779,410779-2019-W4,1,KREA,22.18,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544751,544751-2015-W19,1,KREA,47.8,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544751,544751-2016-W35,1,KREA,42.09,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544751,544751-2018-W3,1,KREA,45.91,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544751,544751-2019-W3,1,KREA,30.906666666666663,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+544751,544751-2020-W19,1,KREA,47.72,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+601951,601951-2014-W16,1,KREA,18.52,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+845234,845234-2019-W38,1,KREA,13.920000000000002,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+845234,845234-2020-W10,1,KREA,16.735,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+913031,913031-2023-W2,1,KREA,25.046666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1036163,1036163-2020-W35,1,KREA,11.476666666666668,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1253872,1253872-2024-W3,1,KREA,18.836666666666662,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1387625,1387625-2021-W37,1,KREA,19.5925,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1395013,1395013-2024-W12,1,KREA,10.846666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1399981,1399981-2023-W11,1,KREA,40.760000000000005,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1835278,1835278-2023-W35,1,KREA,10.836666666666666,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+1900587,1900587-2022-W20,1,KREA,10.415,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2022575,2022575-2022-W22,1,KREA,24.48,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2205993,2205993-2021-W35,1,KREA,19.433333333333337,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2234856,2234856-2022-W30,1,KREA,21.734,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2264884,2264884-2022-W11,1,KREA,30.046666666666667,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2280895,2280895-2022-W25,1,KREA,40.27,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2337370,2337370-2023-W5,1,KREA,18.59,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2502803,2502803-2024-W35,1,KREA,28.628000000000004,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+2502803,2502803-2024-W36,1,KREA,17.02,KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+205088,205088-2021-W26,0,K,17.2,K > 15 mmol/l (niezgodne z życiem)
+603207,603207-2021-W35,0,K,26.23333333333333,K > 15 mmol/l (niezgodne z życiem)
+1220370,1220370-2020-W35,0,K,23.700000000000003,K > 15 mmol/l (niezgodne z życiem)
+1248363,1248363-2021-W7,0,K,21.65,K > 15 mmol/l (niezgodne z życiem)
+1290400,1290400-2020-W37,0,K,18.48,K > 15 mmol/l (niezgodne z życiem)
+1348878,1348878-2021-W39,0,K,28.325,K > 15 mmol/l (niezgodne z życiem)
+1468123,1468123-2020-W12,0,K,20.325,K > 15 mmol/l (niezgodne z życiem)
+1556110,1556110-2021-W12,0,K,25.266666666666666,K > 15 mmol/l (niezgodne z życiem)
+1731487,1731487-2020-W21,0,K,25.5,K > 15 mmol/l (niezgodne z życiem)
+1912418,1912418-2020-W5,0,K,23.866666666666664,K > 15 mmol/l (niezgodne z życiem)
+1912418,1912418-2020-W6,0,K,26.0,K > 15 mmol/l (niezgodne z życiem)
+1976141,1976141-2021-W53,0,K,17.439999999999998,K > 15 mmol/l (niezgodne z życiem)
+1995260,1995260-2020-W9,0,K,25.7125,K > 15 mmol/l (niezgodne z życiem)
+2039267,2039267-2020-W26,0,K,18.133333333333333,K > 15 mmol/l (niezgodne z życiem)
+2044323,2044323-2021-W25,0,K,21.45,K > 15 mmol/l (niezgodne z życiem)
+2077137,2077137-2020-W1,0,K,26.4,K > 15 mmol/l (niezgodne z życiem)
+2094261,2094261-2020-W30,0,K,21.78333333333333,K > 15 mmol/l (niezgodne z życiem)
+2100543,2100543-2020-W6,0,K,16.880000000000003,K > 15 mmol/l (niezgodne z życiem)
+2105943,2105943-2020-W8,0,K,15.86,K > 15 mmol/l (niezgodne z życiem)
+2165083,2165083-2021-W3,0,K,15.9,K > 15 mmol/l (niezgodne z życiem)
+2193864,2193864-2021-W27,0,K,27.45,K > 15 mmol/l (niezgodne z życiem)
+2196528,2196528-2021-W22,0,K,15.75,K > 15 mmol/l (niezgodne z życiem)
+2201344,2201344-2021-W28,0,K,21.766666666666666,K > 15 mmol/l (niezgodne z życiem)
+2210251,2210251-2021-W38,0,K,16.133333333333333,K > 15 mmol/l (niezgodne z życiem)
+2217558,2217558-2021-W41,0,K,18.47142857142857,K > 15 mmol/l (niezgodne z życiem)
+410779,410779-2019-W8,1,Na,74.0,Na < 80 mmol/l (niezgodne z życiem)

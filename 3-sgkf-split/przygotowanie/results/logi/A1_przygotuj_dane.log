@@ -1,0 +1,10 @@
+Rekordy: 78,197 -> 78,052 (usunięto 145 rekordów KOR 63 pacjentów obecnych w obu kohortach)
+Pacjenci: 40,924 -> 40,924
+Wartości zamienione na brak: 752
+   210  (KOR 195, NEURO 15, pacjentów 197)  KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)
+   516  (KOR 478, NEURO 38, pacjentów 471)  KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)
+    25  (KOR 25, NEURO 0, pacjentów 24)  K > 15 mmol/l (niezgodne z życiem)
+     1  (KOR 0, NEURO 1, pacjentów 1)  Na < 80 mmol/l (niezgodne z życiem)
+
+Wynik -> data/processed/aneurysm_sgkf_input.csv
+Spis  -> 3-sgkf-split/przygotowanie/results/usuniete_rekordy.csv, usuniete_wartosci.csv, podsumowanie.json

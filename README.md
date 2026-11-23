@@ -6,14 +6,43 @@
 
 | Plik | Zbiór | Pacjenci | Rekordy | Śr. rekordów/pacjent |
 |------|-------|---------|---------|----------------------|
-| `datasets/neuro_merged_aggregated_1W_mean.csv` | **Positive** (pacjenci z tętniakiem) | 2 016 | 7 655 | 3.8 |
-| `datasets/kor_merged_aggregated_1W_mean.csv` | **Unlabeled** (pacjenci ogólnie) | 39 893 | 73 679 | 1.8 |
+| `data/raw/neuro_merged_aggregated_1W_mean.csv` | **Positive** (pacjenci z tętniakiem) | 2 016 | 7 655 | 3.8 |
+| `data/raw/kor_merged_aggregated_1W_mean.csv` | **Unlabeled** (bez rozpoznania tętniaka w danych; pochodzenie do potwierdzenia) | 39 893 | 73 679 | 1.8 |
 
 Rekord = jeden tydzień zagregowanych (średnia) wyników laboratoryjnych danego pacjenta; klucz: `{patient_id}-{rok}-W{tydzień}`.
 
-## Cechy
+Liczby dotyczą plików surowych. Po czyszczeniu (etap 1) i przygotowaniu danych do podziału (etap 3, decyzje z 04.10.2026): **78 052 rekordy, 40 924 pacjentów, 1 823 pozytywnych**. Szczegóły: `1026_REALIZACJA_DO_SGKF.md`.
 
-Morfologia (HGB, RBC, WBC, PLT, MCV, MCH, MCHC, HCT, RDW), biochemia (KREA, BUN, Na, K, GLU, ALT, AST), koagulacja (PT, INR, APTT), CRP, eGFR (MDRD, CKD-EPI).
+**Wejście do podziału i modelowania:** `data/processed/aneurysm_sgkf_input.csv` (38 cech, przed imputacją). Imputacja odbywa się wewnątrz foldów.
 
-Dla każdego parametru: wartość + flaga normy (`-1` / `0` / `1`).
+## Cechy (38)
 
+| Grupa | Cechy |
+|---|---|
+| morfologia | HGB, RBC, HCT, MCV, MCH, MCHC, RDW, PLT, MPV |
+| rozmaz | WBC, NEUT, %NEUT, LYMPH, %LYMPH, MONO, %MONO, EO, %EO, BAZO, %BAZO, IG, %IG, NRBC, %NRBC |
+| biochemia | KREA, eGFR-MDRD, eGFRCKD, Na, K, GLU, CRP |
+| koagulologia | PT, INR, WPT (wskaźnik protrombinowy), APTT, WAPTT |
+| demografia | patient_age, patient_sex |
+
+Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CRP, MONO i %MONO, została cofnięta (`3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 2.6). Kolumny meta (nie są cechami): `patient_id`, `custom_id`, `examination_date`, `label`.
+
+## Struktura i dokumenty
+
+| Etap | Katalog / plik |
+|---|---|
+| 1. Przygotowanie danych | `1-data-preparation/` |
+| 2. Imputacja (benchmark metod) | `2-imputation/` (`RAPORT_IMPUTACJA.md`) |
+| 3. Przygotowanie danych do SGKF (A), podział `StratifiedGroupKFold` z imputacją w foldach, ocena imputacji i diagnostyka (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
+| 4. Plan modelowania PU | `4-pu-setup/PLAN_MODELOWANIA.md` |
+| Materiał do raportu przejściowego (06.2026, historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
+| **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `1026_REALIZACJA_DO_SGKF.md` |
+| **Podsumowanie prac i materiał na spotkanie z prowadzącym** (10.2026): obie fazy prac, decyzje, pytania, co dalej | `1026_SPOTKANIE_PROWADZACY.md` |
+| Archiwum sprintów i raportów cząstkowych | `docs/` |
+
+## Środowisko
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install scikit-learn pandas numpy scipy pyarrow
+.venv/bin/python 3-sgkf-split/uruchom_sgkf.py --bez-mice   # szybkie sprawdzenie etapu 3 (~1 min)
+```

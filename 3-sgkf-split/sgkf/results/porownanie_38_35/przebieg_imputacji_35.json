@@ -1,0 +1,171 @@
+{
+  "pelny_przebieg": true,
+  "podprobka_pacjentow": null,
+  "plik_danych": "aneurysm_sgkf_input.csv",
+  "zestaw_cech": "35",
+  "przygotowanie_danych": {
+    "plik_zrodlowy": "data/imputation-inputs/aneurysm_concatted.csv",
+    "plik_wynikowy": "data/processed/aneurysm_sgkf_input.csv",
+    "rekordy_przed": 78197,
+    "rekordy_po": 78052,
+    "pacjenci_przed": 40924,
+    "pacjenci_po": 40924,
+    "usuniete_rekordy_kor_mieszanych": 145,
+    "pacjenci_mieszani": 63,
+    "wartosci_na_brak": {
+      "KREA > 50 mg/dl (poza zakresem mg/dl, błąd jednostki)": {
+        "wartosci": 210,
+        "pacjenci": 197,
+        "kor": 195,
+        "neuro": 15
+      },
+      "KREA > 10 mg/dl przy eGFR-MDRD >= 30 (sprzeczność z eGFR)": {
+        "wartosci": 516,
+        "pacjenci": 471,
+        "kor": 478,
+        "neuro": 38
+      },
+      "K > 15 mmol/l (niezgodne z życiem)": {
+        "wartosci": 25,
+        "pacjenci": 24,
+        "kor": 25,
+        "neuro": 0
+      },
+      "Na < 80 mmol/l (niezgodne z życiem)": {
+        "wartosci": 1,
+        "pacjenci": 1,
+        "kor": 0,
+        "neuro": 1
+      }
+    },
+    "wartosci_na_brak_lacznie": 752
+  },
+  "odcisk_danych_sha256": "5b822c09ebc03011",
+  "podzial": {
+    "seed": 42,
+    "n_splits": 5,
+    "warstwy": [
+      "etykieta",
+      "okno",
+      "n_rek"
+    ]
+  },
+  "mice": {
+    "max_iter": 7,
+    "n_estimators": 78,
+    "max_depth": 10,
+    "random_state": 42
+  },
+  "cechy": [
+    "HGB",
+    "PT",
+    "MCV",
+    "GLU",
+    "%IG",
+    "patient_age",
+    "EO",
+    "%EO",
+    "APTT",
+    "%BAZO",
+    "MPV",
+    "RBC",
+    "WBC",
+    "BAZO",
+    "IG",
+    "patient_sex",
+    "KREA",
+    "eGFRCKD",
+    "PLT",
+    "HCT",
+    "%NRBC",
+    "NRBC",
+    "MCHC",
+    "Na",
+    "WPT",
+    "%NEUT",
+    "eGFR-MDRD",
+    "MCH",
+    "RDW",
+    "K",
+    "NEUT",
+    "LYMPH",
+    "INR",
+    "%LYMPH",
+    "WAPTT"
+  ],
+  "foldy": [
+    {
+      "fold": 0,
+      "rekordy_train": 62443,
+      "rekordy_test": 15609,
+      "pacjenci_test": 8185,
+      "udzial_poz_rekordy_test": 0.08539944903581267,
+      "imputowane_train_kor": 0.12677861831822446,
+      "imputowane_train_neuro": 0.2619620695213023,
+      "imputowane_test_kor": 0.12590361445783133,
+      "imputowane_test_neuro": 0.2621369628121316,
+      "czas_imputacji_s": 168.8,
+      "odcisk_wyniku": "224793259531ef19"
+    },
+    {
+      "fold": 1,
+      "rekordy_train": 62442,
+      "rekordy_test": 15610,
+      "pacjenci_test": 8185,
+      "udzial_poz_rekordy_test": 0.08507367072389493,
+      "imputowane_train_kor": 0.12639076814570083,
+      "imputowane_train_neuro": 0.26684200638737554,
+      "imputowane_test_kor": 0.12745513833596736,
+      "imputowane_test_neuro": 0.2425774526678141,
+      "czas_imputacji_s": 221.6,
+      "odcisk_wyniku": "5ff278259504d413"
+    },
+    {
+      "fold": 2,
+      "rekordy_train": 62442,
+      "rekordy_test": 15610,
+      "pacjenci_test": 8185,
+      "udzial_poz_rekordy_test": 0.08532991672005125,
+      "imputowane_train_kor": 0.1265879893262909,
+      "imputowane_train_neuro": 0.25894770767867215,
+      "imputowane_test_kor": 0.1266663998559222,
+      "imputowane_test_neuro": 0.27417417417417417,
+      "czas_imputacji_s": 208.4,
+      "odcisk_wyniku": "c67eb7d21779c11b"
+    },
+    {
+      "fold": 3,
+      "rekordy_train": 62441,
+      "rekordy_test": 15611,
+      "pacjenci_test": 8185,
+      "udzial_poz_rekordy_test": 0.08506822112612901,
+      "imputowane_train_kor": 0.12674563435094266,
+      "imputowane_train_neuro": 0.2599822871098468,
+      "imputowane_test_kor": 0.1260359468298977,
+      "imputowane_test_neuro": 0.27007314974182445,
+      "czas_imputacji_s": 165.9,
+      "odcisk_wyniku": "2ef6a68a5e4bba49"
+    },
+    {
+      "fold": 4,
+      "rekordy_train": 62440,
+      "rekordy_test": 15612,
+      "pacjenci_test": 8184,
+      "udzial_poz_rekordy_test": 0.08519087881117089,
+      "imputowane_train_kor": 0.12651532014616101,
+      "imputowane_train_neuro": 0.2622493086691546,
+      "imputowane_test_kor": 0.1269570088222938,
+      "imputowane_test_neuro": 0.26098818474758323,
+      "czas_imputacji_s": 164.8,
+      "odcisk_wyniku": "bcbd28bb6598edd3"
+    }
+  ],
+  "czas_laczny_min": 15.5,
+  "wersje": {
+    "python": "3.9.6",
+    "sklearn": "1.6.1",
+    "pandas": "2.3.3",
+    "numpy": "2.0.2"
+  },
+  "utworzono": "2026-10-31T10:09:00"
+}
