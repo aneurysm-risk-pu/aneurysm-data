@@ -54,6 +54,7 @@ W folderze `data_syntetyczne/` są sztuczne dane w takim samym układzie jak `da
 - Wyników policzonych na danych syntetycznych **nie commitujemy**. Nadpisują prawdziwe pliki w `results/`, w tym zamrożony `pacjent_fold.csv`. Po pracy przywracamy je poleceniem `git checkout -- 3-sgkf-split/`.
 - Liczb z danych syntetycznych **nie raportujemy**. Pokazują tylko, czy kod działa.
 - Opis, tryby (`realny`, `brak`, `wbudowany`) i „klucz odpowiedzi” są w `narzedzia/dane_syntetyczne/README.md` i `data_syntetyczne/OPIS.json`.
+- Każde zadanie na GitHubie ma na końcu sekcję „Dane syntetyczne”: do czego się w nim przydają i na co uważać. Wyjątki to #32 i #34, które nie dotyczą kodu.
 
 ---
 
