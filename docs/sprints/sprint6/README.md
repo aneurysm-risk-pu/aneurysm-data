@@ -1,6 +1,6 @@
-# Sprint 6 (23–27.11.2026): weryfikacja przed modelowaniem
+# Sprint 6 (23–26.11.2026): weryfikacja przed modelowaniem
 
-**Cel:** zanim zaczniemy modelowanie, sprawdzić to, o co pytał prowadzący, i ustalić zasady trenowania i oceny modeli. Wyniki każdej osoby omawiamy na spotkaniu.
+**Cel:** zanim zaczniemy modelowanie, sprawdzić to, o co pytał prowadzący, i ustalić zasady trenowania i oceny modeli. Wyniki każdej osoby omawiamy na spotkaniu w czwartek 26.11.
 
 **Zadania na GitHubie:** kamień milowy „Sprint 6”, issues #29–#51.
 
