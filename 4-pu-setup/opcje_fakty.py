@@ -45,7 +45,7 @@ DATE_COL = "examination_date"
 META = [GROUP_COL, "custom_id", DATE_COL, TARGET_COL]
 DEMO = ["patient_age", "patient_sex"]
 
-# Wspolne okno dat kohort - to samo co w etapie 3 (1026_REALIZACJA_DO_SGKF.md, sekcja 6.1)
+# Wspolne okno dat kohort - to samo co w etapie 3 (docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6.1)
 OKNO = (pd.Timestamp("2019-12-29"), pd.Timestamp("2021-12-26"))
 
 # Bloki cech, ktorych braki wystepuja razem. Wyznaczone z samej macierzy brakow

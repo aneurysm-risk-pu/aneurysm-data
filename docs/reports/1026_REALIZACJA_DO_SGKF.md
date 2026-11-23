@@ -24,7 +24,7 @@ Dokument zbiera w jednym miejscu, **co zostało zrobione, przez kogo, na jakiej 
    - KOR ma profil szpitalny, a wyniki NEURO najpewniej pochodzą z hospitalizacji,
    - ukryci chorzy zachowują cechy kohorty NEURO: sam wzorzec braków odzyskuje około 52% z nich w górnych 5% rankingu, więc także odzyskiwanie ukrytych wymaga porównania z modelami kontrolnymi.
 
-   Te ryzyka idą do ograniczeń raportu (sekcja 9) i do pytań na spotkanie (`1026_SPOTKANIE_PROWADZACY.md`).
+   Te ryzyka idą do ograniczeń raportu (sekcja 9) i do pytań na spotkanie (`docs/reports/1026_SPOTKANIE_PROWADZACY.md`).
 
 ---
 
@@ -100,7 +100,7 @@ Rekord to tydzień uśrednionych wyników laboratoryjnych pacjenta, z kluczem `{
 
 ## 3. Etap 1: przygotowanie danych
 
-**Raporty:** `1-data-preparation/cleaning_summary.md`, `docs/sprints/DATA_ANALYSIS_SPRINT1.md`, `docs/sprints/` (notatki ze spotkań)
+**Raporty:** `1-data-preparation/cleaning_summary.md`, `docs/sprints/sprint1-5/DATA_ANALYSIS_SPRINT1.md`, `docs/sprints/sprint1-5/` (notatki ze spotkań)
 
 ### 3.1 Czyszczenie strukturalne (Liwia, Łukasz)
 
@@ -366,7 +366,7 @@ Spośród 1 823 pacjentów NEURO 1 215 ma więcej niż jeden rekord. U nich medi
 
 ### 6.4 Selekcja cech: dlaczego wracamy z 35 do 38
 
-**Stan w czerwcu.** Raport przejściowy pracował na 35 cechach: w etapie 1 usunięto CRP, MONO i %MONO jako „najsłabiej związane z etykietą”. Raport imputacji z 11.06 zalecał plik z 35 cechami jako wejście do modelowania. Problem wskazała dopiero weryfikacja we wrześniu: selekcję wykonano z użyciem etykiety na całym zbiorze, więc przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej (zapis w `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 1 „Korelacje i selekcja cech”, dodany 18.09). 04.10.2026 sprawdziliśmy to dokładnie.
+**Stan w czerwcu.** Raport przejściowy pracował na 35 cechach: w etapie 1 usunięto CRP, MONO i %MONO jako „najsłabiej związane z etykietą”. Raport imputacji z 11.06 zalecał plik z 35 cechami jako wejście do modelowania. Problem wskazała dopiero weryfikacja we wrześniu: selekcję wykonano z użyciem etykiety na całym zbiorze, więc przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej (zapis w `docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 1 „Korelacje i selekcja cech”, dodany 18.09). 04.10.2026 sprawdziliśmy to dokładnie.
 
 **Co zrobiono w czerwcu.** Skrypt `3-sgkf-split/przygotowanie/analiza_selekcji_cech.py` odtworzył procedurę z notebooka z wynikiem identycznym co do cyfry:
 - dla czterech miar (Pearson, Spearman, Kendall, Phi-K) wybrano po 10 cech najsłabiej skorelowanych z etykietą,
@@ -489,8 +489,8 @@ MICE uzupełnia 26,0% komórek NEURO i 12,3% komórek KOR; kompletne wiersze, na
 
 | Dokument | Zawartość |
 |---|---|
-| `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | materiał do raportu przejściowego z 12.06 (historyczny) |
+| `docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` | materiał do raportu przejściowego z 12.06 (historyczny) |
 | `2-imputation/RAPORT_IMPUTACJA.md` | pełny benchmark imputacji |
 | `3-sgkf-split/RAPORT_SGKF_MICE.md` | etap 3: decyzje i przygotowanie danych, podział, imputacja w foldach, ocena imputacji, diagnostyka wyników, przegląd merytoryczny |
-| `1026_SPOTKANIE_PROWADZACY.md` | podsumowanie prac (czerwiec i wrzesień–październik) i materiał na spotkanie: decyzje do potwierdzenia, pytania, propozycja dalszych prac |
+| `docs/reports/1026_SPOTKANIE_PROWADZACY.md` | podsumowanie prac (czerwiec i wrzesień–październik) i materiał na spotkanie: decyzje do potwierdzenia, pytania, propozycja dalszych prac |
 | `4-pu-setup/PLAN_MODELOWANIA.md` | propozycja planu modelowania PU, założenia i ograniczenia wejściowe |

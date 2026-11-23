@@ -124,7 +124,7 @@ Te dwa zabezpieczenia przed wyciekiem były poprawne i zostały zachowane w wers
 
 ### 3.4 Co zostało otwarte po raporcie przejściowym
 
-Listę zebrała weryfikacja materiału czerwcowego we wrześniu (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 6; dokument spisano 11.09, a punkty o okresach kohort i 63 pacjentach dopisano 18.09). Wcześniej, od kwietnia, znaliśmy błędy jednostek kreatyniny i wartości niemożliwe (notatki ze sprintu 1) oraz pacjentów obecnych w obu kohortach (`check_duplicates.py`, 31.05), ale raport przejściowy żadnego z tych problemów nie rozstrzygnął:
+Listę zebrała weryfikacja materiału czerwcowego we wrześniu (`docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 6; dokument spisano 11.09, a punkty o okresach kohort i 63 pacjentach dopisano 18.09). Wcześniej, od kwietnia, znaliśmy błędy jednostek kreatyniny i wartości niemożliwe (notatki ze sprintu 1) oraz pacjentów obecnych w obu kohortach (`check_duplicates.py`, 31.05), ale raport przejściowy żadnego z tych problemów nie rozstrzygnął:
 1. 63 pacjentów ma rekordy w obu kohortach i nie miało ustalonej etykiety.
 2. Zostały wartości niemożliwe fizjologicznie, a jednostki kreatyniny są mieszane.
 3. Cechy CRP, MONO i %MONO usunięto na podstawie korelacji z etykietą liczonej na całym zbiorze. Ten problem wskazała weryfikacja we wrześniu; w czerwcu raport imputacji zalecał jako wejście do modelowania plik z 35 cechami.
@@ -444,10 +444,10 @@ Sprawdzono ją w innym środowisku niż to, w którym powstały wyniki (Python 3
 | **wejście do modelowania** (38 cech, przed imputacją) | `data/processed/aneurysm_sgkf_input.csv` |
 | przydział pacjent → fold | `3-sgkf-split/sgkf/results/pacjent_fold.csv` (czytać przez `podzial.wczytaj_podzial()`) |
 | cały etap 3 jednym poleceniem | `python 3-sgkf-split/uruchom_sgkf.py` |
-| pełny opis etapów 1–3, kto co zrobił, decyzje | `1026_REALIZACJA_DO_SGKF.md` |
+| pełny opis etapów 1–3, kto co zrobił, decyzje | `docs/reports/1026_REALIZACJA_DO_SGKF.md` |
 | szczegóły techniczne etapu 3, w tym podział SGKF | `3-sgkf-split/RAPORT_SGKF_MICE.md`, sekcja 3 |
 | kontrole skrótów: okres badań, modele kontrolne w odzyskiwaniu ukrytych | `3-sgkf-split/sgkf/kontrola_epoki.py`, `3-sgkf-split/sgkf/kontrola_skrotow.py` (`RAPORT_SGKF_MICE.md`, sekcje 5.2 i 5.4) |
 | benchmark imputacji | `2-imputation/RAPORT_IMPUTACJA.md` |
 | propozycja planu modelowania | `4-pu-setup/PLAN_MODELOWANIA.md` |
-| stan na raport przejściowy (historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
+| stan na raport przejściowy (historyczny) | `docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
 | **nie do modeli** (imputacja przed podziałem) | `2-imputation/final/results/aneurysm_imputed_*.csv` |

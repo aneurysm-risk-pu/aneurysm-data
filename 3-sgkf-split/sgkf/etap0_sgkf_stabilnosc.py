@@ -2,7 +2,7 @@
 etap0_sgkf_stabilnosc.py
 ========================
 
-Punkt 0.6 etapu 0 (1026_REALIZACJA_DO_SGKF.md, sekcja 5) — siatka stabilnosci podzialu.
+Punkt 0.6 etapu 0 (docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 5) — siatka stabilnosci podzialu.
 
 Wersja historyczna z 18.09.2026, przeniesiona z brancha etap0-sgkf-stabilnosc-lk.
 Jej wnioski rozwija podzial.py --porownanie (RAPORT_SGKF_MICE.md, sekcja 6).

@@ -25,7 +25,7 @@ Co zmienia wzgledem wersji 1 z czerwca (to tez byl SGKF, z y = etykieta):
 
   a. y to warstwa zamiast samej etykiety. Sama etykieta zostawiala miedzy foldami
      okolo 4 pp rozjazdu w udziale NEURO z okna czasowego KOR, a to znane zrodlo
-     falszywego sygnalu (1026_REALIZACJA_DO_SGKF.md, sekcja 6).
+     falszywego sygnalu (docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6).
 
   b. Losowa kolejnosc pacjentow, sterowana ziarnem. SGKF bez tasowania przetwarza
      pacjentow wedlug numerow: nie zalezy od kolejnosci wierszy w CSV, ale ziarno

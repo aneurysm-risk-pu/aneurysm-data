@@ -2,7 +2,7 @@
 etap0_diagnostyka.py
 =====================
 
-Diagnostyka do etapu 0 (1026_REALIZACJA_DO_SGKF.md, sekcja 6) — dane SPRZED czyszczenia z 04.10.2026 — dostarcza danych
+Diagnostyka do etapu 0 (docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6) — dane SPRZED czyszczenia z 04.10.2026 — dostarcza danych
 do rozstrzygnięć, które muszą zapaść przed pisaniem pipeline'u modelowania.
 
 Nic nie modyfikuje. Tylko czyta dane i liczy statystyki:
@@ -201,7 +201,7 @@ def main():
 
     print()
     print("=" * 78)
-    print("  Koniec diagnostyki. Wnioski -> 1026_REALIZACJA_DO_SGKF.md, sekcja 6")
+    print("  Koniec diagnostyki. Wnioski -> docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6")
     print("=" * 78)
 
 

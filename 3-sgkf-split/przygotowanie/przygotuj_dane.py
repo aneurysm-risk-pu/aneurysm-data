@@ -12,7 +12,7 @@ Wyjście:  data/processed/aneurysm_sgkf_input.csv
           przygotowanie/results/usuniete_wartosci.csv    spis wartości zamienionych na brak
           przygotowanie/results/podsumowanie.json        liczby do dokumentacji
 
-Decyzje z 04.10.2026 (uzasadnienie: 1026_REALIZACJA_DO_SGKF.md, sekcja 6;
+Decyzje z 04.10.2026 (uzasadnienie: docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6;
 liczby: analiza_decyzji.py):
 
   1. Pacjenci obecni w obu kohortach (63 osoby, 264 rekordy). Pacjent nie może

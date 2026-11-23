@@ -2,9 +2,9 @@
 
 **Projekt:** Ocena ryzyka wystąpienia tętniaka mózgu z wykorzystaniem modelowania Positive-Unlabeled (ID-1650)
 **Status:** **propozycja do uzgodnienia przez zespół i prowadzącego.** Dokument łączy wcześniejsze ustalenia z planem wykonania etapu 4. Wskazane niżej wartości startowe są rekomendacjami, a nie potwierdzonymi decyzjami zespołu. Opis przyszłego kodu nie oznacza, że został on już zaimplementowany.
-**Stan na:** 18.10.2026. Zachowano decyzje dotyczące danych z 04.10 oraz uzupełnienia z weryfikacji 16–17.10.2026 (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9); dodano szczegółową kolejność dalszych prac, objaśnienia i kryteria ukończenia. 31.10.2026: podział przebudowany na `StratifiedGroupKFold`, a liczby zależne od foldów przeliczone (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9.1).
+**Stan na:** 18.10.2026. Zachowano decyzje dotyczące danych z 04.10 oraz uzupełnienia z weryfikacji 16–17.10.2026 (`docs/reports/1026_SPOTKANIE_PROWADZACY.md`, sekcja 9); dodano szczegółową kolejność dalszych prac, objaśnienia i kryteria ukończenia. 31.10.2026: podział przebudowany na `StratifiedGroupKFold`, a liczby zależne od foldów przeliczone (`docs/reports/1026_SPOTKANIE_PROWADZACY.md`, sekcja 9.1).
 
-To główny dokument planistyczny w `4-pu-setup/`. Aktualna wersja wejścia, podział i imputacja w foldach zostały wykonane i sprawdzone technicznie (etapy 1–3, `1026_REALIZACJA_DO_SGKF.md`). Przed porównaniem modeli trzeba potwierdzić zakres eksperymentu i zapisać protokół, czyli wspólne zasady jego wykonania. Zmiana danych może wymagać nowego zamrożenia artefaktów; sam rozwój kodu modelowania nie wymaga tworzenia nowych foldów zewnętrznych.
+To główny dokument planistyczny w `4-pu-setup/`. Aktualna wersja wejścia, podział i imputacja w foldach zostały wykonane i sprawdzone technicznie (etapy 1–3, `docs/reports/1026_REALIZACJA_DO_SGKF.md`). Przed porównaniem modeli trzeba potwierdzić zakres eksperymentu i zapisać protokół, czyli wspólne zasady jego wykonania. Zmiana danych może wymagać nowego zamrożenia artefaktów; sam rozwój kodu modelowania nie wymaga tworzenia nowych foldów zewnętrznych.
 
 **Jak czytać ten plan:**
 
@@ -73,7 +73,7 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 
 ### 3.0 Założenia wejściowe: co już rozstrzygnięto, a co zostaje
 
-**Rozstrzygnięte 04.10.2026** (wdrożone w etapie 3, szczegóły w `1026_REALIZACJA_DO_SGKF.md`, sekcja 6):
+**Rozstrzygnięte 04.10.2026** (wdrożone w etapie 3, szczegóły w `docs/reports/1026_REALIZACJA_DO_SGKF.md`, sekcja 6):
 
 | Decyzja | Co to oznacza dla modelowania |
 |---|---|

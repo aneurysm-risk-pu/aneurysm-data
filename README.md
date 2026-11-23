@@ -11,7 +11,7 @@
 
 Rekord = jeden tydzień zagregowanych (średnia) wyników laboratoryjnych danego pacjenta; klucz: `{patient_id}-{rok}-W{tydzień}`.
 
-Liczby dotyczą plików surowych. Po czyszczeniu (etap 1) i przygotowaniu danych do podziału (etap 3, decyzje z 04.10.2026): **78 052 rekordy, 40 924 pacjentów, 1 823 pozytywnych**. Szczegóły: `1026_REALIZACJA_DO_SGKF.md`.
+Liczby dotyczą plików surowych. Po czyszczeniu (etap 1) i przygotowaniu danych do podziału (etap 3, decyzje z 04.10.2026): **78 052 rekordy, 40 924 pacjentów, 1 823 pozytywnych**. Szczegóły: `docs/reports/1026_REALIZACJA_DO_SGKF.md`.
 
 **Wejście do podziału i modelowania:** `data/processed/aneurysm_sgkf_input.csv` (38 cech, przed imputacją). Imputacja odbywa się wewnątrz foldów.
 
@@ -35,10 +35,14 @@ Jeden zestaw cech (decyzja z 04.10.2026): selekcja z etapu 1, która usuwała CR
 | 2. Imputacja (benchmark metod) | `2-imputation/` (`RAPORT_IMPUTACJA.md`) |
 | 3. Przygotowanie danych do SGKF (A), podział `StratifiedGroupKFold` z imputacją w foldach, ocena imputacji i diagnostyka (B) | `3-sgkf-split/` (`RAPORT_SGKF_MICE.md`; całość: `python 3-sgkf-split/uruchom_sgkf.py`) |
 | 4. Plan modelowania PU | `4-pu-setup/PLAN_MODELOWANIA.md` |
-| Materiał do raportu przejściowego (06.2026, historyczny) | `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
-| **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `1026_REALIZACJA_DO_SGKF.md` |
-| **Podsumowanie prac i materiał na spotkanie z prowadzącym** (10.2026): obie fazy prac, decyzje, pytania, co dalej | `1026_SPOTKANIE_PROWADZACY.md` |
-| Archiwum sprintów i raportów cząstkowych | `docs/` |
+| Materiał do raportu przejściowego (06.2026, historyczny) | `docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md` |
+| **Realizacja etapów 1–3, podział pracy, decyzje** (10.2026) | `docs/reports/1026_REALIZACJA_DO_SGKF.md` |
+| **Podsumowanie prac i materiał na spotkanie z prowadzącym** (10.2026): obie fazy prac, decyzje, pytania, co dalej | `docs/reports/1026_SPOTKANIE_PROWADZACY.md` |
+| **Bieżący sprint**: zadania, decyzje, uwagi prowadzącego | `docs/sprints/sprint6/` |
+| Notatki ze sprintów 1–5 | `docs/sprints/sprint1-5/` |
+| Raporty cząstkowe (imputacja, plakat, audyt z 15.10) | `docs/reports/` |
+| Przewodnik po projekcie (ściąga dla zespołu) | `docs/PRZEWODNIK_LK.md` |
+| Dane syntetyczne do sprawdzania kodu bez prawdziwych danych | `data_syntetyczne/` (generator i opis: `narzedzia/dane_syntetyczne/`) |
 
 ## Środowisko
 

@@ -22,7 +22,7 @@
 
 ### 1.1 Model uczący się na samych nazwach badań
 
-**O co chodzi.** W danych surowych kolumna `examination_type` zawiera listę nazw zleconych badań (np. „Morfologia”, „Kreatynina we krwi”). W etapie 1 usunęliśmy ją jako kolumnę tekstową. Raport przejściowy nazywa ją „zmienną czysto techniczną” (`0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md:35`), a raport z października tylko „kolumną tekstową” (krok 1). Pytanie brzmi: czy model rozpozna chorych po samych nazwach badań, bez ich wyników?
+**O co chodzi.** W danych surowych kolumna `examination_type` zawiera listę nazw zleconych badań (np. „Morfologia”, „Kreatynina we krwi”). W etapie 1 usunęliśmy ją jako kolumnę tekstową. Raport przejściowy nazywa ją „zmienną czysto techniczną” (`docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md:35`), a raport z października tylko „kolumną tekstową” (krok 1). Pytanie brzmi: czy model rozpozna chorych po samych nazwach badań, bez ich wyników?
 
 **Co wiemy:**
 - Nazwy **nie były ujednolicone** między okresami. Zmieniały się w czasie, np. „Kreatynina” i „Azot Mocznika” występują tylko w latach 2010–2013, więc tylko w NEURO, bo KOR nie ma danych sprzed 2019. Nazwy zdradzają więc okres badania, a przez niego kohortę **[jednorazowo]**.
@@ -64,7 +64,7 @@
 **Fakty:**
 - KL i test Kołmogorowa–Smirnowa liczono w etapie 2, **do oceny imputacji, nie do wyboru cech** **[repo]**. KL była niska (KOR 0,003–0,005, NEURO 0,010–0,016). Test KS odrzucił zgodność dla 38 z 38 cech w obu kohortach, bo przy około 78 tys. rekordów wykrywa każdą różnicę, a kompletne wiersze nie są losową próbą. Raport uznał RMSE za właściwą miarę (`2-imputation/RAPORT_IMPUTACJA.md`, sekcja 4.6; `validate_imputed.py`, `validation_ks.csv`).
 - **38 cech wybrano w etapie 1 według braków.** Z 42 kolumn wyników i demografii wypadły ALT, AST, BUN i P-LCR, bo w co najmniej jednej kohorcie brakuje ich w ponad 60% rekordów. P-LCR wypadł przez NEURO (62%), choć w KOR brakuje go tylko w 4% **[jednorazowo; reguła odtworzona z liczb, w dokumentach jest tylko „próg 60%”]**.
-- Zmiana 38 → 35 (bez CRP, MONO, %MONO) wynikała z korelacji z etykietą, nie z KL. Cofnięto ją 04.10 (`1026_REALIZACJA_DO_SGKF.md`, sekcja 6.4) **[repo]**.
+- Zmiana 38 → 35 (bez CRP, MONO, %MONO) wynikała z korelacji z etykietą, nie z KL. Cofnięto ją 04.10 (`docs/reports/1026_REALIZACJA_DO_SGKF.md`, sekcja 6.4) **[repo]**.
 
 **Zadania:** #44 (skąd 38 cech: reguła 60% w skrypcie; dziś jest tylko w notebooku z etapu 1), #48 (co sprawdzały KS/KL). Do raportu: jedno zdanie o tym, skąd jest 38 cech, i że KL/KS służyły ocenie imputacji.
 
@@ -168,7 +168,7 @@
 | wysoka | zaimputowane foldy czytane po nazwie pliku, bez manifestu | przy #47 |
 | średnia | brak wspólnych, przypiętych wersji bibliotek (łącznie z PyArrow); odcisk danych zależy od wersji pandas | odłożone; wersje zapisujemy w plikach wyników |
 | średnia | `master` nie ma prac od 11.09 (35 commitów) | po Sprincie 5 |
-| niska | drobne niezgodności w dokumentach: `1026_REALIZACJA_DO_SGKF.md:357` podaje rozstęp 0,55 pp (to liczba wariantu testowanego; dla SGKF 0,52); „0,05 pp” dla rekordów NEURO w trzech dokumentach, a CSV daje 0,0448 (0,04); komunikat błędu w `podzial.py:399` ma ścieżkę bez `sgkf/` | poprawić przy najbliższej zmianie dokumentów |
+| niska | drobne niezgodności w dokumentach: `docs/reports/1026_REALIZACJA_DO_SGKF.md:357` podaje rozstęp 0,55 pp (to liczba wariantu testowanego; dla SGKF 0,52); „0,05 pp” dla rekordów NEURO w trzech dokumentach, a CSV daje 0,0448 (0,04); komunikat błędu w `podzial.py:399` ma ścieżkę bez `sgkf/` | poprawić przy najbliższej zmianie dokumentów |
 | niska | etap 1 nieodtwarzalny jednym skryptem (notebooki, ścieżki z Colab, kopie danych w kilku miejscach) | opisane jako ograniczenie; porządki przy ponownym zamrożeniu danych |
 
 ---
@@ -183,7 +183,7 @@ Ostateczna lista do wysłania: `plan_szczegolowy.md`, sekcja 5 (#34).
 3. Odłożony fold testowy czy tylko walidacja zagnieżdżona?
 4. Optuna: wybór ustawień czy też rodziny modelu?
 5. Limity historii 11/38: ograniczenie czy ujednolicenie?
-6. Wcześniej otwarte (z `1026_SPOTKANIE_PROWADZACY.md`): cel predykcji, skąd pochodzi KOR, walidacja zewnętrzna, decyzja o NRBC/%NRBC.
+6. Wcześniej otwarte (z `docs/reports/1026_SPOTKANIE_PROWADZACY.md`): cel predykcji, skąd pochodzi KOR, walidacja zewnętrzna, decyzja o NRBC/%NRBC.
 
 **Do właściciela danych:**
 1. Rozpoznanie dla pacjentów NEURO: pęknięty czy niepęknięty (kod ICD-10)?

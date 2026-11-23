@@ -36,7 +36,7 @@
 | `3-sgkf-split/uruchom_sgkf.py` | uruchamia cały etap 3 po kolei |
 | `4-pu-setup/` | plan i opcje modelowania (`PLAN_MODELOWANIA.md`, `OPCJE_MODELOWANIA.md`), pierwsze analizy pod modelowanie |
 | `narzedzia/dane_syntetyczne/` | generator danych syntetycznych |
-| `1026_REALIZACJA_DO_SGKF.md` | główny opis etapów 1–3: co zrobiono i dlaczego |
+| `docs/reports/1026_REALIZACJA_DO_SGKF.md` | główny opis etapów 1–3: co zrobiono i dlaczego |
 
 Cała praca jest na gałęzi `master` (od 23.11, PR #52). Przed rozpoczęciem pracy:
 
@@ -103,7 +103,7 @@ Model może się nauczyć tych różnic zamiast choroby. Dlatego obok właściwe
 - `3-sgkf-split/sgkf/kontrola_sgkf_czerwiec.py`: porównanie z podziałem z czerwca,
 - `3-sgkf-split/archiwum/`: pierwsza wersja podziału (notebook Liwii).
 
-**Opis:** `1026_REALIZACJA_DO_SGKF.md` (sekcje o podziale), `3-sgkf-split/RAPORT_SGKF_MICE.md`.
+**Opis:** `docs/reports/1026_REALIZACJA_DO_SGKF.md` (sekcje o podziale), `3-sgkf-split/RAPORT_SGKF_MICE.md`.
 
 ### #35 Zapoznać się z całym kodem podziału SGKF
 **Po co:** to dla Ciebie nowy kod, a od teraz ta część jest Twoja. Trzeba rozumieć:
@@ -155,7 +155,7 @@ Ile ukrywamy, ustala Łukasz. Imputacja nie korzysta z etykiety, więc ukrywanie
 - `3-sgkf-split/przygotowanie/` (późniejsze poprawki danych i analizy decyzji z etapu 1),
 - `3-sgkf-split/sgkf/kontrola_epoki.py` (jak okres badania odróżnia grupy).
 
-**Opis:** `1026_REALIZACJA_DO_SGKF.md`, sekcja 3.
+**Opis:** `docs/reports/1026_REALIZACJA_DO_SGKF.md`, sekcja 3.
 
 ### #41 Nazwy badań w KOR i NEURO
 **Po co:** prowadzący zapytał o „model uczący się po samych nazwach”. Kolumna z nazwą badania (`examination_type`) została usunięta w etapie 1, ale w danych surowych wygląda inaczej w obu grupach. Część nazw występuje tylko w NEURO, np. „Kreatynina” tylko w latach 2010–2013. Nazwy mówią, jaki zestaw badań zlecono, a to przekłada się na to, których cech brakuje. Model może więc rozpoznać grupę „po nazwach” nawet bez tej kolumny. Trzeba sprawdzić:

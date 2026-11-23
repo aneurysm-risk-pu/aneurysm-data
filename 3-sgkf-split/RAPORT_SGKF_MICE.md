@@ -2,7 +2,7 @@
 
 **Wersja 1:** 11.06.2026, StratifiedGroupKFold na rekordach, materiał do raportu przejściowego (`archiwum/`)
 **Wersja 2:** 04.10.2026, decyzje dotyczące danych, zamrożony podział, pełna imputacja w foldach; 31.10.2026: podział przebudowany na `StratifiedGroupKFold` z 12 warstwami (sekcja 3), cały etap przeliczony
-**Weryfikacja:** 06.10 i 16–17.10.2026; poprawione opisy wniosków i dodane kontrole (sekcja 5.4), dane, podział i imputacja bez zmian (`1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
+**Weryfikacja:** 06.10 i 16–17.10.2026; poprawione opisy wniosków i dodane kontrole (sekcja 5.4), dane, podział i imputacja bez zmian (`docs/reports/1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
 **Wejście etapu:** `data/imputation-inputs/aneurysm_concatted.csv` (78 197 rekordów, 38 cech, przed imputacją)
 **Wyjście etapu:** zamrożony przydział `sgkf/results/pacjent_fold.csv` oraz zaimputowane foldy (38 cech)
 
@@ -177,7 +177,7 @@ W etapie 1 (notebook `1-data-preparation/scripts-lf/aneurysm_data_merge.ipynb`, 
 - benchmark imputacji z etapu 2 był liczony na 38 cechach, więc parametry MICE pasują do tego zestawu bez ponownego benchmarku,
 - jednorazowe porównanie nie wykazało istotnej różnicy w jakości imputacji (sekcja 4.5).
 
-Problem wskazała weryfikacja materiału czerwcowego we wrześniu (zapis w `0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 1 „Korelacje i selekcja cech”, dodany 18.09): przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. W czerwcu raport imputacji zalecał plik z 35 cechami. Wariant 38 cech wdrożono; decyzja wymaga potwierdzenia.
+Problem wskazała weryfikacja materiału czerwcowego we wrześniu (zapis w `docs/reports/0626_PODSUMOWANIE_RAPORT_PRZEJSCIOWY.md`, sekcja 1 „Korelacje i selekcja cech”, dodany 18.09): przed analizą potwierdzającą trzeba albo wrócić do 38 cech, albo przenieść selekcję do walidacji krzyżowej. W czerwcu raport imputacji zalecał plik z 35 cechami. Wariant 38 cech wdrożono; decyzja wymaga potwierdzenia.
 
 Redundancja MONO i %MONO zostaje. Procenty rozmazu sumują się do 100%, więc w modelach liniowych są dokładnie współliniowe. W modelowaniu trzeba to obsłużyć regularyzacją albo pominięciem jednego procentu; modelom drzewiastym to nie przeszkadza. CRP ma 48% braków w NEURO i zawyżone uzupełnienia (sekcja 5.1), więc jego wpływ sprawdzi analiza wrażliwości na cechach o niskim odsetku braków.
 

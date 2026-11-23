@@ -3,7 +3,7 @@ analiza_decyzji.py
 ==================
 
 CZĘŚĆ A etapu 3 — podkładka liczbowa pod decyzje z 04.10.2026
-(1026_REALIZACJA_DO_SGKF.md, sekcja 6; 3-sgkf-split/RAPORT_SGKF_MICE.md, sekcja 2).
+(docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 6; 3-sgkf-split/RAPORT_SGKF_MICE.md, sekcja 2).
 
 Każda liczba cytowana w dokumentach przy tych decyzjach pochodzi z tego
 skryptu. Nic nie modyfikuje — czyta dane źródłowe, przygotowuje je tą samą

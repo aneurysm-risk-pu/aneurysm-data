@@ -174,4 +174,4 @@ Podstawowe kontrole bez nadpisywania danych:
 .venv/bin/python 3-sgkf-split/sgkf/podzial.py --sprawdz
 ```
 
-Źródła lokalne: `README.md`, `1026_SPOTKANIE_PROWADZACY.md`, `1026_REALIZACJA_DO_SGKF.md`, kod i wyniki `1-data-preparation/`, `2-imputation/final/`, `3-sgkf-split/`, `4-pu-setup/PLAN_MODELOWANIA.md`. Najważniejsze źródła liczb: `podsumowanie.json`, `podzial_meta.json`, `przebieg_imputacji_38.json`, `ocena_imputacji.json`, `analiza_wynikow.json`, `kontrola_epoki.json`.
+Źródła lokalne: `README.md`, `docs/reports/1026_SPOTKANIE_PROWADZACY.md`, `docs/reports/1026_REALIZACJA_DO_SGKF.md`, kod i wyniki `1-data-preparation/`, `2-imputation/final/`, `3-sgkf-split/`, `4-pu-setup/PLAN_MODELOWANIA.md`. Najważniejsze źródła liczb: `podsumowanie.json`, `podzial_meta.json`, `przebieg_imputacji_38.json`, `ocena_imputacji.json`, `analiza_wynikow.json`, `kontrola_epoki.json`.

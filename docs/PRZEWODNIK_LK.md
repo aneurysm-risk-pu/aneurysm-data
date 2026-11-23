@@ -52,12 +52,15 @@ data/processed/aneurysm_concatted_cleaned.csv     ← historyczny zestaw 35 cech
    sgkf/               B: zamrożony podział + MICE w foldach (38 cech) + ocena imputacji + diagnostyka wyników
    uruchom_sgkf.py     cały etap jednym poleceniem
 4-pu-setup/            PLAN_MODELOWANIA.md (jedyny dokument: co dalej) + analiza reguły agregacji
-0626_, 1026_*.md       raport przejściowy (06.2026), realizacja etapów 1–3 (10.2026)
-PRZEWODNIK_LK.md       ten plik
+data_syntetyczne/      dane syntetyczne w układzie data/ (do sprawdzania kodu)
+narzedzia/             generator danych syntetycznych
+docs/reports/          raport przejściowy (0626_), realizacja etapów 1–3 i materiał na spotkanie (1026_*), audyt, raporty imputacji
+docs/sprints/          notatki ze sprintów 1–5 (sprint1-5/) i bieżący sprint (sprint6/)
+docs/PRZEWODNIK_LK.md  ten plik
 ```
 
 Kolejność czytania przy powrocie:
-1. `1026_REALIZACJA_DO_SGKF.md`: co zrobiliśmy i kto co robił.
+1. `docs/reports/1026_REALIZACJA_DO_SGKF.md`: co zrobiliśmy i kto co robił.
 2. `3-sgkf-split/RAPORT_SGKF_MICE.md`: sekcja „W skrócie”, potem 2 (decyzje dotyczące danych) i 4 (wyniki imputacji).
 3. `4-pu-setup/PLAN_MODELOWANIA.md`: co dalej, założenia wejściowe i pytania do prowadzącego.
 
@@ -334,7 +337,7 @@ Odpowiedz sobie w głowie, a potem sprawdź pod spodem.
 
 ## 12. Ściąga na spotkanie z prowadzącym
 
-Materiał dla prowadzącego: `1026_SPOTKANIE_PROWADZACY.md`. Poniżej pytania, które mogą paść, z krótkimi odpowiedziami.
+Materiał dla prowadzącego: `docs/reports/1026_SPOTKANIE_PROWADZACY.md`. Poniżej pytania, które mogą paść, z krótkimi odpowiedziami.
 
 | Pytanie | Odpowiedź w jednym, dwóch zdaniach | Gdzie dowód |
 |---|---|---|
