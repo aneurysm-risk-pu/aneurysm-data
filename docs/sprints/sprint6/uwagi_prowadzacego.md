@@ -1,11 +1,11 @@
 # Uwagi prowadzącego do raportu z października
 
 **Źródło:** analiza stanu projektu (06.11) i uwagi prowadzącego do raportu z października (19–20.11.2026).
-**Do czego:** fakty i liczby, z których wyszły zadania Sprintu 5. Zadania są w `README.md` i na GitHubie (issues #29–#51), a decyzje w `plan_szczegolowy.md`.
+**Do czego:** fakty i liczby, z których wyszły zadania Sprintu 6. Zadania są w `README.md` i na GitHubie (issues #29–#51), a decyzje w `plan_szczegolowy.md`.
 
 **Oznaczenia przy liczbach:**
 - **[repo]**: liczbę liczy skrypt w repozytorium; można cytować w raporcie,
-- **[jednorazowo]**: policzone jednorazowo, bez skryptu w repo; **przed cytowaniem trzeba dodać skrypt** (zadania Sprintu 5),
+- **[jednorazowo]**: policzone jednorazowo, bez skryptu w repo; **przed cytowaniem trzeba dodać skrypt** (zadania Sprintu 6),
 - **[do ustalenia]**: pytanie lub decyzja, nie fakt.
 
 ---
@@ -76,7 +76,7 @@
 
 **Pierwotny plan (`PLAN_MODELOWANIA.md` §15):** walidacja zagnieżdżona. 5 zamrożonych foldów zewnętrznych służy tylko do oceny. W treningu każdego z nich są 3 foldy wewnętrzne (`podzial_wewnetrzny()` już jest i ma test), a Optuna stroi tylko na nich. Cel: `RecallHidden@q` na stałych maskach. Najlepsze ustawienia trenujemy na całym treningu i oceniamy raz na foldzie zewnętrznym.
 
-**Propozycja Sprintu 5 (D1 + D3 w `plan_szczegolowy.md`):** zamiast walidacji zagnieżdżonej fold 4 odkładamy jako test, a Optuna stroi na 4 foldach roboczych (te same hiperparametry, średnia z foldów). MICE i skalowanie trzeba wtedy dopasować od nowa w każdym układzie roboczym (#47, #51). **Nie wolno dzielić gotowych `foldy_imputowane_38/`.** Zakresy parametrów, liczbę prób, ziarna i limit czasu zapisujemy przed startem (#29).
+**Propozycja Sprintu 6 (D1 + D3 w `plan_szczegolowy.md`):** zamiast walidacji zagnieżdżonej fold 4 odkładamy jako test, a Optuna stroi na 4 foldach roboczych (te same hiperparametry, średnia z foldów). MICE i skalowanie trzeba wtedy dopasować od nowa w każdym układzie roboczym (#47, #51). **Nie wolno dzielić gotowych `foldy_imputowane_38/`.** Zakresy parametrów, liczbę prób, ziarna i limit czasu zapisujemy przed startem (#29).
 
 **Do ustalenia z prowadzącym:**
 - Czy „wybrać najlepszy” znaczy najlepsze ustawienia (poprawnie), czy model z najlepszego foldu (błąd: wybór szczęśliwego podziału)?
@@ -126,7 +126,7 @@
 
 **Uwaga:** diagnostyka etapu 3 (AUC, kontrola skrótów) korzystała ze wszystkich foldów, ale żadnego modelu ani ustawień jeszcze na nich nie wybrano.
 
-**Propozycja Sprintu 5:** fold 4 odłożony, walidacja krzyżowa na foldach 0–3 (D1, D3; #38).
+**Propozycja Sprintu 6:** fold 4 odłożony, walidacja krzyżowa na foldach 0–3 (D1, D3; #38).
 
 ### 1.10 Standaryzacja w foldzie (wyciek danych)
 
@@ -195,4 +195,4 @@ Ostateczna lista do wysłania: `plan_szczegolowy.md`, sekcja 5 (#34).
 
 ## 4. Zadania
 
-Lista zadań z tych notatek trafiła do Sprintu 5 (issues #29–#51, opis w `README.md`). Kolejne kroki po sprincie są w `plan_szczegolowy.md`, sekcja 6.
+Lista zadań z tych notatek trafiła do Sprintu 6 (issues #29–#51, opis w `README.md`). Kolejne kroki po sprincie są w `plan_szczegolowy.md`, sekcja 6.

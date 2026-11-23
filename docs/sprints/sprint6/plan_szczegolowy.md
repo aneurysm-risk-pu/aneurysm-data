@@ -1,6 +1,6 @@
-# Sprint 5: plan szczegółowy
+# Sprint 6: plan szczegółowy
 
-**Status:** propozycje do omówienia w zespole i z prowadzącym. Zadania z uzasadnieniem są w `README.md` i na GitHubie (Sprint 5, issues #29–#51).
+**Status:** propozycje do omówienia w zespole i z prowadzącym. Zadania z uzasadnieniem są w `README.md` i na GitHubie (Sprint 6, issues #29–#51).
 **Na podstawie:** uwag prowadzącego (`uwagi_prowadzacego.md`), notatek Liwii z OneNote (sekcja 3) i podziału ról w zespole.
 
 ---

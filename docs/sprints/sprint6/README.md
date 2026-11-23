@@ -1,8 +1,8 @@
-# Sprint 5 (23–27.11.2026): weryfikacja przed modelowaniem
+# Sprint 6 (23–27.11.2026): weryfikacja przed modelowaniem
 
 **Cel:** zanim zaczniemy modelowanie, sprawdzić to, o co pytał prowadzący, i ustalić zasady trenowania i oceny modeli. Wyniki każdej osoby omawiamy na spotkaniu.
 
-**Zadania na GitHubie:** kamień milowy „Sprint 5”, issues #29–#51.
+**Zadania na GitHubie:** kamień milowy „Sprint 6”, issues #29–#51.
 
 **Pliki w tym folderze:**
 - `README.md` (ten plik): zadania z uzasadnieniem, dla zespołu,
