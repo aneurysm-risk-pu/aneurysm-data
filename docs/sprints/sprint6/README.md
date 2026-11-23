@@ -45,7 +45,7 @@ git checkout master
 git pull
 ```
 
-Kto pracował na starej `master`, zobaczy nową strukturę folderów (`data/`, `3-sgkf-split/`, `4-pu-setup/` itd.). Własne zmiany można robić na osobnej gałęzi od `master` i scalać przez PR, ale nie jest to obowiązkowe. Gałąź `pu-modeling-setup-lk` zostaje jako archiwum i nie trzeba na niej pracować.
+Kto pracował na starej `master`, zobaczy nową strukturę folderów (`data/`, `3-sgkf-split/`, `4-pu-setup/` itd.). Własne zmiany można robić na osobnej gałęzi od `master` i scalać przez PR, ale nie jest to obowiązkowe. Gałąź `pu-modeling-setup-lk` została usunięta po scaleniu. Kto ma ją lokalnie, może ją skasować: `git branch -D pu-modeling-setup-lk`.
 
 ## Dane syntetyczne
 
