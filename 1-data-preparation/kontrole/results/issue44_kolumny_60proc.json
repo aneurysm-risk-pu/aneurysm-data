@@ -1,0 +1,70 @@
+{
+ "prog_proc": 60.0,
+ "braki_proc": {
+  "ALT": {
+   "kor": 59.6,
+   "neuro": 61.2
+  },
+  "APTT": {
+   "kor": 51.4,
+   "neuro": 55.1
+  },
+  "AST": {
+   "kor": 67.3,
+   "neuro": 65.6
+  },
+  "BUN": {
+   "kor": 75.1,
+   "neuro": 53.8
+  },
+  "GLU": {
+   "kor": 49.9,
+   "neuro": 55.3
+  },
+  "INR": {
+   "kor": 49.0,
+   "neuro": 53.2
+  },
+  "P-LCR": {
+   "kor": 3.8,
+   "neuro": 62.7
+  },
+  "PT": {
+   "kor": 48.1,
+   "neuro": 53.2
+  },
+  "WAPTT": {
+   "kor": 51.3,
+   "neuro": 55.1
+  },
+  "WPT": {
+   "kor": 48.1,
+   "neuro": 53.0
+  }
+ },
+ "regula_osobno_usuwa": {
+  "kor": [
+   "AST",
+   "BUN"
+  ],
+  "neuro": [
+   "ALT",
+   "AST",
+   "P-LCR"
+  ]
+ },
+ "regula_w_ktorejkolwiek_grupie_usuwa": [
+  "ALT",
+  "AST",
+  "BUN",
+  "P-LCR"
+ ],
+ "faktycznie_usuniete": [
+  "ALT",
+  "AST",
+  "BUN",
+  "P-LCR"
+ ],
+ "zgodna_regula": "w którejkolwiek grupie",
+ "liczba_cech": 38
+}

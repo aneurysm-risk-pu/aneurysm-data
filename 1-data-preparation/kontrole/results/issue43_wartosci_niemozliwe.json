@@ -1,0 +1,82 @@
+{
+ "kor | dane surowe": {
+  "wartości ujemne": 0,
+  "wiek > 120": 108,
+  "KREA > 50 mg/dl": 209,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
+  "K > 15 mmol/l": 37,
+  "Na < 80 mmol/l": 1
+ },
+ "kor | po kroku 1 (*_cleaning)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 108,
+  "KREA > 50 mg/dl": 209,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
+  "K > 15 mmol/l": 37,
+  "Na < 80 mmol/l": 1
+ },
+ "kor | po kroku 2 (*_shortend)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 195,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 478,
+  "K > 15 mmol/l": 25,
+  "Na < 80 mmol/l": 0
+ },
+ "kor | po kroku 3 (concatted)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 195,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 478,
+  "K > 15 mmol/l": 25,
+  "Na < 80 mmol/l": 0
+ },
+ "kor | po kroku 4 (wejście SGKF)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 0,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 0,
+  "K > 15 mmol/l": 0,
+  "Na < 80 mmol/l": 0
+ },
+ "neuro | dane surowe": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 18,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
+  "K > 15 mmol/l": 6,
+  "Na < 80 mmol/l": 5
+ },
+ "neuro | po kroku 1 (*_cleaning)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 18,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
+  "K > 15 mmol/l": 6,
+  "Na < 80 mmol/l": 5
+ },
+ "neuro | po kroku 2 (*_shortend)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 15,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
+  "K > 15 mmol/l": 0,
+  "Na < 80 mmol/l": 1
+ },
+ "neuro | po kroku 3 (concatted)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 15,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
+  "K > 15 mmol/l": 0,
+  "Na < 80 mmol/l": 1
+ },
+ "neuro | po kroku 4 (wejście SGKF)": {
+  "wartości ujemne": 0,
+  "wiek > 120": 0,
+  "KREA > 50 mg/dl": 0,
+  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 0,
+  "K > 15 mmol/l": 0,
+  "Na < 80 mmol/l": 0
+ }
+}
