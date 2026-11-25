@@ -17,7 +17,7 @@ os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 DATASETS = {
     "NEURO": {
-        "input":  "data/interim/cleaned/neuro_cleaning.csv",
+        "input":  "data/raw/neuro_merged_aggregated_1W_mean.csv",
         "output": "data/interim/cleaned/neuro_cleaning.csv",
     },
     "KOR": {
