@@ -6,7 +6,7 @@ na samych plikach (notebooka kroku 2 nie da się uruchomić od nowa: Colab, ręc
   krok 1  dane surowe -> *_cleaning.csv   powtórzony custom_id, komórki '<x' zamienione na brak
   krok 2  *_cleaning.csv -> *_shortend.csv, w kolejności notebooka:
           a) wiek poza 18–100 lub brak płci                      (liczone)
-          b) tygodnie obecne w obu plikach (ten sam custom_id)   (liczone)
+          b) tygodnie obecne w obu plikach (ten sam custom_id)   (liczone; notebook, komórki 5–6)
           c) wartości odstające, kwantyle liczone osobno w grupach (liczba z wydruku notebooka,
              3-sgkf-split/przygotowanie/results/analiza_decyzji.json, sekcja F)
           d) limit historii 11 KOR / 38 NEURO                    (reszta: wydruk notebooka po c minus *_shortend.csv)
