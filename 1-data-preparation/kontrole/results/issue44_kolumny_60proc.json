@@ -1,48 +1,57 @@
 {
+ "skrypt_sprawdzany": "1-data-preparation/scripts-lf/final_preprocessing.py (kroki 9–10)",
  "prog_proc": 60.0,
- "braki_proc": {
+ "braki_proc_na_wejsciu_kroku_9": {
+  "%NRBC": {
+   "kor": 2.6,
+   "neuro": 50.7
+  },
   "ALT": {
    "kor": 59.6,
-   "neuro": 61.2
+   "neuro": 61.5
   },
   "APTT": {
-   "kor": 51.4,
-   "neuro": 55.1
+   "kor": 51.5,
+   "neuro": 55.6
   },
   "AST": {
    "kor": 67.3,
-   "neuro": 65.6
+   "neuro": 65.4
   },
   "BUN": {
-   "kor": 75.1,
-   "neuro": 53.8
+   "kor": 75.3,
+   "neuro": 51.9
   },
   "GLU": {
    "kor": 49.9,
-   "neuro": 55.3
+   "neuro": 55.9
   },
   "INR": {
-   "kor": 49.0,
-   "neuro": 53.2
+   "kor": 49.1,
+   "neuro": 53.9
+  },
+  "NRBC": {
+   "kor": 2.5,
+   "neuro": 50.7
   },
   "P-LCR": {
    "kor": 3.8,
-   "neuro": 62.7
+   "neuro": 69.0
   },
   "PT": {
-   "kor": 48.1,
-   "neuro": 53.2
+   "kor": 48.2,
+   "neuro": 54.1
   },
   "WAPTT": {
-   "kor": 51.3,
-   "neuro": 55.1
+   "kor": 51.5,
+   "neuro": 55.5
   },
   "WPT": {
-   "kor": 48.1,
-   "neuro": 53.0
+   "kor": 48.3,
+   "neuro": 53.9
   }
  },
- "regula_osobno_usuwa": {
+ "krok9_osobno_usuwa": {
   "kor": [
    "AST",
    "BUN"
@@ -53,18 +62,28 @@
    "P-LCR"
   ]
  },
- "regula_w_ktorejkolwiek_grupie_usuwa": [
+ "ponad_60_w_ktorejkolwiek_grupie": [
   "ALT",
   "AST",
   "BUN",
   "P-LCR"
  ],
- "faktycznie_usuniete": [
+ "brak_w_plikach_koncowych": [
   "ALT",
   "AST",
   "BUN",
   "P-LCR"
  ],
- "zgodna_regula": "w którejkolwiek grupie",
- "liczba_cech": 38
+ "zgodne": true,
+ "liczba_cech": 38,
+ "usuniete_rekordy_ponad_60proc": {
+  "kor": {
+   "rekordy": 1858,
+   "udzial": 0.0256
+  },
+  "neuro": {
+   "rekordy": 691,
+   "udzial": 0.1165
+  }
+ }
 }

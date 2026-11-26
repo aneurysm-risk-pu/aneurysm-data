@@ -1,82 +1,85 @@
 {
- "kor | dane surowe": {
-  "wartości ujemne": 0,
-  "wiek > 120": 108,
-  "KREA > 50 mg/dl": 209,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
-  "K > 15 mmol/l": 37,
-  "Na < 80 mmol/l": 1
- },
- "kor | po kroku 1 (*_cleaning)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 108,
-  "KREA > 50 mg/dl": 209,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
-  "K > 15 mmol/l": 37,
-  "Na < 80 mmol/l": 1
- },
- "kor | po kroku 2 (*_shortend)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 195,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 478,
-  "K > 15 mmol/l": 25,
-  "Na < 80 mmol/l": 0
- },
- "kor | po kroku 3 (concatted)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 195,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 478,
-  "K > 15 mmol/l": 25,
-  "Na < 80 mmol/l": 0
- },
- "kor | po kroku 4 (wejście SGKF)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 0,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 0,
-  "K > 15 mmol/l": 0,
-  "Na < 80 mmol/l": 0
- },
- "neuro | dane surowe": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 18,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
-  "K > 15 mmol/l": 6,
-  "Na < 80 mmol/l": 5
- },
- "neuro | po kroku 1 (*_cleaning)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 18,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
-  "K > 15 mmol/l": 6,
-  "Na < 80 mmol/l": 5
- },
- "neuro | po kroku 2 (*_shortend)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 15,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
-  "K > 15 mmol/l": 0,
-  "Na < 80 mmol/l": 1
- },
- "neuro | po kroku 3 (concatted)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 15,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
-  "K > 15 mmol/l": 0,
-  "Na < 80 mmol/l": 1
- },
- "neuro | po kroku 4 (wejście SGKF)": {
-  "wartości ujemne": 0,
-  "wiek > 120": 0,
-  "KREA > 50 mg/dl": 0,
-  "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 0,
-  "K > 15 mmol/l": 0,
-  "Na < 80 mmol/l": 0
+ "skrypt_sprawdzany": "1-data-preparation/scripts-lf/final_preprocessing.py",
+ "liczby": {
+  "kor | 4 liczby": {
+   "ujemne": 0,
+   "zera niedozwolone": 25,
+   "odsetki > 100%": 5,
+   "wiek > 120": 108,
+   "KREA > 50 mg/dl": 209,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
+   "K > 15 mmol/l": 37,
+   "Na < 80 mmol/l": 1
+  },
+  "kor | 7 wiek 18–100 i płeć": {
+   "ujemne": 0,
+   "zera niedozwolone": 23,
+   "odsetki > 100%": 5,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 209,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
+   "K > 15 mmol/l": 37,
+   "Na < 80 mmol/l": 1
+  },
+  "kor | 8 walidacja wartości": {
+   "ujemne": 0,
+   "zera niedozwolone": 0,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 209,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 485,
+   "K > 15 mmol/l": 37,
+   "Na < 80 mmol/l": 1
+  },
+  "kor | 10 tylko kolumny wspólne": {
+   "ujemne": 0,
+   "zera niedozwolone": 0,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 191,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 480,
+   "K > 15 mmol/l": 37,
+   "Na < 80 mmol/l": 1
+  },
+  "neuro | 4 liczby": {
+   "ujemne": 0,
+   "zera niedozwolone": 1,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 18,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 38,
+   "K > 15 mmol/l": 6,
+   "Na < 80 mmol/l": 5
+  },
+  "neuro | 7 wiek 18–100 i płeć": {
+   "ujemne": 0,
+   "zera niedozwolone": 1,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 15,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 34,
+   "K > 15 mmol/l": 5,
+   "Na < 80 mmol/l": 4
+  },
+  "neuro | 8 walidacja wartości": {
+   "ujemne": 0,
+   "zera niedozwolone": 0,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 15,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 34,
+   "K > 15 mmol/l": 5,
+   "Na < 80 mmol/l": 4
+  },
+  "neuro | 10 tylko kolumny wspólne": {
+   "ujemne": 0,
+   "zera niedozwolone": 0,
+   "odsetki > 100%": 0,
+   "wiek > 120": 0,
+   "KREA > 50 mg/dl": 11,
+   "KREA > 10 mg/dl przy eGFR-MDRD >= 30": 26,
+   "K > 15 mmol/l": 3,
+   "Na < 80 mmol/l": 2
+  }
  }
 }

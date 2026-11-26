@@ -1,150 +1,104 @@
 {
- "tabela": [
+ "skrypt_sprawdzany": "1-data-preparation/scripts-lf/final_preprocessing.py",
+ "ubytek_krok_po_kroku": [
   {
+   "krok": "1 duplikaty custom_id",
    "grupa": "KOR",
-   "krok": "krok 1: powtórzony custom_id",
    "rekordy": 0,
-   "% rekordów surowych": 0.0
+   "% rekordów surowych": 0.0,
+   "pacjenci": 0
   },
   {
-   "grupa": "KOR",
-   "krok": "krok 2a: wiek poza 18–100 / brak płci",
-   "rekordy": 403,
-   "% rekordów surowych": 0.55
-  },
-  {
-   "grupa": "KOR",
-   "krok": "krok 2b: tydzień obecny w obu plikach",
-   "rekordy": 558,
-   "% rekordów surowych": 0.76
-  },
-  {
-   "grupa": "KOR",
-   "krok": "krok 2c: wartości odstające",
-   "rekordy": 585,
-   "% rekordów surowych": 0.79
-  },
-  {
-   "grupa": "KOR",
-   "krok": "krok 2d: limit historii (11 KOR / 38 NEURO)",
-   "rekordy": 587,
-   "% rekordów surowych": 0.8
-  },
-  {
-   "grupa": "KOR",
-   "krok": "RAZEM kroki 1–2",
-   "rekordy": 2133,
-   "% rekordów surowych": 2.89
-  },
-  {
+   "krok": "1 duplikaty custom_id",
    "grupa": "NEURO",
-   "krok": "krok 1: powtórzony custom_id",
    "rekordy": 1,
-   "% rekordów surowych": 0.01
+   "% rekordów surowych": 0.01,
+   "pacjenci": 0
   },
   {
-   "grupa": "NEURO",
-   "krok": "krok 2a: wiek poza 18–100 / brak płci",
-   "rekordy": 43,
-   "% rekordów surowych": 0.56
+   "krok": "6 bez pacjentów obecnych w obu grupach",
+   "grupa": "KOR",
+   "rekordy": 778,
+   "% rekordów surowych": 1.06,
+   "pacjenci": 358
   },
   {
+   "krok": "6 bez pacjentów obecnych w obu grupach",
    "grupa": "NEURO",
-   "krok": "krok 2b: tydzień obecny w obu plikach",
-   "rekordy": 558,
-   "% rekordów surowych": 7.29
+   "rekordy": 1683,
+   "% rekordów surowych": 21.99,
+   "pacjenci": 358
   },
   {
-   "grupa": "NEURO",
-   "krok": "krok 2c: wartości odstające",
-   "rekordy": 228,
-   "% rekordów surowych": 2.98
+   "krok": "7 wiek 18–100 i płeć",
+   "grupa": "KOR",
+   "rekordy": 402,
+   "% rekordów surowych": 0.55,
+   "pacjenci": 333
   },
   {
+   "krok": "7 wiek 18–100 i płeć",
    "grupa": "NEURO",
-   "krok": "krok 2d: limit historii (11 KOR / 38 NEURO)",
-   "rekordy": 174,
-   "% rekordów surowych": 2.27
+   "rekordy": 41,
+   "% rekordów surowych": 0.54,
+   "pacjenci": 19
   },
   {
+   "krok": "9 ponad 60% braków (kolumny, potem rekordy)",
+   "grupa": "KOR",
+   "rekordy": 1858,
+   "% rekordów surowych": 2.52,
+   "pacjenci": 223
+  },
+  {
+   "krok": "9 ponad 60% braków (kolumny, potem rekordy)",
    "grupa": "NEURO",
-   "krok": "RAZEM kroki 1–2",
-   "rekordy": 1004,
-   "% rekordów surowych": 13.12
+   "rekordy": 691,
+   "% rekordów surowych": 9.03,
+   "pacjenci": 7
+  },
+  {
+   "krok": "RAZEM",
+   "grupa": "KOR",
+   "rekordy": 3038,
+   "% rekordów surowych": 4.12,
+   "pacjenci": 914
+  },
+  {
+   "krok": "RAZEM",
+   "grupa": "NEURO",
+   "rekordy": 2416,
+   "% rekordów surowych": 31.56,
+   "pacjenci": 384
   }
  ],
- "szczegoly": {
+ "krok6_te_same_osoby": {
+  "pacjenci_w_obu_grupach": 358,
+  "zgodna_plec_i_rok_urodzenia": 358,
+  "udzial_pacjentow_neuro": 0.1776
+ },
+ "krok9_neuro_odsetek_usunietych_wg_okresu": {
+  "od 2016": 0.099,
+  "przed 2016": 0.141
+ },
+ "porownanie_z_poprzednim_plikiem": {
   "kor": {
-   "rekordy": {
-    "surowe": 73679,
-    "po_kroku_1": 73679,
-    "po_kroku_2": 71546
-   },
-   "pacjenci": {
-    "surowe": 39893,
-    "po_kroku_2": 39164
-   },
-   "kroki": {
-    "krok 1: powtórzony custom_id": 0,
-    "krok 2a: wiek poza 18–100 / brak płci": 403,
-    "krok 2b: tydzień obecny w obu plikach": 558,
-    "krok 2c: wartości odstające": 585,
-    "krok 2d: limit historii (11 KOR / 38 NEURO)": 587
-   },
-   "krok1_komorki_zamienione_na_brak": {
-    "razem": 1130,
-    "najwiecej": {
-     "INR": 634,
-     "APTT": 186,
-     "ALT": 140,
-     "PT": 52
-    }
-   },
-   "rekordy_ponad_60proc_brakow": {
-    "po_kroku_1": 1899,
-    "po_kroku_2": 1839
-   },
-   "pacjenci_ponizej_40proc_zmierzonych_cech": {
-    "po_kroku_1": 230,
-    "z_nich_po_kroku_2": 224
-   },
-   "wejscie_sgkf_odsetek_pacjentow_ponizej_40proc": 0.0058
+   "rekordy_nowe": 70641,
+   "rekordy_poprzednie": 71546,
+   "pacjenci_nowe": 38979,
+   "pacjenci_poprzednie": 39164,
+   "maks_rekordow_na_pacjenta_nowe": 33,
+   "maks_rekordow_na_pacjenta_poprzednie": 11,
+   "odsetek_pacjentow_ponizej_40proc_zmierzonych_cech": 0.0
   },
   "neuro": {
-   "rekordy": {
-    "surowe": 7655,
-    "po_kroku_1": 7654,
-    "po_kroku_2": 6651
-   },
-   "pacjenci": {
-    "surowe": 2016,
-    "po_kroku_2": 1823
-   },
-   "kroki": {
-    "krok 1: powtórzony custom_id": 1,
-    "krok 2a: wiek poza 18–100 / brak płci": 43,
-    "krok 2b: tydzień obecny w obu plikach": 558,
-    "krok 2c: wartości odstające": 228,
-    "krok 2d: limit historii (11 KOR / 38 NEURO)": 174
-   },
-   "krok1_komorki_zamienione_na_brak": {
-    "razem": 208,
-    "najwiecej": {
-     "CRP": 148,
-     "PLT": 27,
-     "INR": 17,
-     "ALT": 11
-    }
-   },
-   "rekordy_ponad_60proc_brakow": {
-    "po_kroku_1": 883,
-    "po_kroku_2": 818
-   },
-   "pacjenci_ponizej_40proc_zmierzonych_cech": {
-    "po_kroku_1": 7,
-    "z_nich_po_kroku_2": 7
-   },
-   "wejscie_sgkf_odsetek_pacjentow_ponizej_40proc": 0.0077
+   "rekordy_nowe": 5239,
+   "rekordy_poprzednie": 6651,
+   "pacjenci_nowe": 1632,
+   "pacjenci_poprzednie": 1823,
+   "maks_rekordow_na_pacjenta_nowe": 106,
+   "maks_rekordow_na_pacjenta_poprzednie": 38,
+   "odsetek_pacjentow_ponizej_40proc_zmierzonych_cech": 0.0
   }
  }
 }
