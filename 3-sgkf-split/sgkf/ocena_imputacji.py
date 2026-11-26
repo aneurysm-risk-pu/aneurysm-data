@@ -178,7 +178,7 @@ def main() -> None:
 
     foldy = []
     for fold, tr, te in indeksy_foldow(df, przydzial):
-        print(f"  Fold {fold + 1}/{przydzial.nunique()} — dopasowanie i ocena ...", flush=True)
+        print(f"  Fold {fold} — dopasowanie i ocena ...", flush=True)
         w = ocen_fold(df, feat, tr, te, fold)
         foldy.append(w)
         for maska in ("etap2", "wzorce"):
@@ -198,7 +198,7 @@ def main() -> None:
     (WYNIKI / "ocena_imputacji.json").write_text(json.dumps(wynik, indent=2, ensure_ascii=False) + "\n",
                                                  encoding="utf-8")
 
-    print("\n=== Średnio po 5 foldach (RMSE, skala [0,1])")
+    print(f"\n=== Średnio po {len(foldy)} foldach roboczych (RMSE, skala [0,1])")
     for maska in ("etap2", "wzorce"):
         for k in ("kor", "neuro"):
             r = pods[maska][k]["rmse"]

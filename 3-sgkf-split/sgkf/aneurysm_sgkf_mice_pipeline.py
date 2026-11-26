@@ -5,7 +5,8 @@ aneurysm_sgkf_mice_pipeline.py
 CZĘŚĆ B etapu 3 — imputacja MICE wewnątrz foldów zamrożonego podziału.
 
 Metodologia (zapobieganie data leakage):
-  1. Foldy z zamrożonego przydziału `results/pacjent_fold.csv` (podzial.py)
+  1. Walidacja domyślnie używa foldów 0–3; fold 4 pozostaje odłożony
+     (tryb końcowego testu wymaga jawnego --test-koncowy)
   2. MinMaxScaler fitowany TYLKO na wierszach train bez braków (complete cases)
   3. IterativeImputer (MICE) fitowany TYLKO na X_train po skalowaniu
   4. X_test transformowany imputer.transform() — nigdy fit_transform()
@@ -23,16 +24,16 @@ Zmiany w wersji 2 (04.10.2026), uzasadnienie w RAPORT_SGKF_MICE.md:
     od zapisu podziału przerywa przebieg (odcisk w results/podzial_meta.json)
   - zestaw cech: 38 (jeden wariant projektu, decyzja z 04.10.2026);
     --cechy 35 tylko na potrzeby jednorazowej analizy porównawczej (porownanie_cech.py)
-  - dodatkowe kontrole: każdy pacjent dokładnie raz w części testowej,
+  - dodatkowe kontrole: każdy pacjent roboczy dokładnie raz w walidacji,
     brak wartości ujemnych, udział imputowanych komórek per kohorta
-  - --zapisz: zaimputowane foldy do results/foldy_imputowane_<cechy>/ (parquet,
+  - --zapisz: zaimputowane foldy do results/foldy_imputowane_<cechy>_robocze/ (parquet,
     poza gitem) + podsumowanie results/przebieg_imputacji_<cechy>.json z odciskiem
     wyników każdego foldu (porównanie między komputerami i wersjami sklearn)
   - --podprobka / --szybkie-mice do szybkiego sprawdzenia całej ścieżki
 
 Uruchomienie (całość etapu jednym poleceniem: python 3-sgkf-split/uruchom_sgkf.py):
     python 3-sgkf-split/sgkf/podzial.py                                   # raz: zbuduj i zapisz foldy
-    python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py               # pełny przebieg (~5 x 3 min na M-series)
+    python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py               # foldy robocze 0–3
     python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --zapisz      # + zapis foldów (38 cech)
     python 3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py --podprobka 3000 --szybkie-mice
 """
@@ -58,7 +59,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 sys.path.insert(0, str(Path(__file__).parent))
 from podzial import (KOL_ETYKIETA, KOL_PACJENT, META_KOLUMNY,  # noqa: E402
-                     WYNIKI, KonfiguracjaPodzialu, indeksy_foldow, kolumny_cech,
+                     WYNIKI, KonfiguracjaPodzialu, foldy_do_oceny, indeksy_foldow, kolumny_cech,
                      wczytaj_podzial, wczytaj_rekordy)
 
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
@@ -196,13 +197,17 @@ def main(argv=None):
                     help="lekkie parametry MICE — tylko do testu, nie do wyników")
     ap.add_argument("--zapisz", action="store_true",
                     help="zapisz zaimputowane foldy (parquet) i podsumowanie przebiegu")
+    ap.add_argument("--test-koncowy", action="store_true",
+                    help="jawnie uruchom koncowy test: trening na foldach 0–3, test na foldzie 4")
     ap.add_argument("--cechy", choices=["38", "35"], default="38",
                     help="38 = zestaw projektu; 35 (bez CRP, MONO, %%MONO) tylko do analizy porównawczej")
     args = ap.parse_args(argv)
+    if args.test_koncowy and (args.podprobka or args.szybkie_mice):
+        ap.error("--test-koncowy nie moze byc laczony z --podprobka ani --szybkie-mice")
     params = MICE_PARAMS_SZYBKIE if args.szybkie_mice else MICE_PARAMS
     pelny = not (args.podprobka or args.szybkie_mice)
-    # Przebieg testowy nigdy nie nadpisuje wyników pełnego przebiegu
-    katalog_zapisu = WYNIKI / (f"foldy_imputowane_{args.cechy}" if pelny else "foldy_imputowane_test")
+    katalog_zapisu = (WYNIKI / "foldy_imputowane_final_test" if args.test_koncowy else
+                      WYNIKI / (f"foldy_imputowane_{args.cechy}_robocze" if pelny else "foldy_imputowane_test"))
 
     przydzial, meta = wczytaj_podzial()
     cfg_podzialu = KonfiguracjaPodzialu(**{**meta["konfiguracja"],
@@ -232,17 +237,21 @@ def main(argv=None):
     missing_pct = X.isna().sum().sum() / X.size * 100
     print(f"    Braki w cechach: {X.isna().sum().sum():,} ({missing_pct:.1f}%)\n")
 
-    n_folds = przydzial.nunique()
+    foldy_robocze = foldy_do_oceny(przydzial)
+    foldy_biezace = foldy_do_oceny(przydzial, test_koncowy=args.test_koncowy)
+    n_folds = len(foldy_biezace)
     splits = []   # lista słowników — gotowe do przekazania do modelu
     widziani_w_tescie = []
     przebieg = []
     if args.zapisz:
         katalog_zapisu.mkdir(parents=True, exist_ok=True)
 
-    print(f"[2] Foldy po pacjentach (n={n_folds}) + MICE ...\n")
+    print(f"[2] Foldy po pacjentach {foldy_biezace} + MICE ...\n")
 
-    for fold, train_idx, test_idx in indeksy_foldow(df, przydzial):
-        print(f"  Fold {fold + 1}/{n_folds} — imputacja MICE ...")
+    for nr, (fold, train_idx, test_idx) in enumerate(
+        indeksy_foldow(df, przydzial, test_koncowy=args.test_koncowy), start=1
+    ):
+        print(f"  Fold {fold} ({nr}/{n_folds}) — imputacja MICE ...")
 
         X_train_raw = X.iloc[train_idx].reset_index(drop=True)
         X_test_raw  = X.iloc[test_idx].reset_index(drop=True)
@@ -253,7 +262,7 @@ def main(argv=None):
 
         # Weryfikacja: brak wspólnych pacjentów
         overlap = set(g_train).intersection(set(g_test))
-        assert len(overlap) == 0, f"Fold {fold+1}: pacjenci w obu zbiorach! {overlap}"
+        assert len(overlap) == 0, f"Fold {fold}: pacjenci w obu zbiorach! {overlap}"
         widziani_w_tescie.extend(g_test.unique())
 
         # Imputacja
@@ -263,10 +272,10 @@ def main(argv=None):
         czas = time.time() - t0
 
         # Weryfikacja: brak NaN i wartości ujemnych po imputacji
-        assert not np.isnan(X_train_imp).any(), f"Fold {fold+1}: NaN w X_train po imputacji!"
-        assert not np.isnan(X_test_imp).any(),  f"Fold {fold+1}: NaN w X_test po imputacji!"
+        assert not np.isnan(X_train_imp).any(), f"Fold {fold}: NaN w X_train po imputacji!"
+        assert not np.isnan(X_test_imp).any(),  f"Fold {fold}: NaN w X_test po imputacji!"
         assert (X_train_imp >= 0).all() and (X_test_imp >= 0).all(), \
-            f"Fold {fold+1}: wartości ujemne po imputacji!"
+            f"Fold {fold}: wartości ujemne po imputacji!"
 
         imp_test = udzial_imputowanych(X_test_raw, y_test)
 
@@ -304,9 +313,14 @@ def main(argv=None):
             "groups_test":  g_test,
         })
 
-    # Każdy pacjent dokładnie raz w części testowej — warunek predykcji out-of-fold
-    assert len(widziani_w_tescie) == len(set(widziani_w_tescie)) == len(przydzial), \
-        "pacjent pominięty albo powtórzony w częściach testowych"
+    # W trybie roboczym fold 4 pozostaje całkowicie poza preprocessingiem i walidacją.
+    if args.test_koncowy:
+        oczekiwani = set(przydzial.index[przydzial == 4])
+    else:
+        oczekiwani = set(przydzial.index[przydzial.isin(foldy_robocze)])
+    assert len(widziani_w_tescie) == len(set(widziani_w_tescie)) == len(oczekiwani), \
+        "pacjent pominięty albo powtórzony w częściach oceny"
+    assert set(widziani_w_tescie) == oczekiwani, "części oceny nie odpowiadają aktywnym foldom"
 
     if args.zapisz:
         podsumowanie = {
@@ -317,6 +331,8 @@ def main(argv=None):
             "przygotowanie_danych": meta.get("przygotowanie_danych", {}),
             "odcisk_danych_sha256": meta["odcisk_danych_sha256"],
             "podzial": {k: meta["konfiguracja"][k] for k in ("seed", "n_splits", "warstwy")},
+            "tryb_oceny": "test_koncowy" if args.test_koncowy else "walidacja_foldy_0_3",
+            "foldy_oceny": foldy_biezace,
             "mice": {**params, "random_state": RANDOM_STATE},
             "cechy": feat_cols,
             "foldy": przebieg,
@@ -325,8 +341,12 @@ def main(argv=None):
                        "pandas": pd.__version__, "numpy": np.__version__},
             "utworzono": datetime.now().isoformat(timespec="seconds"),
         }
-        plik = (WYNIKI / f"przebieg_imputacji_{args.cechy}.json") if pelny \
-            else (katalog_zapisu / "przebieg_imputacji.json")
+        if args.test_koncowy:
+            plik = WYNIKI / "przebieg_imputacji_final_test.json"
+        elif pelny:
+            plik = WYNIKI / f"przebieg_imputacji_{args.cechy}.json"
+        else:
+            plik = katalog_zapisu / "przebieg_imputacji.json"
         plik.write_text(json.dumps(podsumowanie, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"[zapis] foldy -> {katalog_zapisu.relative_to(WYNIKI.parent.parent)}, podsumowanie -> {plik.name}\n")
 

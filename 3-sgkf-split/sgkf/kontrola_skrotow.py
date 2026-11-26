@@ -4,7 +4,7 @@ kontrola_skrotow.py
 
 Kontrola z 17.10.2026: ile „odzyskiwania ukrytych pozytywnych” dają same skróty.
 
-Ukrywamy losowo wybranych chorych z NEURO, więc ukryci zachowują wszystkie
+Ukrywamy stałe, zapisane listy chorych z NEURO, więc ukryci zachowują wszystkie
 cechy kohorty NEURO: okres badań, wzorzec braków, ślad imputacji. Model, który
 nauczył się tylko tych cech, też wypchnie ich na górę rankingu. Wysoki
 RecallHidden@q nie jest więc sam w sobie dowodem wykrywania choroby; potrzebny
@@ -16,7 +16,7 @@ samych maskach i zamrożonych foldach:
   wiek i płeć
   sam wzorzec braków (0/1)             tylko to, które badania zlecono
   38 cech, braki jako NaN              bez imputacji
-  38 cech po imputacji MICE            zapisane foldy (foldy_imputowane_38/)
+  38 cech po imputacji MICE            zapisane foldy robocze (foldy_imputowane_38_robocze/)
 
 oraz te same skróty w wariancie z profilem pacjenta (mediana cech, udział
 braków), bo jednostka treningu nie jest jeszcze ustalona.
@@ -25,8 +25,9 @@ Dodatkowo B3 z analiza_wynikow.py BEZ imputacji: NEURO vs KOR tylko na rekordach
 ze wspólnego okna dat, braki jako NaN. W B3 okno wybierano po imputacji
 dopasowanej także na innych okresach; ta wersja sprawdza, czy wynik od tego zależał.
 
-Protokół jest ORIENTACYJNY (do zamrożenia w pakiecie 1, 4-pu-setup/PLAN_MODELOWANIA.md):
-  ukrywani całi pacjenci NEURO, 40%, ziarna 0–4;
+Zamrożony protokół:
+  ukrywani całi pacjenci NEURO, 40% osobno w każdym foldzie, ziarna 0–4;
+  lista zamrożona w results/ukryci_pacjenci.csv;
   trening na treningu foldu z etykietą widzianą przez model (ukryci = 0);
   pula oceny: pacjenci KOR i ukryci NEURO z części testowej foldu;
   top-q: ceil(q · |pula|), remisy rozstrzygane po patient_id;
@@ -54,11 +55,12 @@ from sklearn.metrics import roc_auc_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from podzial import (BASE_DIR, KOL_DATA, KOL_ETYKIETA, KOL_PACJENT, WYNIKI,  # noqa: E402
-                     kolumny_cech, wczytaj_podzial, wczytaj_rekordy, wspolne_okno_dat)
+                     foldy_do_oceny, kolumny_cech, wczytaj_podzial, wczytaj_rekordy,
+                     wspolne_okno_dat)
+from ukrywanie import (UDZIAL_UKRYTYCH, ZIARNA,  # noqa: E402
+                       wczytaj_maski)
 
-FOLDY_IMP = WYNIKI / "foldy_imputowane_38"
-UDZIAL_UKRYTYCH = 0.40
-ZIARNA = range(5)
+FOLDY_IMP = WYNIKI / "foldy_imputowane_38_robocze"
 Q = (0.01, 0.05, 0.10)
 
 
@@ -78,8 +80,10 @@ def _podsumuj(v: list) -> dict:
     return {"srednia": round(float(np.mean(v)), 3), "min_max": [round(float(min(v)), 3), round(float(max(v)), 3)]}
 
 
-def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) -> tuple[dict, dict]:
-    n_fold = przydzial.nunique()
+def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series,
+                          maski: pd.DataFrame) -> tuple[dict, dict]:
+    foldy_robocze = foldy_do_oceny(przydzial)
+    df = df[df[KOL_PACJENT].map(przydzial).isin(foldy_robocze)].reset_index(drop=True)
     fold_rek = df[KOL_PACJENT].map(przydzial).to_numpy()
     etyk_pac = df.groupby(KOL_PACJENT)[KOL_ETYKIETA].max()
     neuro = np.sort(etyk_pac.index[etyk_pac == 1].to_numpy())
@@ -88,7 +92,7 @@ def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) ->
                  "sam wzorzec braków (0/1)": df[feat].isna().astype(int),
                  "38 cech, braki jako NaN (bez imputacji)": df[feat]}
     imputowane = [(pd.read_parquet(FOLDY_IMP / f"fold{f}_train.parquet"),
-                   pd.read_parquet(FOLDY_IMP / f"fold{f}_test.parquet")) for f in range(n_fold)]
+                   pd.read_parquet(FOLDY_IMP / f"fold{f}_test.parquet")) for f in foldy_robocze]
     profile = {"profil pacjenta: udział braków każdej cechy": df[feat].isna().groupby(df[KOL_PACJENT]).mean(),
                "profil pacjenta: mediana 38 cech (NaN)": df.groupby(KOL_PACJENT)[feat].median()}
     fold_pac = przydzial.loc[next(iter(profile.values())).index].to_numpy()
@@ -99,8 +103,7 @@ def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) ->
     ukrytych_na_fold = []
 
     for z in ZIARNA:
-        rng = np.random.default_rng(z)
-        ukryci = set(rng.choice(neuro, size=int(round(UDZIAL_UKRYTYCH * len(neuro))), replace=False))
+        ukryci = set(maski.loc[maski["seed"] == z, KOL_PACJENT])
         widoczni = set(neuro) - ukryci
         widziana_rek = (df[KOL_ETYKIETA].eq(1) & ~df[KOL_PACJENT].isin(ukryci)).astype(int).to_numpy()
 
@@ -108,7 +111,7 @@ def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) ->
             w = pd.Series(s).groupby(pacjenci).median()
             return w[~w.index.isin(widoczni)]
 
-        for f in range(n_fold):
+        for f in foldy_robocze:
             tr, te = fold_rek != f, fold_rek == f
             p_te = df.loc[te, KOL_PACJENT].to_numpy()
             pula = np.unique(p_te[~np.isin(p_te, list(widoczni))])
@@ -139,7 +142,10 @@ def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) ->
 
     tabela = {k: {f"q_{int(round(q * 100))}%": _podsumuj(v[q]) for q in Q} for k, v in wyn.items()}
     protokol = {"udzial_ukrytych": UDZIAL_UKRYTYCH, "ziarna": list(ZIARNA), "q": list(Q),
-                "przebiegi_na_model": len(ZIARNA) * n_fold,
+                "lista_ukrytych": "ukryci_pacjenci.csv",
+                "dobor_w_foldzie": "round(40% liczby chorych), losowanie osobne seed-fold",
+                "foldy_oceny": foldy_robocze,
+                "przebiegi_na_model": len(ZIARNA) * len(foldy_robocze),
                 "ukrytych_na_fold_srednio": round(float(np.mean(ukrytych_na_fold)), 1),
                 "pula": "pacjenci KOR i ukryci NEURO z części testowej foldu",
                 "agregacja_rekordow": "mediana wyników rekordów pacjenta"}
@@ -147,11 +153,14 @@ def odzyskiwanie_ukrytych(df: pd.DataFrame, feat: list, przydzial: pd.Series) ->
 
 
 def b3_bez_imputacji(df: pd.DataFrame, feat: list, przydzial: pd.Series) -> dict:
+    foldy_robocze = foldy_do_oceny(przydzial)
+    df = df[df[KOL_PACJENT].map(przydzial).isin(foldy_robocze)].reset_index(drop=True)
     od, do = wspolne_okno_dat(df)
     fold_rek = df[KOL_PACJENT].map(przydzial).to_numpy()
     w = df[KOL_DATA].between(od, do).to_numpy()
+    w &= np.isin(fold_rek, foldy_robocze)
     rek, pac = [], []
-    for f in sorted(przydzial.unique()):
+    for f in foldy_robocze:
         tr, te = w & (fold_rek != f), w & (fold_rek == f)
         y_te = df.loc[te, KOL_ETYKIETA]
         s = _model().fit(df.loc[tr, feat], df.loc[tr, KOL_ETYKIETA]).predict_proba(df.loc[te, feat])[:, 1]
@@ -170,14 +179,15 @@ def main() -> None:
     przydzial, meta = wczytaj_podzial()
     df = wczytaj_rekordy()
     feat = kolumny_cech(df, "38")
+    maski = wczytaj_maski(df, przydzial, meta)
 
     print("Odzyskiwanie ukrytych pozytywnych przez modele kontrolne ...", flush=True)
-    tabela, protokol = odzyskiwanie_ukrytych(df, feat, przydzial)
+    tabela, protokol = odzyskiwanie_ukrytych(df, feat, przydzial, maski)
     print("B3 bez imputacji ...", flush=True)
     b3 = b3_bez_imputacji(df, feat, przydzial)
 
     wynik = {"opis": "Kontrola: RecallHidden@q modeli kontrolnych (skróty) i B3 bez imputacji",
-             "protokol_orientacyjny": protokol, "recall_hidden": tabela, "B3_bez_imputacji": b3,
+             "protokol": protokol, "recall_hidden": tabela, "B3_bez_imputacji": b3,
              "odcisk_danych": meta["odcisk_danych_sha256"],
              "wersje": {"sklearn": sklearn.__version__, "pandas": pd.__version__}}
     (WYNIKI / "kontrola_skrotow.json").write_text(json.dumps(wynik, indent=2, ensure_ascii=False) + "\n",

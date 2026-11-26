@@ -61,11 +61,12 @@ Cały protokół podporządkowany jest pytaniu: *czy wynik mówi coś o tętniak
 | Element | Gdzie | Stan |
 |---|---|---|
 | dane po decyzjach z 04.10.2026 (38 cech, przed imputacją) | `data/processed/aneurysm_sgkf_input.csv` (część A etapu 3) | **gotowe** |
-| przydział pacjent → fold (`StratifiedGroupKFold`, 5 foldów, stratyfikacja etykieta × okno × liczba rekordów) | `3-sgkf-split/sgkf/results/pacjent_fold.csv` | **zamrożone** |
+| przydział pacjent → fold (`StratifiedGroupKFold`, 5 foldów, stratyfikacja etykieta × okno × liczba rekordów) | `3-sgkf-split/sgkf/results/pacjent_fold.csv` | **zamrożone**; foldy 0–3 do pracy, fold 4 odłożony |
+| układy oceny | `podzial.indeksy_foldow()` | domyślnie walidacja na foldach 0–3; fold 4 tylko po jawnym `test_koncowy=True` |
 | MICE wewnątrz foldu (ExtraTrees 7/78/10) | `3-sgkf-split/sgkf/aneurysm_sgkf_mice_pipeline.py` | gotowe |
-| zaimputowane foldy zewnętrzne (38 cech) | `3-sgkf-split/sgkf/results/foldy_imputowane_38/` (lokalnie, poza gitem) | **policzone**, odtwarzalne jednym poleceniem |
+| zaimputowane foldy walidacyjne (38 cech) | `3-sgkf-split/sgkf/results/foldy_imputowane_38_robocze/` (lokalnie, poza gitem) | do wygenerowania nowym, bezpiecznym przebiegiem |
 
-**Zasada nadrzędna:** foldy zewnętrzne wyłącznie z `podzial.wczytaj_podzial()`, nigdy liczone od nowa w etapie 4 dla tej samej wersji danych. Każde dopasowanie (scaler, imputer, selekcja cech, model, próg uczony na etykietach) odbywa się tylko na części treningowej. Wybór top-q z rankingu testowego realizuje ustalony wcześniej limit miejsc, bez dobierania q na podstawie etykiet testowych (sekcja 13).
+**Zasada nadrzędna:** foldy wyłącznie z `podzial.wczytaj_podzial()`, nigdy liczone od nowa dla tej samej wersji danych. Całe strojenie i analizy robimy na foldach 0–3. Fold 4 pozostaje nietknięty do końcowej oceny; nie wolno go używać w preprocessingu, walidacji, selekcji cech ani do podejmowania decyzji. Układ końcowy (trening 0–3, test 4) wymaga jawnego `test_koncowy=True`. Każde dopasowanie odbywa się tylko na części treningowej. Q jest ustalone przed uruchomieniem końcowego testu.
 
 ---
 
@@ -209,13 +210,7 @@ Tabela foldów, parametry masek, predykcje OOF każdego modelu, wyniki per ziarn
 
 ## 5. Co jest osiągalne przy obecnych liczbach
 
-Scenariusz: 5 foldów, 40% ukrywania, `q = 5%`. Na fold testowy przypada:
-
-| pacjentów | pozytywnych | ukrytych | pula U | skierowanych przy `q = 5%` |
-|---:|---:|---:|---:|---:|
-| 8 185 | ~365 | **~146** | ~7 966 | ~399 |
-
-Rozdzielczość `RecallHidden@q` wynosi 1/146 ≈ 0,7 pp. Gdyby ograniczyć dane do wspólnego okna dat, zostałoby ~22 ukrytych na fold i rozdzielczość spadłaby do 4,5 pp. Dlatego wspólne okno nadaje się na analizę wrażliwości (czy wnioski są zgodne co do kierunku), a nie na scenariusz główny.
+Scenariusz roboczy: walidacja na foldach 0–3, 40% ukrywania, `q = 5%`. Liczebności i rozdzielczość metryki raportujemy wyłącznie dla tych foldów. Nie publikujemy ani nie sprawdzamy liczebności foldu 4 przed końcową oceną. Wspólne okno dat pozostaje analizą wrażliwości.
 
 ---
 
@@ -311,7 +306,7 @@ Poniższa tabela daje zespołowi konkretny punkt wyjścia. **Nie oznacza akcepta
 | Główne q | 5%; 1% i 10% jako dodatkowe punkty krzywej | Nawiązuje do istniejącej diagnostyki i ograniczonej liczby miejsc w rankingu | Brak potwierdzonej przepustowości klinicznej; 5% jest propozycją badawczą |
 | Ziarna maskowania | 0, 1, 2, 3, 4 | Zgodność z kontrolą z 17.10 i sprawdzenie zależności od losowania | Czy zwiększamy liczbę powtórzeń po ocenie kosztu obliczeń |
 | Funkcja celu | `RecallHidden@q`, czyli α = 1 | Jedno kryterium jest łatwiejsze do wyjaśnienia; nie wymaga arbitralnego łączenia dwóch miar | `RecallKnown` na start pomocniczo; inne α tylko z ustalonym uzasadnieniem |
-| Podział | Obecne 5 foldów zewnętrznych; 3 wewnętrzne przy strojeniu | Powtarzalna ocena tych samych pacjentów i rozdzielenie wyboru ustawień od oceny | Postępowanie przy małych podzbiorach analiz wrażliwości |
+| Podział | 4 foldy robocze do walidacji; fold 4 wyłącznie do końcowego testu; 3 wewnętrzne przy strojeniu | Powtarzalna ocena na foldach 0–3 bez użycia testu | Postępowanie przy małych podzbiorach analiz wrażliwości |
 
 **Dlaczego nie dobierać tych wartości po zobaczeniu wyniku?** Zmiana q z 5% na 10% zwiększa liczbę dostępnych miejsc, a więc także szansę odzyskania ukrytych. Lepszy procent nie musi wówczas wynikać z lepszego modelu. Podobnie zmiana udziału ukrywania zmienia zadanie treningowe. Porównujemy modele przy jednakowych warunkach, a osobno pokazujemy wpływ zmiany warunków.
 
@@ -333,7 +328,7 @@ Poniższa tabela daje zespołowi konkretny punkt wyjścia. **Nie oznacza akcepta
 
 Punktem wyjścia jest `data/processed/aneurysm_sgkf_input.csv`, czyli 78 052 rekordy, 40 924 pacjentów i 38 cech w obecnej wersji. Zewnętrzny przydział odczytujemy przez `podzial.wczytaj_podzial()`. Nie używamy globalnie zaimputowanych plików z etapu 2 ani przypadkowej kopii `*_shortend.csv`.
 
-Przed obliczeniami sprawdzamy nie tylko odcisk wejścia, ale również sam przydział: jeden wpis na pacjenta, pełne pokrycie danych, numery foldów 0–4, zgodność etykiet i rozłączność train/test. Obecne dane są poprawne; dodanie tej kontroli ma zapobiec użyciu niespójnej przyszłej wersji.
+Przed obliczeniami sprawdzamy odciski wejścia i pliku przydziału, jeden wpis na pacjenta, pełne pokrycie danych, numery foldów 0–4, zgodność etykiet i rozłączność train/test. Domyślne układy obejmują tylko foldy 0–3; fold 4 włącza się jawnie dopiero do końcowego testu.
 
 ### 11.2 Proponowana ścieżka pierwszego eksperymentu
 
@@ -360,7 +355,7 @@ Przykład: mediana cechy z wyników 10, 12 i 80 wynosi 12, a średnia 34. Median
 
 ### 11.3 Kiedy wolno wykorzystać już zapisane foldy
 
-W pierwszym eksperymencie bez strojenia można użyć `foldy_imputowane_38/`, jeśli dane, przydział, cechy i parametry odpowiadają manifestowi przebiegu. Następnie agregujemy cechy do pacjentów i trenujemy ustalony z góry model. Dla innego wejścia MICE, np. bez NRBC/%NRBC, potrzebne jest nowe dopasowanie.
+W walidacji roboczej używamy wyłącznie nowego `foldy_imputowane_38_robocze/`, wygenerowanego po odłożeniu foldu 4. Wcześniejsze `foldy_imputowane_38/` zawierają imputację dopasowaną z udziałem cech foldu 4 i nie nadają się do modelowania ani strojenia. Nowe przebiegi domyślnie nie imputują foldu 4. Dla innego wejścia MICE, np. bez NRBC/%NRBC, potrzebne jest nowe dopasowanie.
 
 Nie wolno użyć tych outer-parquet do strojenia przez ich późniejszy podział na inner-train i inner-validation. Imputer dopasowany do całego outer-train znałby już cechy pacjentów inner-validation. Poprawny przebieg strojenia opisuje sekcja 15.
 
@@ -388,19 +383,19 @@ Ukrywanie zmienia etykietę dostępną modelowi, a nie wyniki badań i nie miejs
 | Widoczny pacjent NEURO | 1 | 1 | false | Znany pozytywny widoczny w danym scenariuszu |
 | Ukryty pacjent NEURO | 1 | 0 | true | Dla modelu U; dla funkcji oceniającej znany cel odzyskania |
 
-**Proponowany sposób wykonania:**
+**Zamrożony sposób wykonania:**
 
-1. Dla ustalonej wersji danych i ziarna tworzymy wspólną listę pacjentów P. Sortujemy ją i losujemy bez zwracania `round(h × liczba P)` osób, gdzie h to udział ukrywania. Zapisujemy algorytm, regułę zaokrąglenia i wynik losowania.
-2. Ta sama lista obowiązuje wszystkie modele, foldy i podziały wewnętrzne. W konkretnym train/validation/test bierzemy przecięcie listy z pacjentami tej części. Faktyczny udział w pojedynczym foldzie może się lekko różnić od h; zapisujemy go.
-3. W treningu ukryci dostają `observed_label = 0`. Widoczni P dostają 1. Zmiana musi nastąpić przed trenowaniem klasyfikatora i przed tworzeniem podzbiorów PU Bagging.
-4. W validation/test cechy wszystkich pacjentów są przetwarzane bez dopasowywania na nich transformacji. Ocena rankingu obejmuje KOR oraz ukrytych NEURO. Widoczni NEURO są poza tą pulą i mogą służyć do pomocniczego `RecallKnown`.
+1. Dla każdego z ziaren 0–4 losujemy bez zwracania `round(0.40 × liczba chorych)` osobno w każdym foldzie. Losowanie jest deterministyczne dla pary `(seed, fold)` i sortuje identyfikatory przed losowaniem.
+2. Pełna lista jest zapisana w `3-sgkf-split/sgkf/results/ukryci_pacjenci.csv`, a jej manifest zawiera odciski danych, podziału i listy. Wspólny plik obowiązuje wszystkie modele; w danym train/validation/test wykorzystuje się przecięcie listy z pacjentami tej części.
+3. W treningu ukryci dostają `observed_label = 0`. Widoczni P dostają 1. Zmiana musi nastąpić przed trenowaniem klasyfikatora i przed tworzeniem podzbiorów PU Bagging. Maski foldu 4 pozostają niewykorzystane aż do końcowej oceny.
+4. W validation/test cechy wszystkich pacjentów są przetwarzane bez dopasowywania na nich transformacji. Ocena rankingu obejmuje KOR oraz ukrytych NEURO. Widoczni NEURO są poza tą pulą i mogą służyć do pomocniczego `RecallKnown`. Fold 4 jest używany dopiero po zamrożeniu modelu i decyzji.
 5. `original_label` i `is_hidden` są dostępne funkcji oceniającej, ale nie modelowi. Prawdziwe oznaczenia wolno wykorzystać do technicznej konstrukcji benchmarku i stratyfikacji; trzeba jawnie odnotować ten dostęp.
 
 **Dlaczego ukrywamy także w treningu?** Gdyby ukrywać wyłącznie w teście, model uczyłby się innego zadania: wszystkich znanych P przeciw KOR. Chcemy sprawdzić sytuację, w której w treningowej puli U również znajdują się celowo ukryci znani chorzy.
 
 MICE nie wykorzystuje tych etykiet, więc może korzystać z cech wszystkich pacjentów treningowych, także ukrytych. Nie wolno natomiast dopasowywać go do cech pacjentów testowych pod pretekstem, że są nieoznaczeni. Wybrany protokół ocenia nowych pacjentów; nie jest eksperymentem uczącym się dodatkowo na testowej puli U.
 
-Zapis listy pacjentów jest niewielki i ułatwia kontrolę zgodności. Samo podanie „seed 42” nie wystarcza, jeśli inna kolejność pacjentów lub inna implementacja losowania zmieni wybór. Własnego `hash()` Pythona nie używamy jako trwałego identyfikatora maski.
+Zapis listy pacjentów jest niewielki i ułatwia kontrolę zgodności. Utworzenie i weryfikacja: `python 3-sgkf-split/sgkf/ukrywanie.py`. Samo podanie ziarna nie wystarcza, jeśli inna kolejność pacjentów lub inna implementacja losowania zmieni wybór. Własnego `hash()` Pythona nie używamy jako trwałego identyfikatora maski.
 
 **Gotowe, gdy:** każdy rekord pacjenta ma ten sam status, modele używają identycznej maski, a przy ustalonej masce i podziale zmiana etykiet przekazanych do funkcji oceniającej test nie wpływa na wytrenowany model.
 
@@ -418,7 +413,7 @@ To trzy różne mianowniki. Nie należy zamieniać czułości na ukrytych z udzi
 
 ### 13.2 Reguły wspólne dla wszystkich modeli
 
-W każdym testowym foldzie osobno:
+W każdym walidacyjnym foldzie roboczym osobno (a fold 4 dopiero w końcowym teście):
 
 1. tworzymy pulę U: KOR i ukryci NEURO z tego foldu;
 2. wyliczamy liczbę miejsc `k = ceil(q × liczba pacjentów w puli)`;
@@ -428,13 +423,13 @@ W każdym testowym foldzie osobno:
 
 Losowy ranking nadaje jedną losową liczbę każdemu pacjentowi. Jego dokładna wartość oczekiwana to `k / wielkość puli`, bliska q; pojedyncze losowanie nie musi trafić dokładnie w q. Losowanie liczb dla rekordów i późniejsza mediana nie daje równomiernego losowego rankingu pacjentów — potwierdza to kontrola z 17.10.
 
-**Dlaczego osobno w każdym foldzie?** Pięć modeli zewnętrznych może nadawać wynikom różne skale. Nie łączymy ich surowych score w jeden ranking top-q. W obrębie foldu można zapisać percentyl, czyli pozycję względem innych osób w tej puli. Oznacza on względne miejsce, nie prawdopodobieństwo choroby.
+**Dlaczego osobno w każdym foldzie?** Cztery modele walidacyjne mogą nadawać wynikom różne skale. Nie łączymy ich surowych score w jeden ranking top-q. W obrębie foldu można zapisać percentyl, czyli pozycję względem innych osób w tej puli. Oznacza on względne miejsce, nie prawdopodobieństwo choroby.
 
 Wybór top-q na podstawie testowych wyników jest realizacją z góry ustalonego limitu miejsc, bez oglądania etykiet. Nie jest strojeniem progu na testowych rozpoznaniach. Inny, stały próg klasyfikacji lub kalibrację można dobierać tylko na treningu/walidacji.
 
 ### 13.3 Łączenie foldów, ziarna i dodatkowe metryki
 
-Dla każdego ziarna główny wynik łączny to **suma odnalezionych ukrytych ze wszystkich foldów podzielona przez sumę ukrytych w tych foldach**. Dzięki temu każdy ukryty pacjent ma jeden głos. Obok pokazujemy wartości per fold, żeby widzieć niestabilność. Następnie zestawiamy wyniki ziaren; nie traktujemy powtarzających się pacjentów jako nowych niezależnych osób.
+Dla każdego ziarna główny wynik walidacyjny to **suma odnalezionych ukrytych z foldów 0–3 podzielona przez sumę ukrytych w tych foldach**. Fold 4 nie uczestniczy w tej agregacji i jego metryka jest liczona dopiero w końcowej ocenie. Obok pokazujemy wartości per fold, żeby widzieć niestabilność. Następnie zestawiamy wyniki ziaren; nie traktujemy powtarzających się pacjentów jako nowych niezależnych osób.
 
 `RecallKnown` proponujemy raportować pomocniczo: odsetek widocznych P z testu, które osiągają regułę odcięcia wyznaczoną przez top-q puli U danego foldu. Obsługa remisów musi odpowiadać regule rankingu. Ta miara nie zwiększa liczby miejsc w głównej puli i nie jest czułością dla wszystkich chorych populacji.
 
@@ -458,7 +453,7 @@ W wariancie pacjentowym kontrola braków powinna również uczyć się na jednym
 
 **Jaki algorytm dla kontroli?** Proponujemy kontrolę demografii i braków tą samą rodziną modelu, którą porównujemy na pełnych cechach: np. regresja na brakach obok regresji pełnej, a las na brakach obok lasu pełnego. W pierwszym przebiegu mają z góry ustalone ustawienia; w porównaniu strojonym otrzymują ten sam budżet i wewnętrzne podziały. Dodatkowo zachowujemy HistGradientBoosting z parametrami dotychczasowej diagnostyki jako stały punkt odniesienia dla braków. Porównanie różnych rodzin jest informacyjne, ale nie izoluje samego wkładu wartości badań.
 
-Kontrola orientacyjna z 17.10, przeliczona 31.10 na podziale SGKF, przy 40% ukrywania, pięciu ziarnach i pięciu foldach, dała `RecallHidden@5%`: 4,2% dla losowego rankingu pacjentów, 51,7% dla rekordowego modelu na brakach i 56,1% dla pacjentowego profilu braków. Model pacjentowy na medianach 38 cech z NaN osiągnął 68,5%. Źródło: `3-sgkf-split/sgkf/results/kontrola_skrotow.json`. To wcześniejsza diagnostyka, **nie wynik docelowego protokołu** ani poziom, który przyszły model musi przekroczyć o ustaloną liczbę punktów.
+Kontrola orientacyjna z 17.10, przeliczona 31.10 na pięciu foldach, dała `RecallHidden@5%`: 4,2% dla losowego rankingu pacjentów, 51,7% dla rekordowego modelu na brakach i 56,1% dla pacjentowego profilu braków. Model pacjentowy na medianach 38 cech z NaN osiągnął 68,5%. Źródło: `3-sgkf-split/sgkf/results/kontrola_skrotow.json`. To historyczna diagnostyka sprzed odłożenia foldu 4, obejmująca ten fold; **nie wolno używać jej do strojenia ani jako wyniku końcowego**.
 
 Przewaga nad kontrolą braków sugeruje dodatkową użyteczność cech w tym benchmarku. Nie mierzy „czystego sygnału choroby” — pełny model nadal może korzystać z innych różnic między kohortami.
 
@@ -489,16 +484,16 @@ Nie testujemy od razu dziesiątek kombinacji modeli, imputacji, q i cech. Najpie
 
 ## 15. Strojenie: jak poprawiać ustawienia bez uczenia się testu
 
-### 15.1 Po co drugi poziom podziału
+### 15.1 Walidacja robocza i końcowy test
 
-Model może wyglądać dobrze również dlatego, że przetestowaliśmy wiele ustawień i wybraliśmy szczęśliwy wynik. Dlatego część treningu służy do wyboru ustawień, a odłożony outer-test dopiero do ich oceny. Jest to cel zagnieżdżonej walidacji opisany w [przykładzie scikit-learn 1.6](https://scikit-learn.org/1.6/auto_examples/model_selection/plot_nested_cross_validation_iris.html).
+Model może wyglądać dobrze również dlatego, że przetestowaliśmy wiele ustawień i wybraliśmy szczęśliwy wynik. Strojenie i wybór modelu odbywają się wyłącznie w obrębie foldów 0–3; fold 4 jest końcowym testem, nie kolejnym outer-foldem walidacyjnym.
 
-W naszym projekcie dla testowanego foldu nr 0 pozostałe foldy 1–4 tworzą outer-train. Tylko wewnątrz tej grupy powstają trzy nowe podziały pacjentów. Imputer w pierwszym inner-train nie może oglądać pacjentów z jego inner-validation ani z foldu nr 0. Dotyczy to również scalera, wyboru cech i ewentualnego progu uczonego na etykietach.
+W walidacji roboczej jeden z foldów 0–3 jest validation, a pozostałe trzy są train. Jeśli parametry są strojone, podział wewnętrzny powstaje wyłącznie w tych trzech foldach train. Fold 4 nie należy do żadnej części tego procesu.
 
 ```text
-dla każdego z 5 zapisanych foldów zewnętrznych:
-    odłóż outer-test
-    w outer-train utwórz 3 inner foldy pacjentów
+dla każdego foldu walidacyjnego 0–3:
+    pozostałe trzy foldy 0–3 tworzą train
+    opcjonalnie: w train utwórz inner foldy pacjentów do strojenia
     dla każdego inner foldu:
         dopasuj preprocessing wyłącznie na inner-train
         przygotuj inner-validation bez ponownego fit
@@ -506,8 +501,12 @@ dla każdego z 5 zapisanych foldów zewnętrznych:
             trenuj na observed_label inner-train
             oceń odzyskiwanie ukrytych w inner-validation
     wybierz ustawienia według ustalonej metryki inner
-    dopasuj preprocessing i model na całym outer-train
-    oblicz i zapisz wynik outer-test
+    dopasuj preprocessing i model na train
+    oblicz i zapisz wynik validation
+
+po zamrożeniu modelu i wszystkich decyzji:
+    dopasuj preprocessing i model na foldach 0–3
+    jednokrotnie oceń na foldzie 4
 ```
 
 Agregacja medianą wewnątrz jednego pacjenta nie uczy parametrów wspólnych dla populacji. Można ją wykonać oddzielnie po obu stronach podziału. Nie usprawiedliwia to jednak MICE dopasowanego wcześniej do wszystkich pacjentów outer-train.
@@ -518,7 +517,7 @@ Przed startem zapisujemy zakres parametrów każdego modelu, liczbę prób Optun
 
 Każde ustawienie oceniamy na tych samych wewnętrznych pacjentach i maskach. Losowanie nowej maski dla każdej próby utrudniałoby rozróżnienie poprawy modelu od łatwiejszego losowania chorych. Te same osoby między ziarnami nie tworzą niezależnych prób.
 
-Proponowana funkcja celu jednej Optuny działa następująco: dla każdego z ziaren 0–4 łączymy liczniki i mianowniki z trzech inner-validation, otrzymując jeden `RecallHidden@q` dla tego ziarna, a następnie uśredniamy pięć wyników. Wybrane parametry są wspólne dla tych masek w danym outer-foldzie. Potem dla każdego ziarna osobno trenujemy model na całym outer-train z odpowiadającym mu `observed_label` i oceniamy outer-test. Nie uruchamiamy pięciu niezależnych poszukiwań tylko po to, aby każda maska dostała inne najlepsze ustawienia.
+Proponowana funkcja celu jednej Optuny działa następująco: dla każdego z ziaren 0–4 łączymy liczniki i mianowniki z inner-validation, otrzymując jeden `RecallHidden@q` dla tego ziarna, a następnie uśredniamy pięć wyników. Wybrane parametry są wspólne dla tych masek. Porównanie i wybór finalnych ustawień kończą się przed otwarciem foldu 4. Dopiero wtedy model dopasowuje się na foldach 0–3 i ocenia jednokrotnie na foldzie 4.
 
 Lista rodzin modeli także jest elementem protokołu. Jeśli chcemy ocenić automatyczny wybór „logistyczna czy las”, wybór rodziny powinien odbywać się w pętli wewnętrznej. Gdy jedynie pokazujemy kilka uprzednio zaplanowanych porównań OOF, raportujemy wszystkie; najwyższy z nich nie staje się przez to niezależnie potwierdzonym wynikiem zwycięzcy.
 
@@ -530,7 +529,7 @@ Preprocessing można policzyć raz dla danego podziału, a potem używać przy w
 
 Klucz cache obejmuje odciski danych i przydziału, dokładną listę train/validation/test, listę i kolejność cech, zakres dat, kolejność agregacji i imputacji, parametry, losowość oraz wersje bibliotek. To chroni przed użyciem gotowego wyniku dla innego eksperymentu. Katalog zapisujemy jako ukończony dopiero po zapisaniu wszystkich plików i manifestu; odczyt sprawdza ich zgodność.
 
-Przy schemacie 5 × 3 potrzebujemy 15 dopasowań preprocessingu do podziałów wewnętrznych i 5 do pełnego outer-train na jeden wariant. Wcześniejsze około 3 minut MICE na fold daje orientację kosztu, nie gwarancję czasu. Nowy zestaw cech, inna kolejność agregacji lub okno dat wymagają własnego cache. Nie mnożymy natomiast dopasowań MICE przez wszystkie próby Optuny ani przez maski, jeśli preprocessing pozostaje od nich niezależny.
+Przy czterech foldach roboczych liczba dopasowań preprocessingu zależy od wybranej walidacji wewnętrznej. Zbiór testowy nie jest częścią cache walidacyjnego. Nowy zestaw cech, inna kolejność agregacji lub okno dat wymagają własnego cache. Nie mnożymy dopasowań MICE przez wszystkie próby Optuny ani przez maski, jeśli preprocessing pozostaje od nich niezależny.
 
 **Gotowe, gdy:** outer-test nie uczestniczy w wyborze ustawień, a test techniczny potwierdza, że zmiana jego cech nie zmienia dopasowania na treningu.
 
@@ -585,7 +584,7 @@ Planowane kolumny tabeli OOF: identyfikator eksperymentu i scenariusza, model, z
 
 ### 17.2 Niepewność i uczciwe porównanie
 
-Przy pięciu foldach i pięciu maskach mamy 25 wartości, ale te same osoby wracają między maskami, a treningi zachodzą na siebie. Nie traktujemy tego jako 25 niezależnych prób. Minimum raportowania to wynik łączny dla każdego ziarna, wyniki foldów, liczebności i rozrzut. Zakres minimum–maksimum nie jest przedziałem ufności.
+Przy czterech foldach roboczych i pięciu maskach mamy 20 wartości, ale te same osoby wracają między maskami, a treningi zachodzą na siebie. Nie traktujemy tego jako 20 niezależnych prób. Minimum raportowania to wynik łączny dla każdego ziarna, wyniki foldów, liczebności i rozrzut. Zakres minimum–maksimum nie jest przedziałem ufności. Wynik foldu 4 nie należy do tej tabeli walidacyjnej.
 
 Jeśli liczymy bootstrap, losujemy pacjentów z zastępowaniem i przenosimy razem ich wyniki ze wszystkich modeli i masek. W każdym powtórzeniu odtwarzamy pule i top-q według tej samej reguły. Porównanie jest sparowane: model A i B mają tych samych wylosowanych pacjentów. Nie losujemy pojedynczych tygodni ani każdego wystąpienia pacjenta między ziarnami osobno. Przedział z gotowych OOF opisuje niepewność oceny warunkową dla tych wytrenowanych modeli; nie zawiera całej niepewności ich ponownego trenowania i historycznego doboru danych.
 

@@ -47,10 +47,11 @@ from sklearn.metrics import roc_auc_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from podzial import (BASE_DIR, KOL_DATA, KOL_ETYKIETA, KOL_PACJENT, WYNIKI,  # noqa: E402
-                     kolumny_cech, wczytaj_podzial, wczytaj_rekordy, wspolne_okno_dat)
+                     foldy_do_oceny, kolumny_cech, wczytaj_podzial, wczytaj_rekordy,
+                     wspolne_okno_dat)
 
 warnings.filterwarnings("ignore")
-FOLDY = WYNIKI / "foldy_imputowane_38"
+FOLDY = WYNIKI / "foldy_imputowane_38_robocze"
 
 # Orientacyjne górne / dolne granice zakresów referencyjnych dla dorosłych
 # (wartości typowe dla laboratoriów; służą tylko do opisu profilu kohort).
@@ -68,9 +69,9 @@ def _r(x, n=4):
     return None if x is None or (isinstance(x, float) and np.isnan(x)) else round(float(x), n)
 
 
-def wczytaj_foldy(n: int) -> list:
+def wczytaj_foldy(foldy: list[int]) -> list:
     return [(pd.read_parquet(FOLDY / f"fold{f}_train.parquet"), pd.read_parquet(FOLDY / f"fold{f}_test.parquet"))
-            for f in range(n)]
+            for f in foldy]
 
 
 # ---------------------------------------------------------------------------
@@ -250,15 +251,19 @@ def e_slad_nrbc(foldy: list, test_wszystkie: pd.DataFrame, braki: pd.DataFrame) 
 def main() -> None:
     przydzial, meta = wczytaj_podzial()
     df = wczytaj_rekordy()
+    fold_ids = foldy_do_oceny(przydzial)
+    df = df[df[KOL_PACJENT].map(przydzial).isin(fold_ids)].reset_index(drop=True)
     feat = kolumny_cech(df, "38")
     braki = df.set_index("custom_id")[feat].isna()
-    foldy = wczytaj_foldy(przydzial.nunique())
+    foldy = wczytaj_foldy(fold_ids)
     test_wszystkie = pd.concat([te for _, te in foldy], ignore_index=True)
-    assert test_wszystkie["custom_id"].is_unique and len(test_wszystkie) == len(df), "części testowe nie pokrywają danych"
+    expected = df[df[KOL_PACJENT].map(przydzial).isin(fold_ids)]
+    assert test_wszystkie["custom_id"].is_unique and len(test_wszystkie) == len(expected), \
+        "części testowe nie pokrywają foldów roboczych"
 
     print("[A] Imputacja per kohorta ...")
     a = a_imputacja(test_wszystkie, braki, feat)
-    print("[B] Diagnostyka skrótów (5 foldów) ...")
+    print(f"[B] Diagnostyka skrótów (foldy robocze {fold_ids}) ...")
     b = b_skroty(foldy, braki, feat, wspolne_okno_dat(df))
     print("[C] Profil kohort względem zakresów referencyjnych ...")
     c = c_profil(df)
@@ -268,7 +273,8 @@ def main() -> None:
     print("[E] Ślad imputacji NRBC ...")
     e = e_slad_nrbc(foldy, test_wszystkie, braki)
 
-    wynik = {"A_imputacja_per_kohorta": a, "B_diagnostyka_skrotow": b, "C_profil_kohort": c,
+    wynik = {"foldy_oceny": fold_ids,
+             "A_imputacja_per_kohorta": a, "B_diagnostyka_skrotow": b, "C_profil_kohort": c,
              "D_zgodnosc_miedzy_foldami": d, "E_slad_imputacji_nrbc": e, "odcisk_danych": meta["odcisk_danych_sha256"]}
     (WYNIKI / "analiza_wynikow.json").write_text(json.dumps(wynik, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 

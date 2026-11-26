@@ -82,6 +82,7 @@ KOL_PACJENT = "patient_id"
 KOL_ETYKIETA = "label"
 KOL_DATA = "examination_date"
 META_KOLUMNY = ["patient_id", "custom_id", "examination_date", "label"]
+FOLD_TESTOWY = 4
 
 # Granice klas liczby rekordow: 1 | 2 | 3-4 | 5+
 GRANICE_N_REK = [0, 1, 2, 4, np.inf]
@@ -239,17 +240,36 @@ def sprawdz_podzial(pac: pd.DataFrame, przydzial: pd.Series, n_splits: int) -> N
     assert len(poz) == n_splits and (poz > 0).all(), "fold bez pozytywnych pacjentow"
 
 
-def indeksy_foldow(df: pd.DataFrame, przydzial: pd.Series
-                   ) -> Iterator[tuple[int, np.ndarray, np.ndarray]]:
-    """Przeklada przydzial pacjentow na pozycje rekordow: (fold, train_idx, test_idx).
+def foldy_do_oceny(przydzial: pd.Series, test_koncowy: bool = False) -> list[int]:
+    """Domyslnie zwraca foldy robocze 0–3; fold 4 tylko w trybie koncowego testu."""
+    foldy = sorted(int(f) for f in przydzial.dropna().unique())
+    if test_koncowy:
+        if FOLD_TESTOWY not in foldy:
+            raise ValueError(f"brak zarezerwowanego foldu testowego {FOLD_TESTOWY}")
+        return [FOLD_TESTOWY]
+    robocze = [f for f in foldy if f != FOLD_TESTOWY]
+    if not robocze:
+        raise ValueError("brak foldow roboczych 0–3")
+    return robocze
 
-    Rekordy pacjentow spoza przydzialu (np. przy podprobce) nie trafiaja
-    ani do treningu, ani do testu.
+
+def indeksy_foldow(df: pd.DataFrame, przydzial: pd.Series,
+                   test_koncowy: bool = False
+                   ) -> Iterator[tuple[int, np.ndarray, np.ndarray]]:
+    """Pozycje rekordow: walidacja na foldach 0–3 albo koncowy test na foldzie 4.
+
+    Pacjenci spoza aktywnego układu, w tym fold 4 w trybie roboczym, nie trafiają
+    do treningu ani walidacji.
     """
     fold_rek = df[KOL_PACJENT].map(przydzial)
-    for f in sorted(przydzial.unique()):
+    foldy_oceny = foldy_do_oceny(przydzial, test_koncowy=test_koncowy)
+    if test_koncowy:
+        foldy_train = [int(f) for f in przydzial.dropna().unique() if int(f) != FOLD_TESTOWY]
+    else:
+        foldy_train = foldy_oceny
+    for f in foldy_oceny:
         test = np.flatnonzero(fold_rek.eq(f).to_numpy())
-        train = np.flatnonzero((fold_rek.notna() & fold_rek.ne(f)).to_numpy())
+        train = np.flatnonzero(fold_rek.isin([g for g in foldy_train if g != f]).to_numpy())
         yield int(f), train, test
 
 
@@ -257,14 +277,26 @@ def indeksy_foldow(df: pd.DataFrame, przydzial: pd.Series
 # Diagnostyka
 # ---------------------------------------------------------------------------
 
-def diagnostyka(df: pd.DataFrame, pac: pd.DataFrame, przydzial: pd.Series) -> pd.DataFrame:
-    """Statystyki foldow: to, co musi byc wyrownane, zeby fold byl porownywalny."""
+def diagnostyka(df: pd.DataFrame, pac: pd.DataFrame, przydzial: pd.Series,
+                 include_test_fold: bool = False) -> pd.DataFrame:
+    """Statystyki foldow roboczych; fold 4 wymaga jawnego wlaczenia."""
     p = pac.set_index(KOL_PACJENT).join(przydzial)
     rek_fold = df[KOL_PACJENT].map(przydzial)
+    foldy = sorted(int(f) for f in przydzial.unique())
+    if not include_test_fold:
+        foldy = [f for f in foldy if f != FOLD_TESTOWY]
+    dane_foldow = df[rek_fold.isin(foldy)]
     wiersze = []
-    for f, s in p.groupby("fold"):
+    od, do = wspolne_okno_dat(dane_foldow)
+    for f in foldy:
+        s = p[p["fold"] == f]
         poz = s[s["label"] == 1]
-        rek = df[rek_fold.eq(f)]
+        rek = dane_foldow[rek_fold.loc[dane_foldow.index].eq(f)]
+        kor = s[s["label"] == 0]
+        neuro = s[s["label"] == 1]
+        rek_kor = rek[KOL_ETYKIETA] == 0
+        rek_neuro = rek[KOL_ETYKIETA] == 1
+        data_w_oknie = dane_foldow[KOL_DATA].between(od, do)
         wiersze.append({
             "fold": int(f),
             "pacjenci": len(s),
@@ -275,7 +307,12 @@ def diagnostyka(df: pd.DataFrame, pac: pd.DataFrame, przydzial: pd.Series) -> pd
             "poz_w_oknie": poz["w_oknie"].mean(),
             "poz_5plus_rek": poz["klasa_n_rek"].eq("5+").mean(),
             "poz_rok_mediana": poz["rok_mediana"].median(),
-            "u_1_rek": s.loc[s["label"] == 0, "klasa_n_rek"].eq("1").mean(),
+            "kor_1_rek": kor["klasa_n_rek"].eq("1").mean(),
+            "kor_5plus_rek": kor["klasa_n_rek"].eq("5+").mean(),
+            "neuro_1_rek": neuro["klasa_n_rek"].eq("1").mean(),
+            "neuro_5plus_rek": neuro["klasa_n_rek"].eq("5+").mean(),
+            "kor_rek_w_oknie": float(data_w_oknie[rek.index[rek_kor]].mean()) if rek_kor.any() else np.nan,
+            "neuro_rek_w_oknie": float(data_w_oknie[rek.index[rek_neuro]].mean()) if rek_neuro.any() else np.nan,
         })
     return pd.DataFrame(wiersze)
 
@@ -363,6 +400,7 @@ def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
         przydzial.reset_index(), on=KOL_PACJENT)
     tabela[[KOL_PACJENT, "fold", "label", "warstwa"]].to_csv(
         katalog / "pacjent_fold.csv", index=False)
+    hash_przydzialu = odcisk_pliku(katalog / "pacjent_fold.csv")
     diag.to_csv(katalog / "podzial_diagnostyka.csv", index=False)
 
     meta = {
@@ -371,6 +409,7 @@ def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
         "konfiguracja": {**asdict(cfg), "warstwy": list(cfg.warstwy)},
         "plik_danych": str(cfg.sciezka_danych.relative_to(BASE_DIR)).replace("\\", "/"),
         "odcisk_danych_sha256": odcisk_pliku(cfg.sciezka_danych),
+        "odcisk_przydzialu_sha256": hash_przydzialu,
         "przygotowanie_danych": (json.loads(PODSUMOWANIE_PRZYGOTOWANIA.read_text(encoding="utf-8"))
                                  if PODSUMOWANIE_PRZYGOTOWANIA.exists() else {}),
         "pacjenci": int(len(pac)),
@@ -387,8 +426,7 @@ def zapisz_podzial(pac: pd.DataFrame, przydzial: pd.Series, diag: pd.DataFrame,
 def wczytaj_podzial(katalog: Path = WYNIKI) -> tuple[pd.Series, dict]:
     """Zwraca (przydzial patient_id -> fold, metadane).
 
-    Odcisk pliku danych jest sprawdzany: jesli dane zmienily sie od zapisu
-    podzialu, przydzial przestaje byc wiarygodny i trzeba go zbudowac od nowa.
+    Weryfikuje dane zrodlowe, calosc i integralnosc zamrozonego pliku przydzialu.
     """
     meta = json.loads((katalog / "podzial_meta.json").read_text(encoding="utf-8"))
     sciezka = BASE_DIR / meta["plik_danych"]
@@ -397,7 +435,39 @@ def wczytaj_podzial(katalog: Path = WYNIKI) -> tuple[pd.Series, dict]:
         raise RuntimeError(f"{sciezka.name} zmienil sie od zapisu podzialu "
                            f"({meta['odcisk_danych_sha256']} -> {teraz}); "
                            "uruchom ponownie 3-sgkf-split/podzial.py")
-    t = pd.read_csv(katalog / "pacjent_fold.csv")
+    plik_przydzialu = katalog / "pacjent_fold.csv"
+    if "odcisk_przydzialu_sha256" not in meta:
+        raise RuntimeError("brak odcisku pliku przydzialu; uruchom ponownie 3-sgkf-split/sgkf/podzial.py")
+    hash_przydzialu = odcisk_pliku(plik_przydzialu)
+    if hash_przydzialu != meta["odcisk_przydzialu_sha256"]:
+        raise RuntimeError("pacjent_fold.csv zmienil sie od zamrozenia; sprawdz plik przed uzyciem")
+
+    t = pd.read_csv(plik_przydzialu)
+    wymagane = {KOL_PACJENT, "fold", "label", "warstwa"}
+    if not wymagane.issubset(t.columns):
+        raise RuntimeError(f"pacjent_fold.csv nie zawiera wymaganych kolumn: {sorted(wymagane - set(t.columns))}")
+    if t[KOL_PACJENT].isna().any() or t[KOL_PACJENT].duplicated().any():
+        raise RuntimeError("pacjent_fold.csv zawiera brakujace lub powtorzone patient_id")
+    if t["fold"].isna().any() or not np.equal(t["fold"], t["fold"].astype(int)).all():
+        raise RuntimeError("pacjent_fold.csv zawiera nieprawidlowy numer foldu")
+    t["fold"] = t["fold"].astype(int)
+    n_splits = int(meta["konfiguracja"]["n_splits"])
+    if not t["fold"].between(0, n_splits - 1).all():
+        raise RuntimeError("pacjent_fold.csv zawiera fold poza zakresem konfiguracji")
+    if set(t["fold"]) != set(range(n_splits)):
+        raise RuntimeError("pacjent_fold.csv nie zawiera wszystkich skonfigurowanych foldow")
+    if len(t) != int(meta["pacjenci"]):
+        raise RuntimeError(f"pacjent_fold.csv zawiera {len(t)} pacjentow, oczekiwano {meta['pacjenci']}")
+    dane_min = pd.read_csv(sciezka, usecols=[KOL_PACJENT, KOL_ETYKIETA])
+    pacjenci_danych = dane_min[KOL_PACJENT]
+    if pacjenci_danych.isna().any() or set(t[KOL_PACJENT]) != set(pacjenci_danych):
+        raise RuntimeError("pacjent_fold.csv nie pokrywa dokladnie pacjentow z danych wejsciowych")
+    if not t["label"].isin([0, 1]).all():
+        raise RuntimeError("pacjent_fold.csv zawiera nieprawidlowa etykiete")
+    etykiety = dane_min.groupby(KOL_PACJENT)[KOL_ETYKIETA].max().sort_index().astype(int)
+    zapisane_etykiety = t.set_index(KOL_PACJENT)["label"].sort_index().astype(int)
+    if not etykiety.equals(zapisane_etykiety):
+        raise RuntimeError("etykiety pacjentow w pacjent_fold.csv nie zgadzaja sie z danymi")
     return t.set_index(KOL_PACJENT)["fold"], meta
 
 

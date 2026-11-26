@@ -1,0 +1,15 @@
+{
+  "udzial_ukrytych": 0.4,
+  "ziarna": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "regula_zaokraglenia": "round(udzial * liczba chorych w foldzie)",
+  "losowanie": "numpy.default_rng(SeedSequence([seed, fold])), bez zwracania",
+  "odcisk_danych_sha256": "5b822c09ebc03011",
+  "odcisk_przydzialu_sha256": "2976f7b8a7b391ab",
+  "odcisk_listy_sha256": "1e9285106678e823"
+}

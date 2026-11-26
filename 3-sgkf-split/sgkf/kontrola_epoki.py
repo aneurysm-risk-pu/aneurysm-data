@@ -9,8 +9,8 @@ rekordów NEURO z innych lat z AUC 0,83. Test liczono na cechach PO imputacji,
 więc nie rozstrzyga, gdzie siedzi sygnał epoki: w samych wartościach
 laboratoryjnych czy w tym, które badania zlecano (wzorzec braków).
 
-Ten skrypt powtarza B4 na danych PRZED imputacją, na tych samych zamrożonych
-foldach (HistGradientBoosting, braki jako NaN):
+Ten skrypt powtarza B4 na danych PRZED imputacją, wyłącznie na foldach roboczych
+0–3 (HistGradientBoosting, braki jako NaN):
   1. wszystkie 38 cech, braki jako NaN,
   2. tylko wzorzec braków (0/1),
   3. wyłącznie wartości zmierzone: rekordy z kompletnym panelem, bez imputacji.
@@ -40,17 +40,18 @@ from sklearn.metrics import roc_auc_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from podzial import (KOL_DATA, KOL_ETYKIETA, KOL_PACJENT, WYNIKI,  # noqa: E402
-                     kolumny_cech, wczytaj_podzial, wczytaj_rekordy, wspolne_okno_dat)
+                     foldy_do_oceny, kolumny_cech, wczytaj_podzial, wczytaj_rekordy,
+                     wspolne_okno_dat)
 
 MORFOLOGIA = ["HGB", "RBC", "HCT", "MCV", "MCH", "MCHC", "RDW", "PLT", "WBC"]
 ROZMAZ = ["MPV", "LYMPH", "%LYMPH", "EO", "%EO", "BAZO", "%BAZO", "MONO", "%MONO"]
 ELEKTROLITY = ["Na", "K", "KREA"]
 
 
-def _auc_po_foldach(X: pd.DataFrame, y: pd.Series, fold: pd.Series) -> dict:
-    """Ten sam model co w analiza_wynikow.py; ocena na części testowej każdego foldu."""
+def _auc_po_foldach(X: pd.DataFrame, y: pd.Series, fold: pd.Series, foldy: list[int]) -> dict:
+    """Ten sam model co w analiza_wynikow.py; ocena tylko na foldach roboczych."""
     auc = []
-    for f in sorted(fold.unique()):
+    for f in foldy:
         tr, te = (fold != f).to_numpy(), (fold == f).to_numpy()
         m = HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05, random_state=0)
         auc.append(roc_auc_score(y[te], m.fit(X[tr], y[tr]).predict_proba(X[te])[:, 1]))
@@ -61,25 +62,29 @@ def _auc_po_foldach(X: pd.DataFrame, y: pd.Series, fold: pd.Series) -> dict:
 def main() -> None:
     przydzial, meta = wczytaj_podzial()
     df = wczytaj_rekordy()
+    foldy_robocze = foldy_do_oceny(przydzial)
+    df = df[df[KOL_PACJENT].map(przydzial).isin(foldy_robocze)].reset_index(drop=True)
     feat = kolumny_cech(df)
     od, do = wspolne_okno_dat(df)
 
     n = df[df[KOL_ETYKIETA] == 1].reset_index(drop=True)
     fold = n[KOL_PACJENT].map(przydzial)
     y = n[KOL_DATA].between(od, do).astype(int)
+    robocze = fold.isin(foldy_robocze)
+    n, fold, y = n[robocze].reset_index(drop=True), fold[robocze].reset_index(drop=True), y[robocze].reset_index(drop=True)
 
     wyniki = {}
 
     def licz(nazwa: str, X: pd.DataFrame, maska: pd.Series = None) -> None:
         m = pd.Series(True, index=n.index) if maska is None else maska
         r = _auc_po_foldach(X[m].reset_index(drop=True), y[m].reset_index(drop=True),
-                            fold[m].reset_index(drop=True))
+                            fold[m].reset_index(drop=True), foldy_robocze)
         r.update({"rekordy": int(m.sum()), "rekordy_w_oknie": int(y[m].sum())})
         wyniki[nazwa] = r
         print(f"  {nazwa:52s} AUC {r['auc_srednia']:.3f} {r['auc_min_max']}  "
               f"(rekordy {r['rekordy']:,}, w oknie {r['rekordy_w_oknie']:,})", flush=True)
 
-    print(f"NEURO: rekordy z okna {od.date()} – {do.date()} vs pozostałe, 5 zamrożonych foldów")
+    print(f"NEURO: rekordy z okna {od.date()} – {do.date()} vs pozostałe, foldy robocze {foldy_robocze}")
     licz("38 cech, braki jako NaN (bez imputacji)", n[feat])
     licz("tylko wzorzec braków (0/1)", n[feat].isna().astype(int))
     licz("tylko demografia (wiek, płeć)", n[["patient_age", "patient_sex"]])
@@ -92,7 +97,8 @@ def main() -> None:
         licz(f"{panel}: wzorzec braków pozostałych cech, te same rekordy", n[feat].isna().astype(int), komplet)
         licz(f"{panel}: 38 cech z NaN, te same rekordy", n[feat], komplet)
 
-    wynik = {"opis": "Kontrola testu B4: czy epokę w NEURO widać w wartościach, czy we wzorcu braków",
+    wynik = {"opis": "Kontrola walidacyjna foldów 0–3: czy epokę w NEURO widać w wartościach, czy we wzorcu braków",
+             "foldy_oceny": foldy_robocze,
              "okno": [str(od.date()), str(do.date())], "odcisk_danych": meta["odcisk_danych_sha256"],
              "wersje": {"sklearn": sklearn.__version__, "pandas": pd.__version__},
              "testy": wyniki}

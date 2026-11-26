@@ -13,6 +13,7 @@
   },
   "plik_danych": "data/processed/aneurysm_sgkf_input.csv",
   "odcisk_danych_sha256": "5b822c09ebc03011",
+  "odcisk_przydzialu_sha256": "2976f7b8a7b391ab",
   "przygotowanie_danych": {
     "plik_zrodlowy": "data/imputation-inputs/aneurysm_concatted.csv",
     "plik_wynikowy": "data/processed/aneurysm_sgkf_input.csv",
@@ -55,15 +56,15 @@
   "rozstepy": {
     "udzial_poz_pacjenci_pp": 0.024434941967012985,
     "udzial_poz_rekordy_pp": 0.03312279096836651,
-    "rekordy_wzgl_proc": 0.019217957259263056,
+    "rekordy_wzgl_proc": 0.012812299807815503,
     "poz_w_oknie_pp": 0.5246123739274424,
-    "poz_5plus_rek_pp": 0.2747252747252765
+    "poz_5plus_rek_pp": 0.21752220382357523
   },
   "wersje": {
-    "python": "3.9.6",
-    "sklearn": "1.6.1",
+    "python": "3.10.0",
+    "sklearn": "1.7.2",
     "pandas": "2.3.3",
-    "numpy": "2.0.2"
+    "numpy": "2.2.6"
   },
-  "utworzono": "2026-10-31T09:12:12"
+  "utworzono": "2026-11-26T09:05:21"
 }

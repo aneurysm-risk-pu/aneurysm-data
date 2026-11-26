@@ -44,7 +44,7 @@ from sklearn.preprocessing import MinMaxScaler
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from aneurysm_sgkf_mice_pipeline import MICE_PARAMS, RANDOM_STATE, build_mice_imputer  # noqa: E402
 from podzial import (CECHY_POZA_35, KOL_ETYKIETA, KOL_PACJENT, WYNIKI,  # noqa: E402
-                     kolumny_cech, wczytaj_podzial, wczytaj_rekordy)
+                     foldy_do_oceny, kolumny_cech, wczytaj_podzial, wczytaj_rekordy)
 
 warnings.filterwarnings("ignore")
 
@@ -55,7 +55,8 @@ SEED_MASKI = 42
 def test_kontrolowany(df: pd.DataFrame, przydzial: pd.Series, fold: int = 0) -> dict:
     cechy38 = kolumny_cech(df, "38")
     cechy35 = kolumny_cech(df, "35")
-    train = df[df[KOL_PACJENT].map(przydzial).ne(fold) & df[KOL_PACJENT].isin(przydzial.index)]
+    fold_rek = df[KOL_PACJENT].map(przydzial)
+    train = df[fold_rek.isin(foldy_do_oceny(przydzial)) & fold_rek.ne(fold)]
     kompletne = train.dropna(subset=cechy38).reset_index(drop=True)
     etykieta = kompletne[KOL_ETYKIETA].to_numpy()
 
@@ -101,15 +102,15 @@ def test_kontrolowany(df: pd.DataFrame, przydzial: pd.Series, fold: int = 0) -> 
     return wyniki
 
 
-def porownanie_foldow(df: pd.DataFrame, n_foldow: int) -> dict:
-    k38, k35 = WYNIKI / "foldy_imputowane_38", WYNIKI / "foldy_imputowane_35"
+def porownanie_foldow(df: pd.DataFrame, foldy: list[int]) -> dict:
+    k38, k35 = WYNIKI / "foldy_imputowane_38_robocze", WYNIKI / "foldy_imputowane_35_robocze"
     if not (k38.exists() and k35.exists()):
         return {"pominiete": "brak zapisanych foldów obu wariantów"}
     cechy35 = kolumny_cech(df, "35")
     braki = df.set_index("custom_id")[cechy35].isna()
     odch = df[cechy35].std()
     wiersze = []
-    for f in range(n_foldow):
+    for f in foldy:
         for czesc in ("train", "test"):
             a = pd.read_parquet(k38 / f"fold{f}_{czesc}.parquet").set_index("custom_id")
             b = pd.read_parquet(k35 / f"fold{f}_{czesc}.parquet").set_index("custom_id")
@@ -138,6 +139,7 @@ def porownanie_foldow(df: pd.DataFrame, n_foldow: int) -> dict:
 def main() -> None:
     przydzial, meta = wczytaj_podzial()
     df = wczytaj_rekordy()
+    df = df[df[KOL_PACJENT].map(przydzial).isin(foldy_do_oceny(przydzial))].reset_index(drop=True)
     print(f"Dodatkowe kolumny wariantu 38: {', '.join(CECHY_POZA_35)}\n")
 
     print("[1] Test kontrolowany na kompletnych wierszach treningu foldu 0 ...")
@@ -148,18 +150,18 @@ def main() -> None:
     print(f"    różnica RMSE (35 - 38): {kontrola['rmse_35'] - kontrola['rmse_38']:+.4f}")
 
     print("\n[2] Wartości uzupełnione w zapisanych foldach: 38 vs 35 ...")
-    foldy = porownanie_foldow(df, przydzial.nunique())
-    if "pominiete" in foldy:
-        print(f"    pominięte: {foldy['pominiete']}")
+    porownanie = porownanie_foldow(df, foldy_do_oceny(przydzial))
+    if "pominiete" in porownanie:
+        print(f"    pominięte: {porownanie['pominiete']}")
     else:
-        print(f"    średnia |różnica| uzupełnionych wartości (test): {foldy['srednia_roznica_sd_test']:.3f} SD")
-        print(f"    udział różnic > 0,5 SD (test): {foldy['udzial_roznic_ponad_0_5_sd_test']:.2%}")
-        print(f"    wartości obserwowane identyczne w obu wariantach: {foldy['obserwowane_identyczne_wszedzie']}")
+        print(f"    średnia |różnica| uzupełnionych wartości (walidacja): {porownanie['srednia_roznica_sd_test']:.3f} SD")
+        print(f"    udział różnic > 0,5 SD (walidacja): {porownanie['udzial_roznic_ponad_0_5_sd_test']:.2%}")
+        print(f"    wartości obserwowane identyczne w obu wariantach: {porownanie['obserwowane_identyczne_wszedzie']}")
 
     katalog = WYNIKI / "porownanie_38_35"
     katalog.mkdir(parents=True, exist_ok=True)
     (katalog / "porownanie_cech_38_35.json").write_text(
-        json.dumps({"test_kontrolowany": kontrola, "foldy": foldy}, indent=2, ensure_ascii=False),
+        json.dumps({"test_kontrolowany": kontrola, "foldy": porownanie}, indent=2, ensure_ascii=False),
         encoding="utf-8")
     print(f"\nZapisano -> {WYNIKI.name}/porownanie_38_35/porownanie_cech_38_35.json")
 

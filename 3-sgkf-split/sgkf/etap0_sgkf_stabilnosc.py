@@ -6,6 +6,8 @@ Punkt 0.6 etapu 0 (docs/reports/1026_REALIZACJA_DO_SGKF.md, sekcja 5) — siatka
 
 Wersja historyczna z 18.09.2026, przeniesiona z brancha etap0-sgkf-stabilnosc-lk.
 Jej wnioski rozwija podzial.py --porownanie (RAPORT_SGKF_MICE.md, sekcja 6).
+Wyniki obejmują całe ówczesne dane i nie są bieżącą walidacją po odłożeniu foldu 4;
+nie uruchamiać ich ponownie do podejmowania decyzji modelowych.
 
 Odpowiada na trzy pytania, ktore trzeba rozstrzygnac przed zamrozeniem foldow:
 

@@ -1,5 +1,13 @@
 # Etap 3: przygotowanie danych i podział SGKF z imputacją w foldach
 
+> **Aktualizacja protokołu, 26.11.2026:** dotychczasowe tabele i wyniki w tym raporcie
+> pochodzą z wcześniejszych analiz pięciu foldów i obejmują fold 4. Są wyłącznie
+> historycznym materiałem eksploracyjnym, nie wolno używać ich do strojenia ani
+> końcowej oceny. Od teraz skrypty domyślnie pracują na foldach 0–3; fold 4 jest
+> odłożony, a końcowy układ wymaga jawnego `test_koncowy=True` / `--test-koncowy`.
+> Plik przydziału jest dodatkowo weryfikowany własnym odciskiem i pełnym pokryciem
+> pacjentów. Diagnostyka porównywalności raportuje domyślnie wyłącznie foldy robocze.
+
 **Wersja 1:** 11.06.2026, StratifiedGroupKFold na rekordach, materiał do raportu przejściowego (`archiwum/`)
 **Wersja 2:** 04.10.2026, decyzje dotyczące danych, zamrożony podział, pełna imputacja w foldach; 31.10.2026: podział przebudowany na `StratifiedGroupKFold` z 12 warstwami (sekcja 3), cały etap przeliczony
 **Weryfikacja:** 06.10 i 16–17.10.2026; poprawione opisy wniosków i dodane kontrole (sekcja 5.4), dane, podział i imputacja bez zmian (`docs/reports/1026_SPOTKANIE_PROWADZACY.md`, sekcja 9)
@@ -12,7 +20,7 @@
 
 Decyzje o danych z 04.10 przygotował i wdrożył Łukasz; wymagają potwierdzenia przez zespół i prowadzącego. Poniższy opis dotyczy wykonanego wariantu, a nie zatwierdzonego protokołu analizy potwierdzającej.
 
-**Co robi ten etap.** Najpierw porządkuje dane według decyzji z 04.10.2026 (część A). Potem dzieli 40 924 pacjentów na 5 foldów metodą `StratifiedGroupKFold` (SGKF) tak, żeby żaden pacjent nie był jednocześnie w treningu i w teście, a skład foldów był wyrównany. Na koniec w każdym foldzie uzupełnia braki (MICE), ucząc imputer wyłącznie na części treningowej (część B). Wynik to 5 par części treningowej i testowej bez braków oraz bez wycieku przez skalowanie i imputację. Ograniczenia wcześniejszego czyszczenia danych pozostają opisane w sekcji 7 i wymagają decyzji przed analizą potwierdzającą.
+**Co robi ten etap.** Najpierw porządkuje dane według decyzji z 04.10.2026 (część A). Potem dzieli 40 924 pacjentów na 5 foldów metodą `StratifiedGroupKFold` (SGKF), tak żeby każdy pacjent należał do jednego foldu. Do analiz, imputacji i walidacji używa się domyślnie wyłącznie foldów 0–3: trzy foldy trenują, czwarty waliduje. Fold 4 jest odłożony do jednorazowego testu końcowego (trening 0–3, test 4). Ograniczenia wcześniejszego czyszczenia danych pozostają opisane w sekcji 7 i wymagają decyzji przed analizą potwierdzającą.
 
 | Element | Stan | Gdzie |
 |---|---|---|
@@ -20,8 +28,8 @@ Decyzje o danych z 04.10 przygotował i wdrożył Łukasz; wymagają potwierdzen
 | liczby uzasadniające decyzje | gotowe | `przygotowanie/results/analiza_decyzji.json` |
 | przydział pacjent → fold | **zamrożony**, z odciskiem danych | `sgkf/results/pacjent_fold.csv`, `podzial_meta.json` |
 | zestaw cech: **38, jeden wariant** | selekcja z etapu 1 (usunięcie CRP, MONO, %MONO) cofnięta | `przygotowanie/results/analiza_selekcji_cech.json`, sekcja 2.6 |
-| imputacja MICE w foldach | **pełny przebieg wykonany** | `sgkf/results/przebieg_imputacji_38.json` |
-| zaimputowane foldy | lokalnie, poza gitem (46 MB), odtwarzalne jednym poleceniem; dwa przebiegi dały identyczne odciski | `sgkf/results/foldy_imputowane_38/` |
+| imputacja MICE w foldach roboczych 0–3 | wcześniejszy przebieg obejmował 5 foldów; nowy domyślny przebieg pomija fold 4 | `sgkf/results/przebieg_imputacji_38.json` |
+| zaimputowane foldy | lokalnie, poza gitem; nowe bezpieczne przebiegi zapisują wyłącznie foldy 0–3 | `sgkf/results/foldy_imputowane_38_robocze/` |
 | jakość imputacji (protokół z etapu 2, w foldach) | jak w benchmarku przy losowych brakach; przy brakach całymi panelami MICE niewiele lepsze od średniej, a uzupełnienia skupione wokół niej | `sgkf/results/ocena_imputacji.json`, sekcja 4.3 |
 | analiza wyników: na czym model mógłby się „przejechać” | kohorty rozdzielne z AUC 0,93; sam wzorzec braków 0,82; epoka w wynikach NEURO 0,83; KOR wygląda na populację szpitalną; sam wzorzec braków odzyskuje około 52% ukrytych chorych w górnych 5% rankingu (sekcja 5.4) | `sgkf/results/analiza_wynikow.json`, sekcja 5 |
 | porównanie 38 vs 35 (jednorazowe, podkładka pod decyzję) | brak istotnego wpływu na imputację | `sgkf/results/porownanie_38_35/`, sekcja 4.5 |
@@ -31,11 +39,11 @@ Decyzje o danych z 04.10 przygotował i wdrożył Łukasz; wymagają potwierdzen
 
 ```python
 import sys; sys.path.insert(0, "3-sgkf-split/sgkf")
-from podzial import wczytaj_podzial           # przydział pacjent -> fold (sprawdza odcisk danych)
+from podzial import wczytaj_podzial           # sprawdza odciski danych i przydziału oraz kompletność
 przydzial, meta = wczytaj_podzial()
 
 import pandas as pd                            # albo gotowe zaimputowane foldy
-train0 = pd.read_parquet("3-sgkf-split/sgkf/results/foldy_imputowane_38/fold0_train.parquet")
+train0 = pd.read_parquet("3-sgkf-split/sgkf/results/foldy_imputowane_38_robocze/fold0_train.parquet")
 ```
 
 **Jak odtworzyć cały etap:** `python 3-sgkf-split/uruchom_sgkf.py` (około 35 min na Macu z procesorem M, w tym 15 min imputacji i 18 min jej oceny). Opcja `--czesc A` albo `--czesc B` uruchamia jedną część, a `--bez-mice` pomija imputację.
@@ -567,7 +575,7 @@ Wnioski:
 │                                     podzial_porownanie_strategii.csv, przebieg_imputacji_38.json,
 │                                     ocena_imputacji.json, analiza_wynikow.json, kontrola_epoki.json,
 │                                     kontrola_skrotow.json, kontrola_sgkf_czerwiec.json, logi/,
-│                                     porownanie_38_35/, foldy_imputowane_38/ (poza gitem)
+│                                     porownanie_38_35/, foldy_imputowane_38_robocze/ (poza gitem)
 └── archiwum/
     └── aneurysm_data_StratifiedGroupKFold.ipynb   wersja 1 (Liwia, 08.06.2026)
 ```

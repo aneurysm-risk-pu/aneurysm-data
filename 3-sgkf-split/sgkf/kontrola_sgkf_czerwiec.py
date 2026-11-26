@@ -4,6 +4,10 @@ kontrola_sgkf_czerwiec.py
 
 Kontrola z 31.10.2026: co naprawdę było nie tak z podziałem z czerwca.
 
+To historyczna diagnostyka wariantów podziału wykonana przed odłożeniem foldu 4.
+Wyniki 5-foldowe z tego skryptu nie są częścią bieżącej walidacji; nowe liczby
+porównawcze generuje podzial.py i obejmują domyślnie tylko foldy 0–3.
+
 Wersja 1 to StratifiedGroupKFold(n_splits=5) bez tasowania, y = etykieta. Wcześniejsze
 opisy mówiły, że taki podział zależy od kolejności wierszy i od wersji sklearn.
 Ten skrypt sprawdza to wprost:

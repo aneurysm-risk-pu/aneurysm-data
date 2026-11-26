@@ -13,6 +13,8 @@ import sys
 import tempfile
 from dataclasses import asdict
 from pathlib import Path
+import json
+import shutil
 
 import numpy as np
 import pandas as pd
@@ -22,9 +24,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from sklearn.model_selection import StratifiedGroupKFold  # noqa: E402
 
 from podzial import (KOL_PACJENT, WYNIKI, KonfiguracjaPodzialu,  # noqa: E402
-                     _przydzial_sgkf, diagnostyka, indeksy_foldow, kolumny_cech,
-                     podzial_wewnetrzny, rozstepy, tabela_pacjentow, wczytaj_podzial,
-                     zbuduj_podzial)
+                     _przydzial_sgkf, diagnostyka, foldy_do_oceny, indeksy_foldow,
+                     kolumny_cech, odcisk_pliku, podzial_wewnetrzny, rozstepy,
+                     tabela_pacjentow, wczytaj_podzial, wczytaj_rekordy, zbuduj_podzial)
+from ukrywanie import zbuduj_maski_ukrytych  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -78,11 +81,57 @@ def test_indeksy_rekordowe_nie_dziela_pacjenta_i_pokrywaja_wszystko():
     cfg = _cfg()
     przydzial = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
     testowe = []
+    robocze = set(przydzial.index[przydzial.isin(foldy_do_oceny(przydzial))])
     for _, tr, te in indeksy_foldow(df, przydzial):
         assert not set(df[KOL_PACJENT].iloc[tr]) & set(df[KOL_PACJENT].iloc[te])
-        assert len(tr) + len(te) == len(df)
+        assert set(df[KOL_PACJENT].iloc[tr]) | set(df[KOL_PACJENT].iloc[te]) <= robocze
+        assert len(tr) + len(te) == df[KOL_PACJENT].isin(robocze).sum()
         testowe.extend(te)
-    assert sorted(testowe) == list(range(len(df))), "rekord pominiety albo powtorzony w testach"
+    assert sorted(testowe) == np.flatnonzero(df[KOL_PACJENT].isin(robocze).to_numpy()).tolist(), \
+        "rekord roboczy pominiety albo powtorzony w walidacji"
+    assert not set(df[KOL_PACJENT].iloc[testowe]) & set(przydzial.index[przydzial == 4])
+
+
+def test_fold_4_jest_dostepny_tylko_jako_jawny_test_koncowy():
+    df = dane_testowe()
+    cfg = _cfg()
+    przydzial = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
+    assert foldy_do_oceny(przydzial) == [0, 1, 2, 3]
+    assert foldy_do_oceny(przydzial, test_koncowy=True) == [4]
+
+    podzialy = list(indeksy_foldow(df, przydzial, test_koncowy=True))
+    assert len(podzialy) == 1
+    fold, tr, te = podzialy[0]
+    assert fold == 4
+    assert set(df[KOL_PACJENT].iloc[tr]) == set(przydzial.index[przydzial.isin([0, 1, 2, 3])])
+    assert set(df[KOL_PACJENT].iloc[te]) == set(przydzial.index[przydzial == 4])
+    assert not set(df[KOL_PACJENT].iloc[tr]) & set(df[KOL_PACJENT].iloc[te])
+
+
+def test_diagnostyka_domyslnie_pomija_fold_4():
+    df = dane_testowe()
+    cfg = _cfg()
+    pac = tabela_pacjentow(df, cfg)
+    przydzial = zbuduj_podzial(df, pac, cfg)
+    assert diagnostyka(df, pac, przydzial)["fold"].tolist() == [0, 1, 2, 3]
+    assert diagnostyka(df, pac, przydzial, include_test_fold=True)["fold"].tolist() == [0, 1, 2, 3, 4]
+
+
+def test_maski_sa_stale_i_maja_ustalony_udzial_w_kazdym_foldzie():
+    df = dane_testowe()
+    cfg = _cfg()
+    przydzial = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
+    a = zbuduj_maski_ukrytych(df, przydzial)
+    b = zbuduj_maski_ukrytych(df.sample(frac=1, random_state=91), przydzial)
+    pd.testing.assert_frame_equal(a, b)
+
+    etykiety = df.groupby(KOL_PACJENT)["label"].max()
+    for seed in range(5):
+        for fold in range(5):
+            chorzy = etykiety.index[(etykiety == 1) & (przydzial.reindex(etykiety.index) == fold)]
+            ukryci = a.loc[(a["seed"] == seed) & (a["fold"] == fold), KOL_PACJENT]
+            assert len(ukryci) == round(0.4 * len(chorzy))
+            assert set(ukryci) <= set(chorzy)
 
 
 def test_podzial_to_stratified_group_kfold_z_warstwa_jako_y():
@@ -164,10 +213,14 @@ def test_foldy_wewnetrzne_tylko_z_treningu():
     cfg = _cfg()
     pac = tabela_pacjentow(df, cfg)
     przydzial = zbuduj_podzial(df, pac, cfg)
-    outer_train = przydzial.index[przydzial != 0].to_numpy()
-    outer_test = set(przydzial.index[przydzial == 0])
+    _, outer_train_idx, outer_valid_idx = next(
+        split for split in indeksy_foldow(df, przydzial) if split[0] == 0)
+    outer_train = df[KOL_PACJENT].iloc[outer_train_idx].unique()
+    outer_test = (set(df[KOL_PACJENT].iloc[outer_valid_idx])
+                  | set(przydzial.index[przydzial == 4]))
     for tr, te in podzial_wewnetrzny(df, pac, outer_train):
         assert not (set(tr) | set(te)) & outer_test
+        assert not set(tr) & set(przydzial.index[przydzial == 4])
         assert not set(tr) & set(te)
 
 
@@ -186,9 +239,56 @@ def test_zapisany_podzial_jest_zgodny_z_danymi():
     assert meta["rozstepy"]["poz_w_oknie_pp"] < 1.5
 
 
+def test_zapisany_podzial_jest_odtwarzalny_na_biezacym_srodowisku():
+    if not (WYNIKI / "podzial_meta.json").exists():
+        return
+    zapisany, meta = wczytaj_podzial()
+    cfg = KonfiguracjaPodzialu(**{
+        **meta["konfiguracja"],
+        "warstwy": tuple(meta["konfiguracja"]["warstwy"]),
+    })
+    df = wczytaj_rekordy(cfg)
+    odtworzony = zbuduj_podzial(df, tabela_pacjentow(df, cfg), cfg)
+    assert zapisany.sort_index().equals(odtworzony.sort_index()), \
+        "lokalnie odtworzony przydzial rozni sie od zamrozonego"
+
+
+def test_wczytaj_podzial_odrzuca_zmieniony_plik_przydzialu():
+    if not (WYNIKI / "podzial_meta.json").exists():
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        shutil.copy(WYNIKI / "pacjent_fold.csv", tmp / "pacjent_fold.csv")
+        shutil.copy(WYNIKI / "podzial_meta.json", tmp / "podzial_meta.json")
+        with (tmp / "pacjent_fold.csv").open("a", encoding="utf-8") as f:
+            f.write("999999,0,0,warstwa\n")
+        try:
+            wczytaj_podzial(tmp)
+        except RuntimeError:
+            return
+        raise AssertionError("zmieniony plik przydzialu zostal przyjety")
+
+
+def test_wczytaj_podzial_odrzuca_ucięty_plik_nawet_z_przeliczonym_hashem():
+    if not (WYNIKI / "podzial_meta.json").exists():
+        return
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        plik = tmp / "pacjent_fold.csv"
+        shutil.copy(WYNIKI / "pacjent_fold.csv", plik)
+        meta = json.loads((WYNIKI / "podzial_meta.json").read_text(encoding="utf-8"))
+        tabela = pd.read_csv(plik).iloc[:-1]
+        tabela.to_csv(plik, index=False)
+        meta["odcisk_przydzialu_sha256"] = odcisk_pliku(plik)
+        (tmp / "podzial_meta.json").write_text(json.dumps(meta), encoding="utf-8")
+        try:
+            wczytaj_podzial(tmp)
+        except RuntimeError:
+            return
+        raise AssertionError("ucięty plik przydzialu zostal przyjety")
+
+
 def test_zmiana_danych_uniewaznia_podzial():
-    import json
-    import shutil
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         if not (WYNIKI / "podzial_meta.json").exists():
