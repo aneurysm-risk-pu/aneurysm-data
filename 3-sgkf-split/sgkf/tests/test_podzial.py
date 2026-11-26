@@ -124,15 +124,20 @@ def test_maski_sa_stale_i_maja_ustalony_udzial_w_kazdym_foldzie():
     a = zbuduj_maski_ukrytych(df, przydzial)
     b = zbuduj_maski_ukrytych(df.sample(frac=1, random_state=91), przydzial)
     pd.testing.assert_frame_equal(a, b)
+    assert set(a["fold"]) == {0, 1, 2, 3}
 
     etykiety = df.groupby(KOL_PACJENT)["label"].max()
     for seed in range(5):
-        for fold in range(5):
+        for fold in range(4):
             chorzy = etykiety.index[(etykiety == 1) & (przydzial.reindex(etykiety.index) == fold)]
             ukryci = a.loc[(a["seed"] == seed) & (a["fold"] == fold), KOL_PACJENT]
             assert len(ukryci) == round(0.4 * len(chorzy))
             assert set(ukryci) <= set(chorzy)
 
+    test_koncowy = zbuduj_maski_ukrytych(df, przydzial, test_koncowy=True)
+    assert set(test_koncowy["fold"]) == {0, 1, 2, 3, 4}
+    pd.testing.assert_frame_equal(
+        test_koncowy[test_koncowy["fold"] < 4].reset_index(drop=True), a)
 
 def test_podzial_to_stratified_group_kfold_z_warstwa_jako_y():
     """Bez losowej kolejnosci wynik jest dokladnie tym, co zwraca klasa ze sklearn."""
